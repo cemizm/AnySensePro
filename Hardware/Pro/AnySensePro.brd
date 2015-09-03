@@ -1798,7 +1798,7 @@ Source: http://www.osram.convergy.de/ ... Lb_q993.pdf</description>
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
-<designrules name="PCB-POOL Standard">
+<designrules name="PCB-POOL Standard *">
 <description language="de">&lt;b&gt;EAGLE Design Rules Prototypen  für PCB-POOL(R)&lt;/b&gt;
 &lt;p&gt;
 Wir haben in diesem DRU File alle notwendigen Design Einstellungen vorgenommen, damit Sie Ihre Leiterplatte 
@@ -1865,7 +1865,7 @@ Covered vias can be set in Masks (Limit).
 <param name="psElongationLong" value="100"/>
 <param name="psElongationOffset" value="100"/>
 <param name="mvStopFrame" value="0"/>
-<param name="mvCreamFrame" value="0"/>
+<param name="mvCreamFrame" value="0.1"/>
 <param name="mlMinStopFrame" value="0.075mm"/>
 <param name="mlMaxStopFrame" value="0.2mm"/>
 <param name="mlMinCreamFrame" value="0mil"/>
@@ -2031,52 +2031,63 @@ Covered vias can be set in Masks (Limit).
 <element name="C1" library="rcl" package="C0402K" value="1uF" x="2.032" y="31.496" smashed="yes" rot="R180">
 <attribute name="NAME" x="2.659" y="32.595" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="2.532" y="32.946" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="2362093RL" x="2.032" y="31.496" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="C13" library="rcl" package="C0402K" value="4.7uF" x="5.588" y="33.782" smashed="yes" rot="R180">
 <attribute name="NAME" x="6.469" y="34.881" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="6.088" y="35.232" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="2426952RL" x="5.588" y="33.782" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
-<element name="C11" library="rcl" package="C0402K" value="4.7uF" x="5.588" y="29.21" smashed="yes" rot="R180">
+<element name="C11" library="rcl" package="C0402K" value="10nF" x="5.588" y="29.21" smashed="yes" rot="R180">
 <attribute name="NAME" x="6.469" y="28.785" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="6.088" y="30.66" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="1758924RL" x="5.588" y="29.21" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="X7" library="con-tag-connect" package="TC2030-IDC" value="TC2030-IDC-NL" x="5.207" y="5.207" smashed="yes" rot="R90"/>
 <element name="C6" library="rcl" package="C0402K" value="10nF" x="21.971" y="20.955" smashed="yes" rot="R270">
 <attribute name="NAME" x="21.59" y="19.812" size="0.6096" layer="25" font="vector" rot="R270"/>
 <attribute name="VALUE" x="20.066" y="21.59" size="1.27" layer="27" rot="R270"/>
+<attribute name="OC_FARNELL" value="1758924RL" x="21.971" y="20.955" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="C7" library="rcl" package="C0402K" value="1uF" x="20.955" y="20.955" smashed="yes" rot="R270">
 <attribute name="NAME" x="20.618" y="19.804" size="0.6096" layer="25" font="vector" rot="R270"/>
 <attribute name="VALUE" x="19.505" y="21.455" size="1.016" layer="27" rot="R270"/>
+<attribute name="OC_FARNELL" value="2362093RL" x="20.955" y="20.955" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="C18" library="rcl" package="C0402K" value="4.7uF" x="9.779" y="28.067" smashed="yes">
 <attribute name="NAME" x="7.12" y="27.73" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="9.279" y="26.617" size="1.016" layer="27"/>
+<attribute name="OC_FARNELL" value="2426952RL" x="9.779" y="28.067" size="1.778" layer="27" display="off"/>
 </element>
 <element name="C8" library="rcl" package="C0402K" value="100nF" x="6.313" y="15.842" smashed="yes" rot="R90">
 <attribute name="NAME" x="5.881" y="15.039" size="0.6096" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="7.763" y="15.342" size="1.016" layer="27" rot="R90"/>
-<attribute name="OC_FARNELL" value="test" x="6.313" y="15.842" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="6.313" y="15.842" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
 <element name="C12" library="rcl" package="C0402K" value="100nF" x="16.51" y="27.178" smashed="yes">
-<attribute name="NAME" x="14.359" y="26.841" size="0.6096" layer="25" font="vector"/>
+<attribute name="NAME" x="15.883" y="27.73" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="16.01" y="25.728" size="1.016" layer="27"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="16.51" y="27.178" size="1.778" layer="27" display="off"/>
 </element>
 <element name="C14" library="rcl" package="C0402K" value="100nF" x="9.779" y="26.924" smashed="yes">
 <attribute name="NAME" x="7.12" y="26.587" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="9.279" y="25.474" size="1.016" layer="27"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="9.779" y="26.924" size="1.778" layer="27" display="off"/>
 </element>
 <element name="C15" library="rcl" package="C0402K" value="100nF" x="18.923" y="13.081" smashed="yes" rot="R270">
 <attribute name="NAME" x="19.348" y="13.962" size="0.6096" layer="25" font="vector" rot="R270"/>
 <attribute name="VALUE" x="17.473" y="13.581" size="1.016" layer="27" rot="R270"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="18.923" y="13.081" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="C9" library="rcl" package="C0402K" value="18pF" x="21.717" y="9.271" smashed="yes" rot="R180">
 <attribute name="NAME" x="22.217" y="8.846" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="22.217" y="10.721" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="1758947RL" x="21.717" y="9.271" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="C10" library="rcl" package="C0402K" value="18pF" x="26.797" y="12.319" smashed="yes" rot="R90">
 <attribute name="NAME" x="27.896" y="11.565" size="0.6096" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="28.247" y="11.819" size="1.016" layer="27" rot="R90"/>
+<attribute name="OC_FARNELL" value="1758947RL" x="26.797" y="12.319" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
 <element name="U4" library="stm32F" package="LQFP64" value="STM32F303RET6" x="13.589" y="19.812" smashed="yes" rot="R180">
 <attribute name="OC_FARNELL" value="2466939" x="13.589" y="19.812" size="1.778" layer="27" rot="R180" display="off"/>
@@ -2091,22 +2102,27 @@ Covered vias can be set in Masks (Limit).
 <element name="R5" library="rcl" package="R0402" value="10K" x="8.382" y="11.176" smashed="yes" rot="R270">
 <attribute name="NAME" x="7.874" y="10.649" size="0.6096" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="6.477" y="11.811" size="1.27" layer="27" rot="R270"/>
+<attribute name="OC_FARNELL" value="2302739RL" x="8.382" y="11.176" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="C31" library="rcl" package="C0402K" value="100nF" x="8.382" y="8.382" smashed="yes" rot="R270">
 <attribute name="NAME" x="7.957" y="7.628" size="0.6096" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="6.932" y="8.882" size="1.016" layer="27" rot="R270"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="8.382" y="8.382" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="R9" library="rcl" package="R0402" value="10K" x="28.067" y="6.731" smashed="yes">
 <attribute name="NAME" x="28.702" y="6.096" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="27.432" y="4.826" size="1.27" layer="27"/>
+<attribute name="OC_FARNELL" value="2302739RL" x="28.067" y="6.731" size="1.778" layer="27" display="off"/>
 </element>
 <element name="R10" library="rcl" package="R0402" value="10K" x="28.067" y="8.255" smashed="yes">
 <attribute name="NAME" x="27.178" y="8.89" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="27.432" y="6.35" size="1.27" layer="27"/>
+<attribute name="OC_FARNELL" value="2302739RL" x="28.067" y="8.255" size="1.778" layer="27" display="off"/>
 </element>
 <element name="R2" library="rcl" package="R0402" value="1M" x="21.706" y="14.883" smashed="yes" rot="R180">
 <attribute name="NAME" x="23.992" y="15.264" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="22.341" y="16.788" size="1.27" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="2302957RL" x="21.706" y="14.883" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="U2" library="ST-Microelctronics" package="QFN32" value="BLUENRGQTR" x="21.336" y="30.734" smashed="yes">
 <attribute name="OC_FARNELL" value="2460183RL" x="21.336" y="30.734" size="1.778" layer="27" display="off"/>
@@ -2119,12 +2135,14 @@ Covered vias can be set in Masks (Limit).
 <attribute name="OC_FARNELL" value="2454731RL" x="25.046" y="30.734" size="1.778" layer="27" display="off"/>
 </element>
 <element name="C3" library="rcl" package="C0402K" value="100pF" x="21.054" y="26.144" smashed="yes" rot="R270">
-<attribute name="NAME" x="22.082" y="25.299" size="0.6096" layer="25" font="vector" rot="R90"/>
+<attribute name="NAME" x="21.447" y="23.902" size="0.6096" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="19.604" y="26.644" size="1.016" layer="27" rot="R270"/>
+<attribute name="OC_FARNELL" value="2320762RL" x="21.054" y="26.144" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="C5" library="rcl" package="C0402K" value="100nF" x="19.995" y="26.144" smashed="yes" rot="R270">
-<attribute name="NAME" x="19.023" y="27.025" size="0.6096" layer="25" font="vector" rot="R270"/>
+<attribute name="NAME" x="19.658" y="24.993" size="0.6096" layer="25" font="vector" rot="R270"/>
 <attribute name="VALUE" x="18.545" y="26.644" size="1.016" layer="27" rot="R270"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="19.995" y="26.144" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="FC" library="con-jst" package="S8B-ZR-SM4" value="X8B-ZR-SM4" x="10.1" y="42.164" smashed="yes">
 <attribute name="OC_FARNELL" value="1830925" x="10.1" y="42.164" size="1.778" layer="27" display="off"/>
@@ -2134,83 +2152,102 @@ Covered vias can be set in Masks (Limit).
 <element name="R3" library="rcl" package="R0402" value="10K" x="7.493" y="36.068" smashed="yes" rot="R270">
 <attribute name="NAME" x="7.239" y="38.227" size="0.6096" layer="25" font="vector" rot="R270"/>
 <attribute name="VALUE" x="5.588" y="36.703" size="1.27" layer="27" rot="R270"/>
+<attribute name="OC_FARNELL" value="2302739RL" x="7.493" y="36.068" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="R1" library="rcl" package="R0402" value="10K" x="16.002" y="31.623" smashed="yes">
 <attribute name="NAME" x="14.986" y="31.877" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="15.367" y="29.718" size="1.27" layer="27"/>
+<attribute name="OC_FARNELL" value="2302739RL" x="16.002" y="31.623" size="1.778" layer="27" display="off"/>
 </element>
 <element name="C24" library="rcl" package="C0402K" value="100pF" x="18.161" y="34.798" smashed="yes" rot="R180">
 <attribute name="NAME" x="19.439" y="34.461" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="18.661" y="36.248" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="2320762RL" x="18.161" y="34.798" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="C25" library="rcl" package="C0402K" value="150nF" x="18.161" y="35.941" smashed="yes" rot="R180">
 <attribute name="NAME" x="19.439" y="35.604" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="18.661" y="37.391" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="2470467RL" x="18.161" y="35.941" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="C28" library="rcl" package="C0402K" value="1uF" x="15.875" y="30.099" smashed="yes" rot="R180">
 <attribute name="NAME" x="14.724" y="30.436" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="16.375" y="31.549" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="2362093RL" x="15.875" y="30.099" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="C29" library="rcl" package="C0402K" value="100nF" x="15.875" y="29.083" smashed="yes" rot="R180">
 <attribute name="NAME" x="14.724" y="29.42" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="16.375" y="30.533" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="15.875" y="29.083" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="C23" library="rcl" package="C0402K" value="100nF" x="23.368" y="36.195" smashed="yes" rot="R90">
 <attribute name="NAME" x="23.031" y="35.171" size="0.6096" layer="25" font="vector" rot="R270"/>
 <attribute name="VALUE" x="24.818" y="35.695" size="1.016" layer="27" rot="R90"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="23.368" y="36.195" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
 <element name="C22" library="rcl" package="C0402K" value="1uF" x="24.511" y="36.195" smashed="yes" rot="R90">
 <attribute name="NAME" x="24.174" y="35.171" size="0.6096" layer="25" font="vector" rot="R270"/>
 <attribute name="VALUE" x="25.961" y="35.695" size="1.016" layer="27" rot="R90"/>
+<attribute name="OC_FARNELL" value="2362093RL" x="24.511" y="36.195" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
 <element name="C4" library="rcl" package="C0402K" value="100nF" x="26.162" y="29.464" smashed="yes">
 <attribute name="NAME" x="24.138" y="29.127" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="25.662" y="28.014" size="1.016" layer="27"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="26.162" y="29.464" size="1.778" layer="27" display="off"/>
 </element>
 <element name="C2" library="rcl" package="C0402K" value="1uF" x="26.162" y="28.448" smashed="yes">
 <attribute name="NAME" x="24.138" y="28.111" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="25.662" y="26.998" size="1.016" layer="27"/>
+<attribute name="OC_FARNELL" value="2362093RL" x="26.162" y="28.448" size="1.778" layer="27" display="off"/>
 </element>
 <element name="C27" library="rcl" package="C0402K" value="100nF" x="18.161" y="38.227" smashed="yes" rot="R180">
 <attribute name="NAME" x="19.439" y="37.636" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="18.661" y="39.677" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="18.161" y="38.227" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="C26" library="rcl" package="C0402K" value="1uF" x="18.161" y="37.084" smashed="yes" rot="R180">
 <attribute name="NAME" x="19.439" y="36.747" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="18.661" y="38.534" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="2362093RL" x="18.161" y="37.084" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="R4" library="rcl" package="R0402" value="10K" x="21.971" y="36.195" smashed="yes" rot="R270">
 <attribute name="NAME" x="21.59" y="34.417" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="20.066" y="36.83" size="1.27" layer="27" rot="R270"/>
+<attribute name="OC_FARNELL" value="2302739RL" x="21.971" y="36.195" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="C16" library="rcl" package="C0402K" value="100nF" x="11.176" y="29.718" smashed="yes" rot="R180">
 <attribute name="NAME" x="10.152" y="30.055" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="11.676" y="31.168" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="11.176" y="29.718" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="C30" library="rcl" package="C0402K" value="100nF" x="25.019" y="9.398" smashed="yes" rot="R180">
 <attribute name="NAME" x="25.9" y="8.846" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="25.519" y="10.848" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="1759380RL" x="25.019" y="9.398" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="C19" library="rcl" package="C0402K" value="15pF" x="26.543" y="25.527" smashed="yes" rot="R270">
 <attribute name="NAME" x="26.968" y="26.408" size="0.6096" layer="25" font="vector" rot="R270"/>
 <attribute name="VALUE" x="25.093" y="26.027" size="1.016" layer="27" rot="R270"/>
+<attribute name="OC_FARNELL" value="1758945RL" x="26.543" y="25.527" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="C17" library="rcl" package="C0402K" value="15pF" x="23.438" y="23.676" smashed="yes" rot="R180">
 <attribute name="NAME" x="24.703" y="23.358" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="23.938" y="25.126" size="1.016" layer="27" rot="R180"/>
+<attribute name="OC_FARNELL" value="1758945RL" x="23.438" y="23.676" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="Y3" library="abracon" package="ABS07" value="ABS07" x="26.543" y="34.29" smashed="yes" rot="R90">
 <attribute name="OC_FARNELL" value="2467865RL" x="26.543" y="34.29" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="NAME" x="27.023" y="32.405" size="0.6096" layer="25" font="vector" ratio="12" rot="R180"/>
 <attribute name="VALUE" x="28.543" y="32.79" size="0.8128" layer="27" font="vector" ratio="12" rot="R90"/>
 </element>
-<element name="C21" library="rcl" package="C0402K" value="15pF" x="28.321" y="33.528" smashed="yes" rot="R90">
+<element name="C21" library="rcl" package="C0402K" value="22pF" x="28.321" y="33.528" smashed="yes" rot="R90">
 <attribute name="NAME" x="29.42" y="32.774" size="0.6096" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="29.771" y="33.028" size="1.016" layer="27" rot="R90"/>
+<attribute name="OC_FARNELL" value="1758951RL" x="28.321" y="33.528" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
-<element name="C20" library="rcl" package="C0402K" value="15pF" x="28.321" y="36.195" smashed="yes" rot="R90">
+<element name="C20" library="rcl" package="C0402K" value="22pF" x="28.321" y="36.195" smashed="yes" rot="R90">
 <attribute name="NAME" x="29.42" y="35.441" size="0.6096" layer="25" font="vector" rot="R90"/>
 <attribute name="VALUE" x="29.771" y="35.695" size="1.016" layer="27" rot="R90"/>
+<attribute name="OC_FARNELL" value="1758951RL" x="28.321" y="36.195" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
 <element name="Y1" library="abracon" package="5X3.2MM" value="ABM3B" x="22.987" y="11.811" smashed="yes">
 <attribute name="OC_FARNELL" value="2467818RL" x="22.987" y="11.811" size="1.778" layer="27" display="off"/>
@@ -2219,32 +2256,35 @@ Covered vias can be set in Masks (Limit).
 <attribute name="OC_FARNELL" value="2467830RL" x="24.065" y="25.808" size="1.778" layer="27" display="off"/>
 <attribute name="NAME" x="22.505" y="27.324" size="0.6096" layer="25" font="vector"/>
 </element>
-<element name="G" library="led" package="CHIP-LED0603" value="" x="1.905" y="25.527" smashed="yes" rot="R90">
+<element name="P" library="led" package="CHIP-LED0603" value="" x="1.905" y="25.527" smashed="yes" rot="R90">
 <attribute name="NAME" x="0.762" y="25.781" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="2.54" y="27.432" size="1.27" layer="27" rot="R180"/>
-<attribute name="OC_FARNELL" value="2099223RL" x="1.905" y="25.527" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="OC_FARNELL" value="2468791RL" x="1.905" y="25.527" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
-<element name="B" library="led" package="CHIP-LED0603" value="" x="1.905" y="24.13" smashed="yes" rot="R90">
+<element name="A" library="led" package="CHIP-LED0603" value="" x="1.905" y="24.13" smashed="yes" rot="R90">
 <attribute name="NAME" x="0.762" y="24.384" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="2.54" y="26.035" size="1.27" layer="27" rot="R180"/>
-<attribute name="OC_FARNELL" value="2217978" x="1.905" y="24.13" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="OC_FARNELL" value="2468793RL" x="1.905" y="24.13" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
-<element name="R" library="led" package="CHIP-LED0603" value="" x="1.905" y="22.733" smashed="yes" rot="R90">
+<element name="E" library="led" package="CHIP-LED0603" value="" x="1.905" y="22.733" smashed="yes" rot="R90">
 <attribute name="NAME" x="0.762" y="22.987" size="0.6096" layer="25" font="vector" rot="R180"/>
 <attribute name="VALUE" x="2.54" y="24.638" size="1.27" layer="27" rot="R180"/>
-<attribute name="OC_FARNELL" value="2099224" x="1.905" y="22.733" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="OC_FARNELL" value="2468792RL" x="1.905" y="22.733" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
-<element name="R6" library="rcl" package="R0402" value="10K" x="4.445" y="25.527" smashed="yes">
+<element name="R6" library="rcl" package="R0402" value="820" x="4.445" y="25.527" smashed="yes">
 <attribute name="NAME" x="5.588" y="25.273" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="3.81" y="23.622" size="1.27" layer="27"/>
+<attribute name="OC_FARNELL" value="2302628RL" x="4.445" y="25.527" size="1.778" layer="27" display="off"/>
 </element>
-<element name="R7" library="rcl" package="R0402" value="10K" x="4.445" y="24.13" smashed="yes">
+<element name="R7" library="rcl" package="R0402" value="820" x="4.445" y="24.13" smashed="yes">
 <attribute name="NAME" x="5.588" y="23.876" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="3.81" y="22.225" size="1.27" layer="27"/>
+<attribute name="OC_FARNELL" value="2302628RL" x="4.445" y="24.13" size="1.778" layer="27" display="off"/>
 </element>
-<element name="R8" library="rcl" package="R0402" value="10K" x="4.445" y="22.733" smashed="yes">
+<element name="R8" library="rcl" package="R0402" value="820" x="4.445" y="22.733" smashed="yes">
 <attribute name="NAME" x="5.588" y="22.352" size="0.6096" layer="25" font="vector"/>
 <attribute name="VALUE" x="3.81" y="20.828" size="1.27" layer="27"/>
+<attribute name="OC_FARNELL" value="2302628RL" x="4.445" y="22.733" size="1.778" layer="27" display="off"/>
 </element>
 </elements>
 <signals>
@@ -2310,15 +2350,17 @@ Covered vias can be set in Masks (Limit).
 <contactref element="USB" pad="1"/>
 <contactref element="D1" pad="2"/>
 <contactref element="U4" pad="42"/>
-<via x="5.715" y="18.669" extent="1-16" drill="0.3048"/>
-<wire x1="5.715" y1="18.669" x2="5.715" y2="27.432" width="0.4064" layer="16"/>
-<via x="5.715" y="27.432" extent="1-16" drill="0.3048"/>
+<via x="5.715" y="18.796" extent="1-16" drill="0.3048"/>
+<wire x1="5.715" y1="18.796" x2="5.715" y2="27.051" width="0.4064" layer="16"/>
+<wire x1="5.715" y1="27.051" x2="5.334" y2="27.432" width="0.4064" layer="16"/>
+<wire x1="5.334" y1="27.432" x2="4.826" y2="27.432" width="0.4064" layer="16"/>
+<via x="4.826" y="27.432" extent="1-16" drill="0.3048"/>
 <wire x1="3.32" y1="27.432" x2="3.236" y2="27.348" width="0.254" layer="1"/>
-<wire x1="5.715" y1="18.669" x2="6.084" y2="19.062" width="0.1524" layer="1"/>
-<wire x1="6.084" y1="19.062" x2="7.839" y2="19.062" width="0.1524" layer="1"/>
-<wire x1="4.125" y1="18.064" x2="5.11" y2="18.064" width="0.4064" layer="1"/>
-<wire x1="5.11" y1="18.064" x2="5.715" y2="18.669" width="0.4064" layer="1"/>
-<wire x1="3.32" y1="27.432" x2="5.715" y2="27.432" width="0.4064" layer="1"/>
+<wire x1="5.715" y1="18.796" x2="5.957" y2="19.062" width="0.1524" layer="1"/>
+<wire x1="5.957" y1="19.062" x2="7.839" y2="19.062" width="0.1524" layer="1"/>
+<wire x1="4.125" y1="18.064" x2="4.983" y2="18.064" width="0.4064" layer="1"/>
+<wire x1="4.983" y1="18.064" x2="5.715" y2="18.796" width="0.4064" layer="1"/>
+<wire x1="3.32" y1="27.432" x2="4.826" y2="27.432" width="0.4064" layer="1"/>
 </signal>
 <signal name="+5V/1">
 <contactref element="SENSOR" pad="3"/>
@@ -2389,11 +2431,11 @@ Covered vias can be set in Masks (Limit).
 <wire x1="10.922" y1="26.289" x2="11.684" y2="25.527" width="0.1524" layer="16"/>
 <wire x1="11.684" y1="25.527" x2="12.192" y2="25.527" width="0.1524" layer="16"/>
 <wire x1="12.192" y1="25.527" x2="12.827" y2="24.892" width="0.1524" layer="16"/>
-<wire x1="12.827" y1="24.892" x2="12.827" y2="23.749" width="0.1524" layer="16"/>
-<wire x1="12.827" y1="23.749" x2="13.081" y2="23.495" width="0.1524" layer="16"/>
-<via x="13.081" y="23.495" extent="1-16" drill="0.3048"/>
-<wire x1="13.081" y1="23.495" x2="13.208" y2="23.368" width="0.1524" layer="1"/>
-<wire x1="13.208" y1="23.368" x2="16.637" y2="23.368" width="0.1524" layer="1"/>
+<wire x1="12.827" y1="24.892" x2="12.827" y2="23.876" width="0.1524" layer="16"/>
+<wire x1="12.827" y1="23.876" x2="13.081" y2="23.622" width="0.1524" layer="16"/>
+<via x="13.081" y="23.622" extent="1-16" drill="0.3048"/>
+<wire x1="13.081" y1="23.622" x2="13.335" y2="23.368" width="0.1524" layer="1"/>
+<wire x1="13.335" y1="23.368" x2="16.637" y2="23.368" width="0.1524" layer="1"/>
 <wire x1="16.637" y1="23.368" x2="17.339" y2="24.07" width="0.1524" layer="1"/>
 <wire x1="17.339" y1="24.07" x2="17.339" y2="25.562" width="0.1524" layer="1"/>
 <wire x1="10.16" y1="30.861" x2="11.938" y2="32.639" width="0.1524" layer="16"/>
@@ -2455,12 +2497,12 @@ Covered vias can be set in Masks (Limit).
 <wire x1="11.557" y1="25.146" x2="12.065" y2="25.146" width="0.1524" layer="16"/>
 <wire x1="12.065" y1="25.146" x2="12.446" y2="24.765" width="0.1524" layer="16"/>
 <wire x1="12.446" y1="24.765" x2="12.446" y2="23.876" width="0.1524" layer="16"/>
-<wire x1="12.446" y1="23.876" x2="11.938" y2="23.368" width="0.1524" layer="16"/>
-<via x="11.938" y="23.368" extent="1-16" drill="0.3048"/>
-<wire x1="17.526" y1="22.86" x2="18.228" y2="23.562" width="0.1524" layer="1"/>
+<wire x1="12.446" y1="23.876" x2="11.811" y2="23.241" width="0.1524" layer="16"/>
+<via x="11.811" y="23.241" extent="1-16" drill="0.3048"/>
+<wire x1="17.399" y1="22.733" x2="18.228" y2="23.562" width="0.1524" layer="1"/>
 <wire x1="18.228" y1="23.562" x2="19.339" y2="23.562" width="0.1524" layer="1"/>
-<wire x1="17.526" y1="22.86" x2="12.446" y2="22.86" width="0.1524" layer="1"/>
-<wire x1="12.446" y1="22.86" x2="11.938" y2="23.368" width="0.1524" layer="1"/>
+<wire x1="17.399" y1="22.733" x2="12.319" y2="22.733" width="0.1524" layer="1"/>
+<wire x1="12.319" y1="22.733" x2="11.811" y2="23.241" width="0.1524" layer="1"/>
 </signal>
 <signal name="+3V3">
 <contactref element="U3" pad="3"/>
@@ -2727,17 +2769,17 @@ Covered vias can be set in Masks (Limit).
 <contactref element="USB" pad="2"/>
 <contactref element="U4" pad="44"/>
 <wire x1="4.125" y1="17.414" x2="4.14" y2="17.399" width="0.1524" layer="1"/>
-<wire x1="4.14" y1="17.399" x2="5.207" y2="17.399" width="0.1524" layer="1"/>
-<wire x1="5.207" y1="17.399" x2="5.87" y2="18.062" width="0.1524" layer="1"/>
-<wire x1="5.87" y1="18.062" x2="7.839" y2="18.062" width="0.1524" layer="1"/>
+<wire x1="4.14" y1="17.399" x2="5.08" y2="17.399" width="0.1524" layer="1"/>
+<wire x1="5.08" y1="17.399" x2="5.743" y2="18.062" width="0.1524" layer="1"/>
+<wire x1="5.743" y1="18.062" x2="7.839" y2="18.062" width="0.1524" layer="1"/>
 </signal>
 <signal name="USB_DP">
 <contactref element="USB" pad="3"/>
 <contactref element="U4" pad="45"/>
 <wire x1="7.803" y1="17.526" x2="7.839" y2="17.562" width="0.1524" layer="1"/>
-<wire x1="4.125" y1="16.764" x2="5.207" y2="16.764" width="0.1524" layer="1"/>
-<wire x1="5.207" y1="16.764" x2="6.005" y2="17.562" width="0.1524" layer="1"/>
-<wire x1="6.005" y1="17.562" x2="7.839" y2="17.562" width="0.1524" layer="1"/>
+<wire x1="4.125" y1="16.764" x2="4.953" y2="16.764" width="0.1524" layer="1"/>
+<wire x1="4.953" y1="16.764" x2="5.751" y2="17.562" width="0.1524" layer="1"/>
+<wire x1="5.751" y1="17.562" x2="7.839" y2="17.562" width="0.1524" layer="1"/>
 </signal>
 <signal name="CANTX">
 <contactref element="U3" pad="1"/>
@@ -3239,11 +3281,11 @@ Covered vias can be set in Masks (Limit).
 <via x="11.938" y="26.924" extent="1-16" drill="0.3048"/>
 <via x="11.938" y="28.321" extent="1-16" drill="0.3048"/>
 <via x="18.288" y="25.908" extent="1-16" drill="0.3048"/>
-<via x="17.272" y="21.463" extent="1-16" drill="0.3048"/>
+<via x="16.637" y="21.082" extent="1-16" drill="0.3048"/>
 <via x="5.969" y="12.827" extent="1-16" drill="0.3048"/>
 <via x="8.89" y="13.843" extent="1-16" drill="0.3048"/>
 <via x="18.161" y="24.384" extent="1-16" drill="0.3048"/>
-<via x="20.574" y="24.384" extent="1-16" drill="0.3048"/>
+<via x="27.559" y="27.686" extent="1-16" drill="0.3048"/>
 <via x="17.907" y="28.448" extent="1-16" drill="0.3048"/>
 <wire x1="17.11" y1="27.178" x2="16.983" y2="26.762" width="0.254" layer="1"/>
 <wire x1="16.983" y1="26.762" x2="16.839" y2="26.618" width="0.254" layer="1"/>
@@ -3261,9 +3303,15 @@ Covered vias can be set in Masks (Limit).
 <via x="15.748" y="6.604" extent="1-16" drill="0.3048"/>
 <via x="8.509" y="3.556" extent="1-16" drill="0.3048"/>
 <via x="25.527" y="3.683" extent="1-16" drill="0.3048"/>
-<contactref element="G" pad="C"/>
-<contactref element="B" pad="C"/>
-<contactref element="R" pad="C"/>
+<contactref element="P" pad="C"/>
+<contactref element="A" pad="C"/>
+<contactref element="E" pad="C"/>
+<via x="9.398" y="18.542" extent="1-16" drill="0.3048"/>
+<via x="7.366" y="29.718" extent="1-16" drill="0.3048"/>
+<via x="15.494" y="35.179" extent="1-16" drill="0.3048"/>
+<via x="24.892" y="43.561" extent="1-16" drill="0.3048"/>
+<via x="26.797" y="37.465" extent="1-16" drill="0.3048"/>
+<via x="10.541" y="23.241" extent="1-16" drill="0.3048"/>
 </signal>
 <signal name="N$12">
 <contactref element="U2" pad="12"/>
@@ -3404,16 +3452,16 @@ Covered vias can be set in Masks (Limit).
 </signal>
 <signal name="N$15">
 <contactref element="R6" pad="1"/>
-<contactref element="G" pad="A"/>
+<contactref element="P" pad="A"/>
 <wire x1="2.655" y1="25.527" x2="3.795" y2="25.527" width="0.1524" layer="1"/>
 </signal>
 <signal name="N$18">
 <contactref element="R7" pad="1"/>
-<contactref element="B" pad="A"/>
+<contactref element="A" pad="A"/>
 <wire x1="2.655" y1="24.13" x2="3.795" y2="24.13" width="0.1524" layer="1"/>
 </signal>
 <signal name="N$19">
-<contactref element="R" pad="A"/>
+<contactref element="E" pad="A"/>
 <contactref element="R8" pad="1"/>
 <wire x1="2.655" y1="22.733" x2="3.795" y2="22.733" width="0.1524" layer="1"/>
 </signal>
