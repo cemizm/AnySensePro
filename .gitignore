@@ -30,3 +30,11 @@
 
 # Debug files
 *.dSYM/
+
+
+# Eagle files
+*.b\#*
+*.s\#*
+
+# System files
+.DS_Store
