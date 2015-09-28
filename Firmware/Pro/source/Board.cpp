@@ -7,59 +7,122 @@
 
 #include "Board.h"
 #include <Interrupt.h>
-#include <BLEDevice.h>
 
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/flash.h>
-
-namespace
-{
-
-const clock_scale_t sysclock = {
-RCC_CFGR_PLLMUL_PLL_IN_CLK_X16,
-RCC_CFGR_PLLSRC_HSI_DIV2,
-FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY_2WS,
-RCC_CFGR_HPRE_DIV_NONE,
-RCC_CFGR_PPRE1_DIV_2,
-RCC_CFGR_PPRE2_DIV_NONE, 1, 32000000, 64000000, };
-
-}
+#include <libopencm3/stm32/can.h>
+#include <libopencm3/stm32/usb.h>
+#include <libopencm3/stm32/syscfg.h>
 
 namespace Board
 {
 
-HAL::Pin Led(GPIOA, RCC_GPIOA, GPIO5);
+HAL::Pin LedActivity(GPIOC, RCC_GPIOC, GPIO7);
+HAL::Pin LedError(GPIOC, RCC_GPIOC, GPIO8);
+
+HAL::Pin USB_DP(GPIOA, RCC_GPIOA, GPIO11);
+HAL::Pin USB_DM(GPIOA, RCC_GPIOA, GPIO12);
+HAL::Pin USB_Disconnect(GPIOA, RCC_GPIOA, GPIO10);
+HAL::Pin USB_Sense(GPIOA, RCC_GPIOA, GPIO9, EXTI19, NVIC_EXTI9_5_IRQ);
+
+HAL::USB USB(RCC_USB, rcc_usb_prescale_1_5, USB_DP, USB_DM, GPIO_AF14, USB_Sense, USB_Disconnect, &stm32f103_usb_driver, NVIC_USB_LP_IRQ, NVIC_USB_HP_IRQ, NVIC_USB_WKUP_IRQ);
+
+namespace FC
+{
+
+HAL::Pin RX(GPIOB, RCC_GPIOB, GPIO8);
+HAL::Pin TX(GPIOB, RCC_GPIOB, GPIO9);
+
+HAL::CAN CAN(CAN1, RCC_CAN, TX, RX, GPIO_AF9, NVIC_USB_HP_CAN1_TX_IRQ, NVIC_USB_LP_CAN1_RX0_IRQ, NVIC_CAN1_RX1_IRQ);
+}
+
+void InitClock()
+{
+	/* Enable internal high-speed oscillator. */
+	rcc_osc_on(HSI);
+	rcc_wait_for_osc_ready(HSI);
+
+	/* Select HSI as SYSCLK source. */
+	rcc_set_sysclk_source(RCC_CFGR_SW_HSI);
+
+	/* Enable external high-speed oscillator 8MHz. */
+	rcc_osc_on(HSE);
+	rcc_wait_for_osc_ready(HSE);
+
+	rcc_set_hpre(RCC_CFGR_HPRE_DIV_NONE);
+	rcc_set_ppre1(RCC_CFGR_PPRE1_DIV_2);
+	rcc_set_ppre2(RCC_CFGR_PPRE2_DIV_NONE);
+
+	rcc_set_main_pll_hsi(RCC_CFGR_PLLMUL_PLL_IN_CLK_X9);
+	rcc_set_pll_source(RCC_CFGR_PLLSRC_HSE_PREDIV);
+
+	/* Enable PLL oscillator and wait for it to stabilize. */
+	rcc_osc_on(PLL);
+	rcc_wait_for_osc_ready(PLL);
+
+	/* Configure flash settings. */
+	flash_set_ws(FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY_2WS);
+
+	/* Select PLL as SYSCLK source. */
+	rcc_set_sysclk_source(RCC_CFGR_SW_PLL);
+
+	/* Wait for PLL clock to be selected. */
+	rcc_wait_for_sysclk_status(PLL);
+
+	/* Set the peripheral clock frequencies used. */
+	rcc_apb1_frequency = 36000000;
+	rcc_apb2_frequency = 72000000;
+
+	/* Disable internal high-speed oscillator. */
+	rcc_osc_off(HSI);
+}
 
 void SystemInit()
 {
-	rcc_clock_setup_hsi(&sysclock);
+
+	InitClock();
+
+	rcc_periph_clock_enable(rcc_periph_clken::RCC_SYSCFG);
+
+	SYSCFG_MEMRM |= 1 << 5; //USB Remap
 }
 
-namespace BLE
+}
+
+extern "C" void can1_rx1_isr()
 {
-
-HAL::Pin MISO(GPIOA, RCC_GPIOA, GPIO6);
-HAL::Pin MOSI(GPIOA, RCC_GPIOA, GPIO7);
-HAL::Pin SCK(GPIOB, RCC_GPIOB, GPIO3);
-
-HAL::Pin IRQ(GPIOA, RCC_GPIOA, GPIO0, EXTI0, NVIC_EXTI0_IRQ);
-HAL::Pin CSN(GPIOA, RCC_GPIOA, GPIO1);
-HAL::Pin RSTN(GPIOA, RCC_GPIOA, GPIO8);
-
-HAL::DMA DMA_RX(DMA1, DMA_CHANNEL2, NVIC_DMA1_CHANNEL2_IRQ, RCC_DMA1);
-HAL::DMA DMA_TX(DMA1, DMA_CHANNEL3, NVIC_DMA1_CHANNEL3_IRQ, RCC_DMA1);
-
-HAL::SPI SPI(SPI1, RCC_SPI1, MOSI, MISO, SCK, GPIO_AF5, DMA_RX, DMA_TX);
-
-BlueNRG::BLEConfig Config = { { 0x14, 0x24, 0x56, 0xF2, 0x65, 0x34 }, "AnySense Pro", "AnySense" };
-
+	HAL::InterruptRegistry.HandleISR(NVIC_CAN1_RX1_IRQ);
 }
 
-}
-
-extern "C" void exti0_isr()
+extern "C" void usb_hp_can1_tx_isr()
 {
-	HAL::InterruptRegistry.HandleISR(NVIC_EXTI0_IRQ);
+	HAL::InterruptRegistry.HandleISR(NVIC_USB_HP_CAN1_TX_IRQ);
+}
+
+extern "C" void usb_lp_can1_rx0_isr()
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_USB_LP_CAN1_RX0_IRQ);
+}
+
+extern "C" void usb_hp_isr()
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_USB_HP_IRQ);
+}
+
+extern "C" void usb_lp_isr()
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_USB_LP_IRQ);
+}
+
+extern "C" void usb_wkup_isr()
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_USB_WKUP_IRQ);
+}
+
+
+extern "C" void exti4_isr()
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_EXTI4_IRQ);
 }
 
 extern "C" void dma1_channel2_isr()

@@ -11,28 +11,27 @@
 #include "Pin.h"
 #include "SPI.h"
 #include "DMA.h"
+#include "CAN.h"
+#include "USB.h"
 #include <BLEDevice.h>
-
-
 
 namespace Board
 {
 
 extern void SystemInit();
 
-extern HAL::Pin Led;
+extern HAL::Pin LedActivity;
+extern HAL::Pin LedError;
 
-namespace BLE
+extern HAL::USB USB;
+
+namespace Telemetry
 {
+}
 
-extern HAL::Pin IRQ;
-extern HAL::Pin CSN;
-extern HAL::Pin RSTN;
-
-extern HAL::SPI SPI;
-
-extern BlueNRG::BLEConfig Config;
-
+namespace FC
+{
+extern HAL::CAN CAN;
 }
 
 }

@@ -48,7 +48,7 @@
 #define  scmRTOS_TARGET_CFG_H
 
 // Define SysTick clock frequency and its interrupt rate in Hz.
-#define SYSTICKFREQ     64000000
+#define SYSTICKFREQ     72000000
 #define SYSTICKINTRATE  10000
 
 #define delay_us(us) us

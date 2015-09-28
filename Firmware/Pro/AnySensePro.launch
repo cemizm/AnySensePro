@@ -16,7 +16,7 @@
 <stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.openocd.gdbServerExecutable" value="${openocd_path}/${openocd_executable}"/>
 <intAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.openocd.gdbServerGdbPortNumber" value="3333"/>
 <stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.openocd.gdbServerLog" value=""/>
-<stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.openocd.gdbServerOther" value="-f board/st_nucleo_f3.cfg"/>
+<stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.openocd.gdbServerOther" value="-f board/AnySensePro.cfg"/>
 <intAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.openocd.gdbServerTelnetPortNumber" value="4444"/>
 <stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.openocd.otherInitCommands" value=""/>
 <stringAttribute key="ilg.gnuarmeclipse.debug.gdbjtag.openocd.otherRunCommands" value=""/>
@@ -63,5 +63,5 @@
 </listAttribute>
 <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;memoryBlockExpressionList context=&quot;Context string&quot;/&gt;&#10;"/>
 <stringAttribute key="process_factory_id" value="org.eclipse.cdt.dsf.gdb.GdbProcessFactory"/>
-<stringAttribute key="saved_expressions&lt;seperator&gt;Unknown" value="&amp;raw_io-&gt;homeLat,&amp;((struct msg_raw_io*) &amp;channel-&gt;msg.bytes)-&gt;homeLat,((struct msg_raw_io*) &amp;channel-&gt;msg.bytes)-&gt;homeLat,&amp;(((struct msg_raw_io*) &amp;channel-&gt;msg.bytes)-&gt;homeLat),( (struct msg_raw_io*) &amp;channel-&gt;msg.bytes)-&gt;homeLat,&amp;( (struct msg_raw_io*) &amp;channel-&gt;msg.bytes)-&gt;homeLat,session-&gt;slotData[slot],&amp;header,session,0x20010000,&amp;packet,0x200004bc,item,&amp;transaction.MasterPayload,queueItems"/>
+<stringAttribute key="saved_expressions&lt;seperator&gt;Unknown" value="&amp;((struct msg_raw_io*) &amp;channel-&gt;msg.bytes)-&gt;homeLat,((struct msg_raw_io*) &amp;channel-&gt;msg.bytes)-&gt;homeLat,&amp;(((struct msg_raw_io*) &amp;channel-&gt;msg.bytes)-&gt;homeLat),( (struct msg_raw_io*) &amp;channel-&gt;msg.bytes)-&gt;homeLat,&amp;( (struct msg_raw_io*) &amp;channel-&gt;msg.bytes)-&gt;homeLat,session-&gt;slotData[slot],&amp;header,session,0x20010000,&amp;packet,0x200004bc,item,&amp;transaction.MasterPayload,queueItems,USB_ISTR_REG"/>
 </launchConfiguration>
