@@ -24,7 +24,7 @@ public:
 	{
 	}
 
-	void Init();
+	HCIGenericStatusCode Init();
 };
 
 } /* namespace BlueNRG */

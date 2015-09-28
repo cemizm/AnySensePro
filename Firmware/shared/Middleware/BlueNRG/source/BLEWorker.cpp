@@ -6,7 +6,6 @@
  */
 
 #include "BLEWorker.h"
-
 namespace Application
 {
 
@@ -14,7 +13,12 @@ void BLEWorker::Run()
 {
 	m_device.Init();
 
-	m_device.GATT.Init();
+	if (m_device.GATT.Init() != BlueNRG::HCIGenericStatusCode::Success)
+		return;
+
+	if (m_device.GAP.Init(BlueNRG::GAPRole::Peripheral, &m_HGAPService, &m_HDeviceNameChar, &m_HAppearanceChar)
+			!= BlueNRG::HCIGenericStatusCode::Success)
+		return;
 
 	uint8_t packetType = 0;
 

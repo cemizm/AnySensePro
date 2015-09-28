@@ -16,6 +16,9 @@ namespace Application
 class BLEWorker
 {
 	BlueNRG::BLEDevice& m_device;
+	uint16_t m_HGAPService = 0;
+	uint16_t m_HDeviceNameChar = 0;
+	uint16_t m_HAppearanceChar = 0;
 public:
 	BLEWorker(BlueNRG::BLEDevice& device) :
 			m_device(device)

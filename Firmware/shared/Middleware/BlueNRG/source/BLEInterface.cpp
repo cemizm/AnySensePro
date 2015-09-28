@@ -42,8 +42,8 @@ RUNLOOP void BLEInterface::Run()
 
 BLETransactionStatus BLEInterface::XFerData()
 {
-	m_irq.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
-	m_irq.On();
+	//m_irq.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
+	//m_irq.On();
 
 	HAL::OSAL::Sleep(1);
 
@@ -76,7 +76,7 @@ BLETransactionStatus BLEInterface::XFerData()
 		return BLETransactionStatus::Timeout;
 	}
 
-	m_irq.ModeSetup(GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN);
+	//m_irq.ModeSetup(GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN);
 
 	m_spi.DisableClearAll();
 
@@ -119,10 +119,10 @@ BLETransactionStatus BLEInterface::XFerData()
 
 	if (transaction.MasterHeader.State == HCISPIState::Data_Receive)
 	{
-		/*
-		 if(m_dataHandler != NULL)
-		 m_dataHandler->OnDataReceived(transaction.MasterPayload, transaction.Size);
-		 */
+		if (m_handlers.dataHandler != NULL)
+		{
+			m_handlers.dataHandler->OnDataReceived(transaction.SlavePayload, transaction.Size);
+		}
 	}
 	else
 	{

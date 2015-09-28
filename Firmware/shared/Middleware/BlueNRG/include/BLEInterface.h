@@ -14,8 +14,6 @@
 #include "Interrupt.h"
 #include <Queue.h>
 
-#include "HCI.h"
-
 namespace
 {
 
@@ -67,12 +65,19 @@ struct SPITransaction
 class BLEDataHandler
 {
 public:
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 	virtual void OnDataReceived(uint8_t data[], uint16_t size)
 	{
 	}
 	virtual ~BLEDataHandler()
 	{
 	}
+#pragma GCC diagnostic pop
+};
+
+struct Handlers
+{
+	BLEDataHandler* dataHandler;
 };
 
 struct TXQueueItem
@@ -80,8 +85,6 @@ struct TXQueueItem
 	uint8_t data[MAX_TRANSACTION_SIZE];
 	uint16_t size;
 };
-
-
 
 class BLEInterface: public HAL::InterruptHandler
 {
@@ -98,18 +101,17 @@ private:
 	HAL::OSALEventFlag dmaDoneFlag;
 	uint8_t m_Timeout;
 
-
 	SPITransaction transaction;
 	BLETransactionStatus XFerData();
 
 	UTILS::Queue<TXQueueItem, 5> tx_queue;
 
-	//BLEDataHandler* m_dataHandler = NULL;
+	Handlers m_handlers;
 
 public:
 	BLEInterface(HAL::SPI& spi, HAL::Pin& csn, HAL::Pin& irq, HAL::Pin& rstn) :
 			m_spi(spi), m_csn(csn), m_irq(irq), m_rstn(rstn), gotWorkFlag(HAL::OSALEventFlag()), dmaDoneFlag(
-					HAL::OSALEventFlag()), m_Timeout(ACTIVEIRQTIMEOUT), transaction(SPITransaction()), tx_queue()
+					HAL::OSALEventFlag()), m_Timeout(ACTIVEIRQTIMEOUT), transaction(SPITransaction()), tx_queue(), m_handlers()
 	{
 	}
 
@@ -123,12 +125,11 @@ public:
 	void Disable();
 	void Reset();
 
-	/*
-	 void RegisterDataHandler(BLEDataHandler* dataHandler)
-	 {
-	 m_dataHandler = dataHandler;
-	 }
-	 */
+	void RegisterDataHandler(BLEDataHandler* dataHandler)
+	{
+		m_handlers.dataHandler = dataHandler;
+	}
+
 	virtual void ISR();
 
 	void Send(uint8_t data[], uint16_t size);

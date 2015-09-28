@@ -5,21 +5,26 @@
  *      Author: cem
  */
 
-#include <GATT.h>
+#include "GATT.h"
 
-namespace BlueNRG
-{
+const uint16_t OCF_GATT_INIT = 0x00;
 
 enum GATTCommand
 {
 	Init = 0x0101,
 };
 
-const uint16_t OCF_GATT_INIT = 0x00;
-
-void GATTInterface::Init()
+namespace BlueNRG
 {
-	m_HCInterface.SendCommand(OpCodeOGF::VendorSpecific, GATTCommand::Init, NULL, 0);
+
+
+HCIGenericStatusCode GATTInterface::Init()
+{
+	HCIEvent event;
+	if (m_HCInterface.SendCommand(OpCodeOGF::VendorSpecific, GATTCommand::Init, NULL, 0, &event) < 0)
+		return HCIGenericStatusCode::Timeout;
+
+	return (HCIGenericStatusCode) event.Data.Status.StatusCode;
 }
 
 } /* namespace BlueNRG */

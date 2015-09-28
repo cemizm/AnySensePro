@@ -20,7 +20,7 @@ void BLEDevice::Init()
 	m_bleInterface.Enable();
 }
 
-RUNLOOP void BLEDevice::Run()
+void BLEDevice::Run()
 {
 	m_bleInterface.Run();
 }

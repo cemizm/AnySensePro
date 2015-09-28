@@ -12,7 +12,7 @@
 
 #include "HCI.h"
 #include "GATT.h"
-
+#include "GAP.h"
 
 namespace BlueNRG
 {
@@ -32,7 +32,7 @@ private:
 	BLEInterface m_bleInterface;
 public:
 	BLEDevice(BLEConfig& config, HAL::SPI& spi, HAL::Pin& csn, HAL::Pin& irq, HAL::Pin& rstn) :
-			m_bleConfig(config), m_bleInterface(spi, csn, irq, rstn), HCI(m_bleInterface), GATT(HCI)
+			m_bleConfig(config), m_bleInterface(spi, csn, irq, rstn), HCI(m_bleInterface), GATT(HCI), GAP(HCI)
 	{
 	}
 
@@ -41,6 +41,7 @@ public:
 
 	HCInterface HCI;
 	GATTInterface GATT;
+	GAPInterface GAP;
 
 };
 
