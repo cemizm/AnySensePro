@@ -10,7 +10,6 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <stdlib.h>
 
 namespace UTILS
 {
@@ -20,59 +19,56 @@ class Queue
 {
 private:
 	T queueItems[queueSize];
-	int16_t front;
-	int16_t rear;
+	uint16_t head;
+	uint16_t tail;
+	uint16_t count;
 
 public:
 	Queue() :
-			front(0), rear(0)
+			queueItems(), head(0), tail(0), count(0)
 	{
 	}
 
 	T* Enqueue()
 	{
-		// Don't allow the queue to grow more
-		// than MAX_SIZE - 1
-		if (Size() == queueSize - 1)
+		if (count == queueSize)
 			return NULL;
 
-		T item = queueItems[rear];
+		T* item = &queueItems[head];
 
-		rear = ++rear % queueSize;
+		head = (head + 1) % queueSize;
 
-		return &item;
+		count++;
+
+		return item;
 	}
 
 	T* Dequeue()
 	{
-		if (IsEmpty())
+		if (count == 0)
 			return NULL;
 
-		T* ret = &queueItems[front];
+		T* ret = &queueItems[tail];
 
-		// MOD is used so that front indicator
-		// can wrap around
-		front = ++front % queueSize;
+		tail = (tail + 1) % queueSize;
+
+		count--;
 
 		return ret;
 
 	}
+
 	T* Peek()
 	{
-		if (IsEmpty())
+		if (count == 0)
 			return NULL;
 
-		return &queueItems[front];
-	}
-
-	uint8_t Size()
-	{
-		return abs(rear - front);
+		return &queueItems[tail];
 	}
 
 	uint8_t IsEmpty()
 	{
-		return (front == rear);
+		return count == 0 ? 1 : 0;
 	}
 };
 
