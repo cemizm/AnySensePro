@@ -17,7 +17,6 @@ namespace HAL
 
 
 using OSALPriority = OS::TPriority;
-using OSALStackSize = size_t;
 using OSALISRSupport = OS::TISRW;
 using OSALEventFlag = OS::TEventFlag;
 
@@ -37,6 +36,10 @@ public:
 		OS::TBaseProcess::sleep(delay_sec(second));
 	}
 
+	static uint_fast32_t GetTime()
+	{
+		return OS::get_tick_count();
+	}
 };
 
 }

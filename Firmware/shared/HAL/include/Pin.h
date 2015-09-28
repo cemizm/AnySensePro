@@ -21,10 +21,10 @@ namespace HAL
 class Pin
 {
 private:
-	uint32_t m_gpio_port;
-	rcc_periph_clken m_gpio_clock;
-	uint16_t m_pin_no;
-	uint32_t m_extis;
+	const uint32_t m_gpio_port;
+	const rcc_periph_clken m_gpio_clock;
+	const uint16_t m_pin_no;
+	const uint32_t m_extis;
 public:
 	const uint8_t EXTI_NVIC_IRQ;
 
@@ -96,6 +96,10 @@ public:
 	inline void EXTI_Enable()
 	{
 		exti_enable_request(m_extis);
+	}
+	inline void EXTI_Disable()
+	{
+		exti_disable_request(m_extis);
 	}
 }
 ;
