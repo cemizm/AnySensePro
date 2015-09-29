@@ -20,9 +20,9 @@ class DJIController
 {
 private:
 	HAL::CAN& m_can;
-	Libs::SensorStore& m_SensorStore;
+	SensorStore& m_SensorStore;
 public:
-	DJIController(HAL::CAN& can, Libs::SensorStore& sensorStore) :
+	DJIController(HAL::CAN& can, SensorStore& sensorStore) :
 			m_can(can), m_SensorStore(sensorStore)
 	{
 

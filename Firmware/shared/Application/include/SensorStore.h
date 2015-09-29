@@ -13,7 +13,7 @@
 const uint8_t MAXRCCHANNELS = 16;
 const uint8_t MAXCELLS = 24;
 
-namespace Libs
+namespace Application
 {
 
 enum GPSFixType

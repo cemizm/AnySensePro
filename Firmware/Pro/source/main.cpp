@@ -5,6 +5,12 @@
  *      Author: cem
  */
 
+#include <SensorStore.h>
+
+#include <StorageManager.h>
+#include <StorageSDSPI.h>
+#include <StorageFlashSPI.h>
+
 #include <USBDevice.h>
 #include <USBInterface.h>
 #include <USBCDCInterface.h>
@@ -17,15 +23,20 @@
 
 #include "Board.h"
 
+#include "ff.h"
+
+Application::SensorStore sensorStore;
+
+Storage::StorageSDSPI sdStorage(Board::MicroSD::SPI, Board::MicroSD::CSN, Board::MicroSD::CD);
+Storage::StorageFlashSPI flashStorage(Board::Ram::SPI, Board::Ram::CSN);
+
 USB::USBCDCInterface iFace;
 USB::USBMSCInterface iFace2;
 USB::USBInterface* iFaces[] = { &iFace, &iFace2 };
 
 USB::USBDevice usb_device(Board::USB, iFaces, 1);
 
-Libs::SensorStore sensorStore;
 Application::DJIController djiController(Board::FC::CAN, sensorStore);
-
 
 // Process types
 typedef OS::process<OS::pr0, 512> TProc0;
@@ -39,11 +50,23 @@ TProc1 Proc1;
 TProc2 Proc2;
 TProc3 Proc3;
 
+DWORD get_fattime(void)
+{
+	return 0;
+}
+
+FATFS fatFs;
+FIL file;
+
 int main()
 {
 	Board::SystemInit();
-
 	usb_device.Init();
+
+	Storage::Instance.RegisterStorage(Board::Storages::MicroSd, &sdStorage);
+	Storage::Instance.RegisterStorage(Board::Storages::Flash, &flashStorage);
+	f_mount(&fatFs, "0:", 0);
+	f_mount(&fatFs, "1:", 0);
 
 	OS::run();
 }
@@ -53,32 +76,34 @@ namespace OS
 template<>
 OS_PROCESS void TProc0::exec()
 {
-	djiController.Run();
+	sleep();
 }
 
 template<>
 OS_PROCESS void TProc1::exec()
 {
-	//blewoker.Run();
+	f_open(&file, "0:test.txt", FA_WRITE | FA_CREATE_ALWAYS);
 	sleep();
 }
 
 template<>
 OS_PROCESS void TProc2::exec()
 {
-	Board::LedActivity.PowerUp();
-	Board::LedActivity.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
-
 	Board::LedError.PowerUp();
 	Board::LedError.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
+	Board::LedError.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ);
 
-	Board::LedError.On();
+	Board::LedActivity.PowerUp();
+	Board::LedActivity.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
+	Board::LedActivity.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ);
+
+	Board::LedError.Toggle();
+
 	for (;;)
 	{
 		Board::LedError.Toggle();
 		Board::LedActivity.Toggle();
 		HAL::OSAL::SleepMS(20);
-
 	}
 }
 
@@ -87,4 +112,5 @@ OS_PROCESS void TProc3::exec()
 {
 	sleep();
 }
+
 }

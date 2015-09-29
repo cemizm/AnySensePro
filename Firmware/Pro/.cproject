@@ -67,8 +67,9 @@
 									<listOptionValue builtIn="false" value="../../shared/scmRTOS/Extensions"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/BlueNRG/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
-									<listOptionValue builtIn="false" value="../../shared/libs/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1723522377" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -90,8 +91,9 @@
 									<listOptionValue builtIn="false" value="../../shared/scmRTOS/Extensions"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/BlueNRG/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
-									<listOptionValue builtIn="false" value="../../shared/libs/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1766875594" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -117,8 +119,9 @@
 									<listOptionValue builtIn="false" value="../../shared/scmRTOS/Extensions"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/BlueNRG/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
-									<listOptionValue builtIn="false" value="../../shared/libs/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.93125110" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>
@@ -163,7 +166,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="shared"/>
+						<entry excluding="Middleware/FatFs/source/option/ccsbcs.c|Middleware/BlueNRG" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="shared"/>
 						<entry excluding="cdcacm.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 					</sourceEntries>
 				</configuration>
@@ -235,8 +238,9 @@
 									<listOptionValue builtIn="false" value="../../shared/scmRTOS/Extensions"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/BlueNRG/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
-									<listOptionValue builtIn="false" value="../../shared/libs/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.534347944" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -256,8 +260,9 @@
 									<listOptionValue builtIn="false" value="../../shared/scmRTOS/Extensions"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/BlueNRG/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
-									<listOptionValue builtIn="false" value="../../shared/libs/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1808653940" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -281,8 +286,9 @@
 									<listOptionValue builtIn="false" value="../../shared/scmRTOS/Extensions"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/BlueNRG/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
-									<listOptionValue builtIn="false" value="../../shared/libs/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.430344351" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>
@@ -325,7 +331,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="shared"/>
+						<entry excluding="Middleware/FatFs/source/option/ccsbcs.c|Middleware/BlueNRG" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="shared"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="source"/>
 					</sourceEntries>
 				</configuration>

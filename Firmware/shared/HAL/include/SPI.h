@@ -14,7 +14,8 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 
-#include "dma.h"
+#include "Pin.h"
+#include "DMA.h"
 
 namespace HAL
 {
@@ -54,18 +55,18 @@ public:
 		rcc_periph_clock_enable(SPIClock);
 
 		MOSI.PowerUp();
-		MOSI.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_NONE);
-		MOSI.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ);
+		MOSI.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_PULLUP);
+		MOSI.SetOutputOptions(GPIO_OTYPE_OD, GPIO_OSPEED_100MHZ);
 		MOSI.Alternate(alt_func);
 
 		MISO.PowerUp();
-		MISO.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_PULLDOWN);
-		MISO.SetOutputOptions(GPIO_OTYPE_OD, GPIO_OSPEED_100MHZ);
+		MISO.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_PULLUP);
+		MISO.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ);
 		MISO.Alternate(alt_func);
 
 		SCK.PowerUp();
-		SCK.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_NONE);
-		SCK.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ);
+		SCK.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_PULLUP);
+		SCK.SetOutputOptions(GPIO_OTYPE_OD, GPIO_OSPEED_100MHZ);
 		SCK.Alternate(alt_func);
 
 		spi_init_master(SPIx, baudrate, cpol, cpha, dff, lsbfirst);
@@ -91,10 +92,24 @@ public:
 	{
 		spi_reset(SPIx);
 	}
-
-	inline uint16_t Xfer(uint16_t data)
+	/*
+	 inline uint16_t Xfer(uint16_t data)
+	 {
+	 return spi_xfer(SPIx, data);
+	 }
+	 */
+	inline uint16_t Xfer8(uint8_t data)
 	{
-		return spi_xfer(SPIx, data);
+		while (!(SPI_SR(SPIx) & SPI_SR_TXE))
+			;
+
+		SPI_DR8(SPIx) = data;
+
+		/* Wait for transfer finished. */
+		while (!(SPI_SR(SPIx) & SPI_SR_RXNE))
+			;
+
+		return SPI_DR8(SPIx);
 	}
 
 	inline void Write(uint16_t data)
@@ -340,6 +355,11 @@ public:
 	inline uint16_t GetFlag(uint16_t spi_sr)
 	{
 		return (SPI_SR(SPIx) & spi_sr);
+	}
+
+	inline uint8_t GetTXEmpty()
+	{
+		return (SPI_SR(SPIx) & SPI_SR_TXE) ? 1 : 0;
 	}
 
 	inline void EnableSPIMode()

@@ -18,12 +18,34 @@
 namespace Board
 {
 
+enum Storages
+{
+	Flash = 0, MicroSd = 1,
+};
+
 extern void SystemInit();
 
 extern HAL::Pin LedActivity;
 extern HAL::Pin LedError;
 
 extern HAL::USB USB;
+
+namespace MicroSD
+{
+
+extern HAL::Pin CD;
+extern HAL::Pin CSN;
+extern HAL::SPI SPI;
+
+}
+
+namespace Ram
+{
+
+extern HAL::Pin CSN;
+extern HAL::SPI SPI;
+
+}
 
 namespace Telemetry
 {

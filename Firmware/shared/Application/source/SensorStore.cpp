@@ -7,7 +7,7 @@
 
 #include <SensorStore.h>
 
-namespace LIBS
+namespace Application
 {
 
 

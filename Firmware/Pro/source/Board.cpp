@@ -25,7 +25,40 @@ HAL::Pin USB_DM(GPIOA, RCC_GPIOA, GPIO12);
 HAL::Pin USB_Disconnect(GPIOA, RCC_GPIOA, GPIO10);
 HAL::Pin USB_Sense(GPIOA, RCC_GPIOA, GPIO9, EXTI19, NVIC_EXTI9_5_IRQ);
 
-HAL::USB USB(RCC_USB, rcc_usb_prescale_1_5, USB_DP, USB_DM, GPIO_AF14, USB_Sense, USB_Disconnect, &stm32f103_usb_driver, NVIC_USB_LP_IRQ, NVIC_USB_HP_IRQ, NVIC_USB_WKUP_IRQ);
+HAL::USB USB(RCC_USB, rcc_usb_prescale_1_5, USB_DP, USB_DM, GPIO_AF14, USB_Sense, USB_Disconnect, &stm32f103_usb_driver,
+NVIC_USB_LP_IRQ, NVIC_USB_HP_IRQ, NVIC_USB_WKUP_IRQ);
+
+namespace MicroSD
+{
+
+HAL::Pin CD(GPIOC, RCC_GPIOC, GPIO6);
+
+HAL::Pin MOSI(GPIOB, RCC_GPIOB, GPIO15);
+HAL::Pin MISO(GPIOB, RCC_GPIOB, GPIO14);
+HAL::Pin SCK(GPIOB, RCC_GPIOB, GPIO13);
+HAL::Pin CSN(GPIOB, RCC_GPIOB, GPIO12);
+
+HAL::DMA RX(DMA1, DMA_CHANNEL4, NVIC_DMA1_CHANNEL4_IRQ, rcc_periph_clken::RCC_DMA1);
+HAL::DMA TX(DMA1, DMA_CHANNEL5, NVIC_DMA1_CHANNEL5_IRQ, rcc_periph_clken::RCC_DMA1);
+
+HAL::SPI SPI(SPI2, rcc_periph_clken::RCC_SPI2, MOSI, MISO, SCK, GPIO_AF5, RX, TX);
+
+}
+
+namespace Ram
+{
+
+HAL::Pin MOSI(GPIOB, RCC_GPIOB, GPIO5);
+HAL::Pin MISO(GPIOB, RCC_GPIOB, GPIO4);
+HAL::Pin SCK(GPIOB, RCC_GPIOB, GPIO3);
+HAL::Pin CSN(GPIOA, RCC_GPIOA, GPIO15);
+
+HAL::DMA RX(DMA2, DMA_CHANNEL1, NVIC_DMA2_CHANNEL1_IRQ, rcc_periph_clken::RCC_DMA2);
+HAL::DMA TX(DMA2, DMA_CHANNEL2, NVIC_DMA2_CHANNEL2_IRQ, rcc_periph_clken::RCC_DMA2);
+
+HAL::SPI SPI(SPI3, rcc_periph_clken::RCC_SPI3, MOSI, MISO, SCK, GPIO_AF6, RX, TX);
+
+}
 
 namespace FC
 {
@@ -119,7 +152,6 @@ extern "C" void usb_wkup_isr()
 	HAL::InterruptRegistry.HandleISR(NVIC_USB_WKUP_IRQ);
 }
 
-
 extern "C" void exti4_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_EXTI4_IRQ);
@@ -133,4 +165,14 @@ extern "C" void dma1_channel2_isr()
 extern "C" void dma1_channel3_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL3_IRQ);
+}
+
+extern "C" void dma1_channel4_isr()
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL4_IRQ);
+}
+
+extern "C" void dma1_channel5_isr()
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL5_IRQ);
 }
