@@ -18,17 +18,16 @@
 
 #include <DJIController.h>
 
+#include <Stopwatch.h>
 #include <scmRTOS.h>
 #include <OSAL.h>
 
 #include "Board.h"
 
-#include "ff.h"
-
 Application::SensorStore sensorStore;
 
 Storage::StorageSDSPI sdStorage(Board::MicroSD::SPI, Board::MicroSD::CSN, Board::MicroSD::CD);
-Storage::StorageFlashSPI flashStorage(Board::Ram::SPI, Board::Ram::CSN);
+Storage::StorageFlashSPI flashStorage(Board::Flash::SPI, Board::Flash::CSN);
 
 USB::USBCDCInterface iFace;
 USB::USBMSCInterface iFace2;
@@ -40,7 +39,7 @@ Application::DJIController djiController(Board::FC::CAN, sensorStore);
 
 // Process types
 typedef OS::process<OS::pr0, 512> TProc0;
-typedef OS::process<OS::pr1, 512> TProc1;
+typedef OS::process<OS::pr1, 2048> TProc1;
 typedef OS::process<OS::pr2, 300> TProc2;
 typedef OS::process<OS::pr3, 300> TProc3;
 
@@ -55,18 +54,24 @@ DWORD get_fattime(void)
 	return 0;
 }
 
+#define BUFFER		2048
+#define F10MB		10485760/BUFFER
+#define F100MB		104857600/BUFFER
+
 FATFS fatFs;
 FIL file;
+char* content[BUFFER];
 
 int main()
 {
 	Board::SystemInit();
 	usb_device.Init();
 
-	Storage::Instance.RegisterStorage(Board::Storages::MicroSd, &sdStorage);
-	Storage::Instance.RegisterStorage(Board::Storages::Flash, &flashStorage);
-	f_mount(&fatFs, "0:", 0);
-	f_mount(&fatFs, "1:", 0);
+	Storage::Instance.RegisterStorage(Board::Storages::SDStorage, &sdStorage);
+	Storage::Instance.RegisterStorage(Board::Storages::FlashStorage, &flashStorage);
+
+	f_mount(&fatFs, "SD:", 0);
+	f_mount(&fatFs, "SPIFLASH:", 0);
 
 	OS::run();
 }
@@ -82,8 +87,93 @@ OS_PROCESS void TProc0::exec()
 template<>
 OS_PROCESS void TProc1::exec()
 {
-	f_open(&file, "0:test.txt", FA_WRITE | FA_CREATE_ALWAYS);
-	sleep();
+	Utils::Stopwatch sp;
+	uint32_t read = 0;
+	uint32_t written = 0;
+
+	volatile uint32_t stop[5] = { 0 };
+
+	FRESULT fr = FR_TIMEOUT;
+	for (;;)
+	{
+		//Format Disk
+		sp.Reset();
+		if (f_mkfs("SD:", 0, 0) == FR_OK)
+			f_setlabel("SD:AnyLogger");
+
+		if (stop[0] == 0)
+			stop[0] = sp.ElapsedTime();
+
+		stop[0] = (sp.ElapsedTime() + stop[0]) / 2;
+
+		//Write 10.485.760 Bytes
+		sp.Reset();
+		fr = f_open(&file, "SD:10.bin", FA_READ | FA_WRITE | FA_CREATE_ALWAYS);
+		if (fr == FR_OK)
+		{
+			for (uint32_t i = 0; (i < F10MB && fr == FR_OK); i++)
+			{
+				fr = f_write(&file, content, BUFFER, (UINT*) &written);
+			}
+
+			f_close(&file);
+		}
+
+		if (stop[1] == 0)
+			stop[1] = sp.ElapsedTime();
+		stop[1] = (sp.ElapsedTime() + stop[1]) / 2;
+
+		//Write 104.857.600 Bytes
+		sp.Reset();
+		fr = f_open(&file, "SD:100.bin", FA_READ | FA_WRITE | FA_CREATE_ALWAYS);
+		if (fr == FR_OK)
+		{
+			for (uint32_t i = 0; (i < F100MB && fr == FR_OK); i++)
+			{
+				fr = f_write(&file, content, BUFFER, (UINT*) &written);
+			}
+
+			f_close(&file);
+		}
+		if (stop[2] == 0)
+			stop[2] = sp.ElapsedTime();
+		stop[2] = (sp.ElapsedTime() + stop[2]) / 2;
+
+		//Read 10.485.760 Bytes
+		sp.Reset();
+		fr = f_open(&file, "SD:10.bin", FA_READ | FA_OPEN_EXISTING);
+		if (fr == FR_OK)
+		{
+			do
+			{
+				fr = f_read(&file, content, BUFFER, (UINT*) &read);
+			} while (fr == FR_OK && read == BUFFER);
+
+			f_close(&file);
+		}
+		if (stop[3] == 0)
+			stop[3] = sp.ElapsedTime();
+		stop[3] = (sp.ElapsedTime() + stop[3]) / 2;
+
+		//Read 104.857.600 Bytes
+		sp.Reset();
+		fr = f_open(&file, "SD:100.bin", FA_READ | FA_OPEN_EXISTING);
+		if (fr == FR_OK)
+		{
+			do
+			{
+				fr = f_read(&file, content, BUFFER, (UINT*) &read);
+			} while (fr == FR_OK && read == BUFFER);
+
+			f_close(&file);
+		}
+		if (stop[4] == 0)
+			stop[4] = sp.ElapsedTime();
+		stop[4] = (sp.ElapsedTime() + stop[4]) / 2;
+
+
+		sleep(delay_ms(100));
+	}
 }
 
 template<>

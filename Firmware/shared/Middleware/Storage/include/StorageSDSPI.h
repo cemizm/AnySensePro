@@ -10,6 +10,8 @@
 
 #include <stdint.h>
 
+#include <OSAL.h>
+
 #include <Interrupt.h>
 #include <SPI.h>
 #include <Pin.h>
@@ -21,7 +23,7 @@ namespace Storage
 
 enum SDCommand
 {
-	ACMD = 0x80,
+	ACMD = 0x80, /* ACMD Command */
 	CMD0 = 0, /* GO_IDLE_STATE */
 	CMD1 = 1, /* SEND_OP_COND (MMC) */
 	ACMD41 = ACMD + 41, /* SEND_OP_COND (SDC) */
@@ -44,13 +46,34 @@ enum SDCommand
 	CMD58 = 58, /* READ_OCR */
 };
 
-inline SDCommand operator~ (SDCommand a) { return (SDCommand)~(int)a; }
-inline SDCommand operator| (SDCommand a, SDCommand b) { return (SDCommand)((int)a | (int)b); }
-inline SDCommand operator& (SDCommand a, SDCommand b) { return (SDCommand)((int)a & (int)b); }
-inline SDCommand operator^ (SDCommand a, SDCommand b) { return (SDCommand)((int)a ^ (int)b); }
-inline SDCommand& operator|= (SDCommand& a, SDCommand b) { return (SDCommand&)((int&)a |= (int)b); }
-inline SDCommand& operator&= (SDCommand& a, SDCommand b) { return (SDCommand&)((int&)a &= (int)b); }
-inline SDCommand& operator^= (SDCommand& a, SDCommand b) { return (SDCommand&)((int&)a ^= (int)b); }
+inline SDCommand operator~(SDCommand a)
+{
+	return (SDCommand) ~(int) a;
+}
+inline SDCommand operator|(SDCommand a, SDCommand b)
+{
+	return (SDCommand) ((int) a | (int) b);
+}
+inline SDCommand operator&(SDCommand a, SDCommand b)
+{
+	return (SDCommand) ((int) a & (int) b);
+}
+inline SDCommand operator^(SDCommand a, SDCommand b)
+{
+	return (SDCommand) ((int) a ^ (int) b);
+}
+inline SDCommand& operator|=(SDCommand& a, SDCommand b)
+{
+	return (SDCommand&) ((int&) a |= (int) b);
+}
+inline SDCommand& operator&=(SDCommand& a, SDCommand b)
+{
+	return (SDCommand&) ((int&) a &= (int) b);
+}
+inline SDCommand& operator^=(SDCommand& a, SDCommand b)
+{
+	return (SDCommand&) ((int&) a ^= (int) b);
+}
 
 enum CardType
 {
@@ -63,13 +86,34 @@ enum CardType
 
 };
 
-inline CardType operator~ (CardType a) { return (CardType)~(int)a; }
-inline CardType operator| (CardType a, CardType b) { return (CardType)((int)a | (int)b); }
-inline CardType operator& (CardType a, CardType b) { return (CardType)((int)a & (int)b); }
-inline CardType operator^ (CardType a, CardType b) { return (CardType)((int)a ^ (int)b); }
-inline CardType& operator|= (CardType& a, CardType b) { return (CardType&)((int&)a |= (int)b); }
-inline CardType& operator&= (CardType& a, CardType b) { return (CardType&)((int&)a &= (int)b); }
-inline CardType& operator^= (CardType& a, CardType b) { return (CardType&)((int&)a ^= (int)b); }
+inline CardType operator~(CardType a)
+{
+	return (CardType) ~(int) a;
+}
+inline CardType operator|(CardType a, CardType b)
+{
+	return (CardType) ((int) a | (int) b);
+}
+inline CardType operator&(CardType a, CardType b)
+{
+	return (CardType) ((int) a & (int) b);
+}
+inline CardType operator^(CardType a, CardType b)
+{
+	return (CardType) ((int) a ^ (int) b);
+}
+inline CardType& operator|=(CardType& a, CardType b)
+{
+	return (CardType&) ((int&) a |= (int) b);
+}
+inline CardType& operator&=(CardType& a, CardType b)
+{
+	return (CardType&) ((int&) a &= (int) b);
+}
+inline CardType& operator^=(CardType& a, CardType b)
+{
+	return (CardType&) ((int&) a ^= (int) b);
+}
 
 class StorageSDSPI: public StorageInterface, public HAL::InterruptHandler
 {
@@ -79,16 +123,28 @@ private:
 	HAL::SPI& m_spi;
 	HAL::Pin& m_csn;
 	HAL::Pin& m_cd;
+	HAL::OSALEventFlag m_dmaRXFinished;
+	HAL::OSALEventFlag m_dmaTXFinished;
+	uint8_t m_hwInit;
+	uint16_t m_workbyte[1] = { 0xffff };
+
+	void initHardware();
+	uint8_t detect();
 
 	uint8_t waitReady(uint16_t ms);
 	void deselect();
 	uint8_t select();
+	void setSpeed(uint8_t high);
 
 	uint8_t sendCommand(SDCommand cmd, uint32_t params);
 
+	uint8_t readBlock(uint8_t* buff, uint16_t btr);
+	uint8_t writeBlock(const uint8_t* buff, uint16_t token);
+
 public:
 	StorageSDSPI(HAL::SPI& spi, HAL::Pin& csn, HAL::Pin& cd) :
-			m_status(StorageStatus::NoInit), m_cardType(CardType::Unknown), m_spi(spi), m_csn(csn), m_cd(cd)
+			m_status(StorageStatus::NoInit), m_cardType(CardType::Unknown), m_spi(spi), m_csn(csn), m_cd(cd), m_dmaRXFinished(), m_dmaTXFinished(), m_hwInit(
+					0)
 	{
 
 	}

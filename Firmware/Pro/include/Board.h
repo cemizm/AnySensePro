@@ -20,7 +20,7 @@ namespace Board
 
 enum Storages
 {
-	Flash = 0, MicroSd = 1,
+	FlashStorage = 0, SDStorage = 1,
 };
 
 extern void SystemInit();
@@ -39,7 +39,7 @@ extern HAL::SPI SPI;
 
 }
 
-namespace Ram
+namespace Flash
 {
 
 extern HAL::Pin CSN;

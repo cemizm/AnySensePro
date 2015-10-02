@@ -11,12 +11,13 @@
 #include <stdint.h>
 #include <OSAL.h>
 
-namespace Storage
+namespace Utils
 {
 class TimeoutTimer
 {
 private:
 	uint_fast32_t time;
+	uint_fast32_t started;
 public:
 	TimeoutTimer(uint16_t delay)
 	{
@@ -25,12 +26,13 @@ public:
 
 	void Reset(uint16_t delay)
 	{
-		time = HAL::OSAL::GetTime() + delay;
+		started = HAL::OSAL::GetTime();
+		time = started + delay;
 	}
 
 	uint8_t IsTimeout()
 	{
-		return time < HAL::OSAL::GetTime() ? 1 : 0;
+		return started > 0 && time < HAL::OSAL::GetTime() ? 1 : 0;
 	}
 };
 

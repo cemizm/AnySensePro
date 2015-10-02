@@ -14,6 +14,8 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/spi.h>
 
+#include <OSAL.h>
+
 #include "Pin.h"
 #include "DMA.h"
 
@@ -30,6 +32,11 @@ public:
 	virtual void OnFormatError() = 0;
 
 	virtual ~SPIEventListener();
+};
+
+enum SPIDMADirection
+{
+	ToDevice = 0, FromDevice = 1,
 };
 
 class SPI
@@ -56,7 +63,7 @@ public:
 
 		MOSI.PowerUp();
 		MOSI.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_PULLUP);
-		MOSI.SetOutputOptions(GPIO_OTYPE_OD, GPIO_OSPEED_100MHZ);
+		MOSI.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ);
 		MOSI.Alternate(alt_func);
 
 		MISO.PowerUp();
@@ -66,7 +73,7 @@ public:
 
 		SCK.PowerUp();
 		SCK.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_PULLUP);
-		SCK.SetOutputOptions(GPIO_OTYPE_OD, GPIO_OSPEED_100MHZ);
+		SCK.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ);
 		SCK.Alternate(alt_func);
 
 		spi_init_master(SPIx, baudrate, cpol, cpha, dff, lsbfirst);
@@ -403,8 +410,6 @@ public:
 
 	inline void DisableClearAll()
 	{
-		m_RX_DMA.ClearInterruptFlags(DMA_TCIF);
-		m_TX_DMA.ClearInterruptFlags(DMA_TCIF);
 
 		m_RX_DMA.DisableChannel();
 		m_TX_DMA.DisableChannel();
@@ -414,6 +419,36 @@ public:
 
 		DisableRXDma();
 		DisableTXDma();
+
+		m_RX_DMA.ClearInterruptFlags(DMA_TCIF);
+		m_TX_DMA.ClearInterruptFlags(DMA_TCIF);
+	}
+
+	inline void InitDMATransfer(SPIDMADirection direction, uint32_t txAddress, uint32_t rxAddress, uint16_t size)
+	{
+		DisableClearAll();
+
+		if (direction == SPIDMADirection::ToDevice)
+		{
+			m_RX_DMA.EnableTransferCompleteInterrupt();
+			m_TX_DMA.EnableMemoryIncrementMode();
+			m_RX_DMA.DisableMemoryIncrementMode();
+		}
+		else
+		{
+			m_RX_DMA.EnableTransferCompleteInterrupt();
+			m_RX_DMA.EnableMemoryIncrementMode();
+			m_TX_DMA.DisableMemoryIncrementMode();
+		}
+
+		m_TX_DMA.SetMemoryAddress(txAddress);
+		m_RX_DMA.SetMemoryAddress(rxAddress);
+
+		m_TX_DMA.SetNumerOfData(size);
+		m_RX_DMA.SetNumerOfData(size);
+
+		m_RX_DMA.EnableChannel();
+		m_TX_DMA.EnableChannel();
 	}
 };
 

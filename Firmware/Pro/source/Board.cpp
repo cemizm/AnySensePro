@@ -23,7 +23,7 @@ HAL::Pin LedError(GPIOC, RCC_GPIOC, GPIO8);
 HAL::Pin USB_DP(GPIOA, RCC_GPIOA, GPIO11);
 HAL::Pin USB_DM(GPIOA, RCC_GPIOA, GPIO12);
 HAL::Pin USB_Disconnect(GPIOA, RCC_GPIOA, GPIO10);
-HAL::Pin USB_Sense(GPIOA, RCC_GPIOA, GPIO9, EXTI19, NVIC_EXTI9_5_IRQ);
+HAL::Pin USB_Sense(GPIOA, RCC_GPIOA, GPIO9, EXTI19, NVIC_EXTI15_10_IRQ);
 
 HAL::USB USB(RCC_USB, rcc_usb_prescale_1_5, USB_DP, USB_DM, GPIO_AF14, USB_Sense, USB_Disconnect, &stm32f103_usb_driver,
 NVIC_USB_LP_IRQ, NVIC_USB_HP_IRQ, NVIC_USB_WKUP_IRQ);
@@ -31,7 +31,7 @@ NVIC_USB_LP_IRQ, NVIC_USB_HP_IRQ, NVIC_USB_WKUP_IRQ);
 namespace MicroSD
 {
 
-HAL::Pin CD(GPIOC, RCC_GPIOC, GPIO6);
+HAL::Pin CD(GPIOC, RCC_GPIOC, GPIO6, EXTI6, NVIC_EXTI9_5_IRQ);
 
 HAL::Pin MOSI(GPIOB, RCC_GPIOB, GPIO15);
 HAL::Pin MISO(GPIOB, RCC_GPIOB, GPIO14);
@@ -45,7 +45,7 @@ HAL::SPI SPI(SPI2, rcc_periph_clken::RCC_SPI2, MOSI, MISO, SCK, GPIO_AF5, RX, TX
 
 }
 
-namespace Ram
+namespace Flash
 {
 
 HAL::Pin MOSI(GPIOB, RCC_GPIOB, GPIO5);
@@ -156,7 +156,10 @@ extern "C" void exti4_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_EXTI4_IRQ);
 }
-
+extern "C" void exti9_5_isr()
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_EXTI9_5_IRQ);
+}
 extern "C" void dma1_channel2_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL2_IRQ);

@@ -13,7 +13,7 @@ namespace Storage
 
 enum StorageStatus
 {
-	NoInit = 0x01, NoDisk = 0x02, WriteProtect = 0x03,
+	NoInit = 0x01, NoDisk = 0x02, WriteProtect = 0x04,
 };
 
 
