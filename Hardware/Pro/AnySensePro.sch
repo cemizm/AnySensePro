@@ -8864,30 +8864,30 @@ Source: www.kingbright.com</description>
 <part name="E" library="led" deviceset="LED" device="CHIP-LED0603">
 <attribute name="OC_FARNELL" value="2468792RL"/>
 </part>
-<part name="R6" library="rcl" deviceset="R-EU_" device="R0402" value="820">
+<part name="R6" library="rcl" deviceset="R-EU_" device="R0402" value="820R">
 <attribute name="OC_FARNELL" value="2302628RL"/>
 </part>
-<part name="R7" library="rcl" deviceset="R-EU_" device="R0402" value="820">
+<part name="R7" library="rcl" deviceset="R-EU_" device="R0402" value="820R">
 <attribute name="OC_FARNELL" value="2302628RL"/>
 </part>
-<part name="R8" library="rcl" deviceset="R-EU_" device="R0402" value="820">
+<part name="R8" library="rcl" deviceset="R-EU_" device="R0402" value="820R">
 <attribute name="OC_FARNELL" value="2302628RL"/>
 </part>
 <part name="+3V38" library="supply1" deviceset="+3V3" device=""/>
 <part name="R4" library="rcl" deviceset="R-EU_" device="R0402" value="1.5K">
-<attribute name="OC_FARNELL" value="2302739RL"/>
+<attribute name="OC_FARNELL" value="2302656RL"/>
 </part>
 <part name="R1" library="rcl" deviceset="R-EU_" device="R0402" value="22R">
-<attribute name="OC_FARNELL" value="2302739RL"/>
+<attribute name="OC_FARNELL" value="2302453RL"/>
 </part>
 <part name="R11" library="rcl" deviceset="R-EU_" device="R0402" value="22R">
-<attribute name="OC_FARNELL" value="2302739RL"/>
+<attribute name="OC_FARNELL" value="2302453RL"/>
 </part>
 <part name="R12" library="rcl" deviceset="R-EU_" device="R0402" value="10K">
 <attribute name="OC_FARNELL" value="2302739RL"/>
 </part>
 <part name="R13" library="rcl" deviceset="R-EU_" device="R0402" value="15K">
-<attribute name="OC_FARNELL" value="2302739RL"/>
+<attribute name="OC_FARNELL" value="2302754RL"/>
 </part>
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
 </parts>
