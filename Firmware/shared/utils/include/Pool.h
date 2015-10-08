@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <algorithm>
 
-namespace UTILS
+namespace Utils
 {
 
 template<typename T>

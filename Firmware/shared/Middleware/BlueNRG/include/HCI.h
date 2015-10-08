@@ -126,13 +126,13 @@ struct HCIRequest
 	}
 };
 
-typedef UTILS::AutoRelease<HCIRequest, MAX_HCI_REQUESTS> HCIAutoRelease;
+typedef Utils::AutoRelease<HCIRequest, MAX_HCI_REQUESTS> HCIAutoRelease;
 
 class HCInterface: BLEDataHandler
 {
 private:
 	BLEInterface& m_bleInterface;
-	UTILS::Pool<HCIRequest, MAX_HCI_REQUESTS> m_pendingRequests;
+	Utils::Pool<HCIRequest, MAX_HCI_REQUESTS> m_pendingRequests;
 	uint8_t VerifyPacket(HCIPacket* packet, uint16_t size);
 public:
 	~HCInterface()

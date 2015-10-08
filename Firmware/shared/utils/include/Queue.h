@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-namespace UTILS
+namespace Utils
 {
 
 template<typename T, uint8_t queueSize>

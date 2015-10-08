@@ -13,6 +13,8 @@
 namespace Utils
 {
 
+#ifdef DEBUG
+
 class Stopwatch
 {
 private:
@@ -35,6 +37,8 @@ public:
 
 
 };
+
+#endif
 
 } /* namespace Storage */
 

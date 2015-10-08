@@ -104,7 +104,7 @@ private:
 	SPITransaction transaction;
 	BLETransactionStatus XFerData();
 
-	UTILS::Queue<TXQueueItem, 5> tx_queue;
+	Utils::Queue<TXQueueItem, 5> tx_queue;
 
 	Handlers m_handlers;
 
