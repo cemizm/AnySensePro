@@ -1,0 +1,1 @@
+python -m pymavlink.generator.mavgen ..\shared\mavlink\UniAdapter.xml --lang CS -o ConfigTool\UniAdapter

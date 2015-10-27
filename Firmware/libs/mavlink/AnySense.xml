@@ -1,0 +1,82 @@
+		<mavlink>
+			<include>common.xml</include>
+			<version>2</version>
+			<enums>
+				<enum name="CONFIG_COMMAND">
+					<entry name="CONFIG_COMMAND_GET_VERSION">
+						<description>Firmware Version request</description>
+					</entry>
+					<entry name="CONFIG_COMMAND_GET_CONFIGURATION" value="0">
+						<description>Configuration data reuqest</description>
+					</entry>
+					<entry name="CONFIG_COMMAND_EXIT" value="4">
+						<description>Leaves the configuration mode</description>
+					</entry>
+					<entry name="CONFIG_COMMAND_BOOTLOADER" value="5">
+						<description>Reboots the MCU into Bootloader mode</description>
+					</entry>
+					<entry name="CONFIG_COMMAND_ACK" value="6">
+						<description>Acknowledge a previous Command</description>
+					</entry>
+					<entry name="CONFIG_COMMAND_NACK" value="7">
+						<description>Acknowledge a previous Command</description>
+					</entry>
+				</enum>
+				<enum name="CONFIG_PORT">
+					<entry name="CONFIG_PORT_1" value="1">
+						<description>Port 1 on UniAdapter 1.0</description>
+					</entry>
+					<entry name="CONFIG_PORT_2" value="2">
+						<description>Port 2 on UniAdapter 1.0</description>
+					</entry>
+					<entry name="CONFIG_PORT_3" value="3">
+						<description>Port 3 reserverd for future use....</description>
+					</entry>
+					<entry name="CONFIG_PORT_4" value="4">
+						<description>Port 4 reserverd for future use....</description>
+					</entry>
+				</enum>
+				<enum name="CONFIG_PROTOCOL">
+					<entry name="CONFIG_PROTOCOL_NONE" value="0">
+						<description>Port deactivated</description>
+					</entry>
+					<entry name="CONFIG_PROTOCOL_FrSkySPort" value="1">
+						<description>FrSky S.Port Protocol</description>
+					</entry>
+					<entry name="CONFIG_PROTOCOL_MAVLINK" value="2">
+						<description>Mavlink Protocol</description>
+					</entry>
+					<entry name="CONFIG_PROTOCOL_HOTT" value="3">
+						<description>HOTT Telemetrie Protocol</description>
+					</entry>
+					<entry name="CONFIG_PROTOCOL_JETI" value="4">
+						<description>Jeti Telemetrie Protocol</description>
+					</entry>
+				</enum>
+			</enums>
+			<messages>
+				<message id="180" name="CONFIGURATION_CONTROL">
+					<field type="uint8_t" name="command" enum="CONFIG_COMMAND">Command to execute</field>
+					<field type="uint16_t" name="param1">Optional, Parameter 1 for Command.</field>
+					<field type="uint16_t" name="param2">Optional, Parameter 2 for Command.</field>
+				</message>
+				<message id="181" name="CONFIGURATION_VERSION">
+					<field type="uint16_t" name="fw_version">Firmware Version</field>
+					<field type="uint8_t" name="port1" enum="CONFIG_PROTOCOL">Protocol used on Port 1</field>
+					<field type="uint8_t" name="port2" enum="CONFIG_PROTOCOL">Protocol used on Port 2</field>
+				</message>
+				<message id="182" name="CONFIGURATION_NAZA_HEARTBEAT">
+					<field type="uint16_t" name="lastNazaHeartbeat">Last Naza Heartbeat in ms. If no Heartbeat UINT16_MAX</field>
+				</message>
+				<message id="183" name="CONFIGURATION_PORT">
+					<field type="uint8_t" name="port" enum="CONFIG_PORT">Port number</field>
+					<field type="uint8_t" name="protocol" enum="CONFIG_PROTOCOL">Protocol used on this Port</field>
+					<field type="uint8_t[128]" name="data">Serialized Protocol configuration</field>
+				</message>
+        <message id="184" name="CONFIGURATION_VERSION2">
+          <field type="uint32_t" name="fw_version">Firmware Version</field>
+          <field type="uint8_t" name="port1" enum="CONFIG_PROTOCOL">Protocol used on Port 1</field>
+          <field type="uint8_t" name="port2" enum="CONFIG_PROTOCOL">Protocol used on Port 2</field>
+        </message>
+			</messages>
+		</mavlink>
