@@ -29,18 +29,17 @@ class DJIController: HAL::InterruptHandler
 {
 private:
 	HAL::CAN& m_can;
-	Utils::Queue<HAL::CANRxMessage, 10> m_queue;
-	OSAL::EventFlag m_PacketArrived;
+	OSAL::Channel<HAL::CANRxMessage, 5> m_channel;
+	HAL::CANRxMessage m_tmp_msg;
 	uint_fast32_t m_nextHeartbeat;
 	uint_fast32_t m_nextTimeout;
 	DJIChannel channels[DJIChannels];
 	DJIParserV1 v1Parser;
 
-
 	DJIChannel* findChannel(uint16_t id);
 public:
 	DJIController(HAL::CAN& can) :
-			m_can(can), m_queue(), m_PacketArrived(), m_nextHeartbeat(), m_nextTimeout(), v1Parser(), err(0)
+			m_can(can), m_channel(), m_tmp_msg(), m_nextHeartbeat(), m_nextTimeout(), v1Parser(), err(0)
 	{
 
 	}

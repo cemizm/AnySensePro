@@ -39,13 +39,14 @@ void DJIController::Run()
 
 	HAL::CANTxMessage txMessage1 = { 0x108, 0, 0, 8, { 0x55, 0xAA, 0x55, 0xAA, 0x07, 0x10, 0x00, 0x00 } };
 	HAL::CANTxMessage txMessage2 = { 0x108, 0, 0, 4, { 0x66, 0xCC, 0x66, 0xCC } };
+	HAL::CANRxMessage msg;
 
 	m_nextHeartbeat = OSAL::Timer::GetTime() + delay_sec(2);
-	m_nextTimeout = OSAL::Timer::GetTime()+ delay_sec(3); //first collect some other messages to avoid osd heartbeat if present
+	m_nextTimeout = OSAL::Timer::GetTime() + delay_sec(3); //first collect some other messages to avoid osd heartbeat if present
 
 	for (;;)
 	{
-		newData = m_PacketArrived.wait(delay_ms(150));
+		newData = m_channel.pop(msg, delay_ms(150));
 
 		time = OSAL::Timer::GetTime();
 
@@ -53,12 +54,10 @@ void DJIController::Run()
 		{
 			m_nextTimeout = time + delay_sec(3);
 
-			HAL::CANRxMessage* msg = m_queue.Peek();
-
 			//Process CAN Bus Messages
 			if (SensorData.GetFCType() == FCType::Unknown)
 			{
-				switch (msg->Id)
+				switch (msg.Id)
 				{
 				case 0x90:
 					SensorData.SetFCType(FCType::Naza);
@@ -85,12 +84,10 @@ void DJIController::Run()
 
 			if (parser != NULL)
 			{
-				channel = findChannel(msg->Id);
+				channel = findChannel(msg.Id);
 				if (channel != NULL)
-					parser->Parse(channel, msg);
+					parser->Parse(channel, &msg);
 			}
-
-			m_queue.Dequeue();
 		}
 
 		if (m_nextTimeout > time)
@@ -129,16 +126,15 @@ void DJIController::ISR()
 {
 	if (m_can.FifoPendig(0))
 	{
-		HAL::CANRxMessage* msg = m_queue.Enqueue();
-		if (msg != NULL)
-		{
-			m_can.Receive(0, 1, msg);
-			m_PacketArrived.signal_isr();
-		}
-		else
+		if (m_channel.get_free_size() == 0)
 		{
 			err = 1;
 			m_can.FifoRelease(0);
+		}
+		else
+		{
+			m_can.Receive(0, 1, &m_tmp_msg);
+			m_channel.push(m_tmp_msg);
 		}
 	}
 }
