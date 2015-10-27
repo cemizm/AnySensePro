@@ -21,7 +21,6 @@ void USBWorker::Run()
 		if (m_channels.pop(m_msg, delay_ms(m_delay_ms)))
 		{
 			//process
-			m_messages.free(&m_msg);
 			m_delay_ms = USB_WORKER_DELAY_CONNECTED;
 		}
 		else if (m_CDC.IsConnected())
@@ -74,27 +73,15 @@ void USBWorker::Disconnected()
 
 void USBWorker::DataRX(uint8_t* data, uint8_t len)
 {
-	mavlink_message_t* msg = NULL;
-
 	for (uint8_t i = 0; i < len; i++)
 	{
-		if (msg == NULL)
-		{
-			msg = m_messages.alloc();
 
-			if (msg == NULL)
-				return;
-		}
-
-		if (m_mavlink.Decode(data[i], msg))
+		if (m_mavlink.Decode(data[i], &m_msg_rcv))
 		{
-			m_channels.push(*msg);
-			msg = NULL;
+			if (m_channels.get_free_size() > 0)
+				m_channels.push(m_msg_rcv);
 		}
 	}
-
-	if (msg != NULL)
-		m_messages.free(msg);
 }
 
 }

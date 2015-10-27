@@ -27,16 +27,16 @@ class USBWorker: public USB::USBSerialHandler
 {
 private:
 	USB::USBCDCInterface& m_CDC;
-	Utils::Pool<mavlink_message_t, USB_WORKER_MESSAGES> m_messages;
 	OSAL::Channel<mavlink_message_t, USB_WORKER_MESSAGES> m_channels;
 	MAVLinkLayer m_mavlink;
 	uint16_t m_delay_ms;
 	mavlink_message_t m_msg;
+	mavlink_message_t m_msg_rcv;
 	uint8_t m_buffer[USB_WORKER_BUFFER_SIZE];
 
 public:
 	USBWorker(USB::USBCDCInterface& cdc) :
-			m_CDC(cdc), m_messages(), m_channels(), m_mavlink(MAVLINK_COMM_0), m_delay_ms(USB_WORKER_DELAY_CONNECTED), m_msg(), m_buffer()
+			m_CDC(cdc), m_channels(), m_mavlink(MAVLINK_COMM_0), m_delay_ms(USB_WORKER_DELAY_CONNECTED), m_buffer()
 	{
 		m_CDC.RegisterHandler(this);
 	}
