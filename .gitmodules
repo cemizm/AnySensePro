@@ -1,3 +1,6 @@
 [submodule "Firmware/libs/libopencm3"]
 	path = Firmware/libs/libopencm3
 	url = https://github.com/libopencm3/libopencm3.git
+[submodule "mavlink"]
+	path = mavlink
+	url = https://github.com/mavlink/mavlink
