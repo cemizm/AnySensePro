@@ -26,13 +26,13 @@ public:
 
 	void Reset(uint16_t delay)
 	{
-		started = HAL::OSAL::GetTime();
+		started = OSAL::Timer::GetTime();
 		time = started + delay;
 	}
 
 	uint8_t IsTimeout()
 	{
-		return started > 0 && time < HAL::OSAL::GetTime() ? 1 : 0;
+		return started > 0 && time < OSAL::Timer::GetTime() ? 1 : 0;
 	}
 };
 

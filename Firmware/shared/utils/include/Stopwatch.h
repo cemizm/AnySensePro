@@ -27,14 +27,13 @@ public:
 
 	void Reset()
 	{
-		start = HAL::OSAL::GetTime();
+		start = OSAL::Timer::GetTime();
 	}
 
 	uint32_t ElapsedTime()
 	{
-		return HAL::OSAL::GetTime() - start;
+		return OSAL::Timer::GetTime() - start;
 	}
-
 
 };
 
