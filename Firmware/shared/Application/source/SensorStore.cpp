@@ -7,8 +7,10 @@
 
 #include <SensorStore.h>
 
-namespace Application
+namespace App
 {
+
+SensorStore SensorData;
 
 
 } /* namespace LIBS */

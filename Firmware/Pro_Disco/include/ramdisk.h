@@ -1,9 +1,8 @@
 /*
  * This file is part of the libopencm3 project.
  *
- * Copyright (C) 2009 Uwe Hermann <uwe@hermann-uwe.de>
- * Copyright (C) 2011 Stephen Caudle <scaudle@doceme.com>
- * Copyright (C) 2013 Sergey Krukowski <softsr@yahoo.de>
+ * Copyright (C) 2013 Andrzej Surowiec <emeryth@gmail.com>
+ * Copyright (C) 2013 Pavol Rusnak <stick@gk2.sk>
  *
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,13 +18,14 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* Define memory regions. */
-MEMORY
-{
-	rom (rx) : ORIGIN = 0x08000000, LENGTH = 512K
-	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 64K
-}
+#ifndef __RAMDISK_H
+#define __RAMDISK_H
 
-/* Include the common ld script. */
-INCLUDE libopencm3_stm32f3.ld
+#include <stdint.h>
 
+extern int ramdisk_init(void);
+extern int ramdisk_read(uint32_t lba, uint8_t *copy_to);
+extern int ramdisk_write(uint32_t lba, const uint8_t *copy_from);
+extern int ramdisk_blocks(void);
+
+#endif

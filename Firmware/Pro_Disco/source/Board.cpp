@@ -17,67 +17,37 @@
 namespace Board
 {
 
-HAL::Pin LedActivity(GPIOC, RCC_GPIOC, GPIO3);
-HAL::Pin LedError(GPIOC, RCC_GPIOC, GPIO2);
+HAL::Pin LedActivity(GPIOE, RCC_GPIOE, GPIO10);
+HAL::Pin LedError(GPIOE, RCC_GPIOE, GPIO11);
 
-HAL::Pin USB_DM(GPIOA, RCC_GPIOA, GPIO11);
-HAL::Pin USB_DP(GPIOA, RCC_GPIOA, GPIO12);
-HAL::Pin USB_Disconnect(GPIOA, RCC_GPIOA, GPIO8);
-HAL::Pin USB_Sense(GPIOC, RCC_GPIOC, GPIO0, EXTI0, NVIC_EXTI0_IRQ);
+HAL::Pin USB_DP(GPIOA, RCC_GPIOA, GPIO11);
+HAL::Pin USB_DM(GPIOA, RCC_GPIOA, GPIO12);
+HAL::Pin USB_Disconnect(GPIOA, RCC_GPIOA, GPIO10);
+HAL::Pin USB_Sense(GPIOA, RCC_GPIOA, GPIO9, EXTI19, NVIC_EXTI9_5_IRQ);
 
 HAL::USB USB(RCC_USB, rcc_usb_prescale_1_5, USB_DP, USB_DM, GPIO_AF14, USB_Sense, USB_Disconnect, &st_usbfs_v2_usb_driver,
-NVIC_USB_LP_IRQ, NVIC_USB_HP_IRQ, NVIC_USB_WKUP_IRQ);
-
-namespace MicroSD
-{
-
-HAL::Pin CD(GPIOC, RCC_GPIOC, GPIO4, EXTI4, NVIC_EXTI4_IRQ);
-
-HAL::Pin MOSI(GPIOA, RCC_GPIOA, GPIO7);
-HAL::Pin MISO(GPIOA, RCC_GPIOA, GPIO6);
-HAL::Pin SCK(GPIOA, RCC_GPIOA, GPIO5);
-HAL::Pin CSN(GPIOA, RCC_GPIOA, GPIO4);
-
-HAL::DMA RX(DMA1, DMA_CHANNEL2, NVIC_DMA1_CHANNEL2_IRQ, rcc_periph_clken::RCC_DMA1);
-HAL::DMA TX(DMA1, DMA_CHANNEL3, NVIC_DMA1_CHANNEL3_IRQ, rcc_periph_clken::RCC_DMA1);
-
-HAL::SPI SPI(SPI1, rcc_periph_clken::RCC_SPI1, MOSI, MISO, SCK, GPIO_AF5, RX, TX);
-
-}
-
-namespace Flash
-{
-
-HAL::Pin MOSI(GPIOB, RCC_GPIOB, GPIO5);
-HAL::Pin MISO(GPIOB, RCC_GPIOB, GPIO4);
-HAL::Pin SCK(GPIOB, RCC_GPIOB, GPIO3);
-HAL::Pin CSN(GPIOA, RCC_GPIOA, GPIO15);
-
-HAL::DMA RX(DMA2, DMA_CHANNEL1, NVIC_DMA2_CHANNEL1_IRQ, rcc_periph_clken::RCC_DMA2);
-HAL::DMA TX(DMA2, DMA_CHANNEL2, NVIC_DMA2_CHANNEL2_IRQ, rcc_periph_clken::RCC_DMA2);
-
-HAL::SPI SPI(SPI3, rcc_periph_clken::RCC_SPI3, MOSI, MISO, SCK, GPIO_AF6, RX, TX);
-
-}
+		NVIC_USB_LP_IRQ, NVIC_USB_HP_IRQ, NVIC_USB_WKUP_IRQ);
 
 namespace FC
 {
 
-HAL::Pin RX(GPIOB, RCC_GPIOB, GPIO8);
-HAL::Pin TX(GPIOB, RCC_GPIOB, GPIO9);
+HAL::Pin CAN_RX(GPIOB, RCC_GPIOB, GPIO8);
+HAL::Pin CAN_TX(GPIOB, RCC_GPIOB, GPIO9);
 
-HAL::CAN CAN(CAN1, RCC_CAN, TX, RX, GPIO_AF9, NVIC_USB_HP_CAN1_TX_IRQ, NVIC_USB_LP_CAN1_RX0_IRQ, NVIC_CAN1_RX1_IRQ);
+HAL::CAN CAN(CAN1, RCC_CAN, CAN_TX, CAN_RX, GPIO_AF9, NVIC_USB_HP_CAN1_TX_IRQ, NVIC_USB_LP_CAN1_RX0_IRQ, NVIC_CAN1_RX1_IRQ);
+
 }
 
-void InitClock()
+void SetupClock()
 {
-
 	/* Enable internal high-speed oscillator. */
 	rcc_osc_on(HSI);
 	rcc_wait_for_osc_ready(HSI);
 
 	/* Select HSI as SYSCLK source. */
 	rcc_set_sysclk_source(RCC_CFGR_SW_HSI);
+
+	rcc_osc_bypass_enable(HSE);
 
 	/* Enable external high-speed oscillator 8MHz. */
 	rcc_osc_on(HSE);
@@ -87,8 +57,8 @@ void InitClock()
 	rcc_set_ppre1(RCC_CFGR_PPRE1_DIV_2);
 	rcc_set_ppre2(RCC_CFGR_PPRE2_DIV_NONE);
 
-	rcc_set_pll_source(RCC_CFGR_PLLSRC_HSE_PREDIV);
 	rcc_set_main_pll_hsi(RCC_CFGR_PLLMUL_PLL_IN_CLK_X9);
+	rcc_set_pll_source(RCC_CFGR_PLLSRC_HSE_PREDIV);
 
 	/* Enable PLL oscillator and wait for it to stabilize. */
 	rcc_osc_on(PLL);
@@ -113,19 +83,14 @@ void InitClock()
 
 void SystemInit()
 {
-
-	InitClock();
+	SetupClock();
 
 	rcc_periph_clock_enable(rcc_periph_clken::RCC_SYSCFG);
 
 	SYSCFG_MEMRM |= 1 << 5; //USB Remap
-}
 
 }
 
-extern "C" void spi2_isr()
-{
-	HAL::InterruptRegistry.HandleISR(NVIC_SPI2_IRQ);
 }
 
 extern "C" void can1_rx1_isr()
@@ -157,22 +122,15 @@ extern "C" void usb_wkup_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_USB_WKUP_IRQ);
 }
-extern "C" void exti0_isr()
-{
-	HAL::InterruptRegistry.HandleISR(NVIC_EXTI0_IRQ);
-}
-extern "C" void exti4_isr()
-{
-	HAL::InterruptRegistry.HandleISR(NVIC_EXTI4_IRQ);
-}
+
 extern "C" void exti9_5_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_EXTI9_5_IRQ);
 }
 
-extern "C" void dma1_channel1_isr()
+extern "C" void exti4_isr()
 {
-	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL1_IRQ);
+	HAL::InterruptRegistry.HandleISR(NVIC_EXTI4_IRQ);
 }
 
 extern "C" void dma1_channel2_isr()
@@ -183,29 +141,4 @@ extern "C" void dma1_channel2_isr()
 extern "C" void dma1_channel3_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL3_IRQ);
-}
-
-extern "C" void dma1_channel4_isr()
-{
-	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL4_IRQ);
-}
-
-extern "C" void dma1_channel5_isr()
-{
-	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL5_IRQ);
-}
-
-extern "C" void dma2_channel1_isr()
-{
-	HAL::InterruptRegistry.HandleISR(NVIC_DMA2_CHANNEL1_IRQ);
-}
-
-extern "C" void dma2_channel2_isr()
-{
-	HAL::InterruptRegistry.HandleISR(NVIC_DMA2_CHANNEL2_IRQ);
-}
-
-extern "C" void dma2_channel3_isr()
-{
-	HAL::InterruptRegistry.HandleISR(NVIC_DMA2_CHANNEL3_IRQ);
 }

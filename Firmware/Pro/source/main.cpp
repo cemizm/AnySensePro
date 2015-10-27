@@ -5,8 +5,6 @@
  *      Author: cem
  */
 
-#include <SensorStore.h>
-
 #include <StorageManager.h>
 #include <StorageSDSPI.h>
 #include <StorageFlashSPI.h>
@@ -14,7 +12,6 @@
 #include <USBDevice.h>
 #include <USBInterface.h>
 #include <USBCDCInterface.h>
-#include <USBMSCInterface.h>
 
 #include <DJIController.h>
 
@@ -22,25 +19,29 @@
 #include <scmRTOS.h>
 #include <OSAL.h>
 
+#include <Configuration.h>
+#include <SensorStore.h>
+#include <USBWorker.h>
+
 #include "Board.h"
 
-Application::SensorStore sensorStore;
+using namespace App;
 
 Storage::StorageSDSPI sdStorage(Board::MicroSD::SPI, Board::MicroSD::CSN, Board::MicroSD::CD);
-Storage::StorageFlashSPI flashStorage(Board::Flash::SPI, Board::Flash::CSN);
 
-USB::USBCDCInterface iFace;
-USB::USBMSCInterface iFace2;
-USB::USBInterface* iFaces[] = { &iFace, &iFace2 };
+USB::USBCDCInterface cdcInterface;
+USB::USBInterface* iFaces[] = { &cdcInterface };
 
 USB::USBDevice usb_device(Board::USB, iFaces, 1);
 
-Application::DJIController djiController(Board::FC::CAN, sensorStore);
+USBWorker usb_worker(cdcInterface);
+
+DJIController djiController(Board::FC::CAN);
 
 // Process types
-typedef OS::process<OS::pr0, 512> TProc0;
+typedef OS::process<OS::pr0, 2048> TProc0;
 typedef OS::process<OS::pr1, 2048> TProc1;
-typedef OS::process<OS::pr2, 300> TProc2;
+typedef OS::process<OS::pr2, 2048> TProc2;
 typedef OS::process<OS::pr3, 300> TProc3;
 
 // Process objects
@@ -49,29 +50,30 @@ TProc1 Proc1;
 TProc2 Proc2;
 TProc3 Proc3;
 
-DWORD get_fattime(void)
-{
-	return 0;
-}
-
 #define BUFFER		2048
 #define F10MB		10485760/BUFFER
 #define F100MB		104857600/BUFFER
 
 FATFS fatFs;
+FATFS fatFsFlash;
 FIL file;
-char* content[BUFFER];
+char* content[BUFFER] = { 0 };
+
+uint32_t get_fattime(void)
+{
+	uint32_t time = 0;
+	return time;
+}
 
 int main()
 {
 	Board::SystemInit();
-	usb_device.Init();
 
 	Storage::Instance.RegisterStorage(Board::Storages::SDStorage, &sdStorage);
-	Storage::Instance.RegisterStorage(Board::Storages::FlashStorage, &flashStorage);
 
 	f_mount(&fatFs, "SD:", 0);
-	f_mount(&fatFs, "SPIFLASH:", 0);
+
+	usb_device.Init();
 
 	OS::run();
 }
@@ -81,7 +83,8 @@ namespace OS
 template<>
 OS_PROCESS void TProc0::exec()
 {
-	sleep();
+	djiController.Init();
+	djiController.Run();
 }
 
 template<>
@@ -96,16 +99,6 @@ OS_PROCESS void TProc1::exec()
 	FRESULT fr = FR_TIMEOUT;
 	for (;;)
 	{
-		//Format Disk
-		sp.Reset();
-		if (f_mkfs("SD:", 0, 0) == FR_OK)
-			f_setlabel("SD:AnyLogger");
-
-		if (stop[0] == 0)
-			stop[0] = sp.ElapsedTime();
-
-		stop[0] = (sp.ElapsedTime() + stop[0]) / 2;
-
 		//Write 10.485.760 Bytes
 		sp.Reset();
 		fr = f_open(&file, "SD:10.bin", FA_READ | FA_WRITE | FA_CREATE_ALWAYS);
@@ -171,13 +164,18 @@ OS_PROCESS void TProc1::exec()
 			stop[4] = sp.ElapsedTime();
 		stop[4] = (sp.ElapsedTime() + stop[4]) / 2;
 
-
-		sleep(delay_ms(100));
+		sleep(delay_ms(500));
 	}
 }
 
 template<>
 OS_PROCESS void TProc2::exec()
+{
+	usb_worker.Run();
+}
+
+template<>
+OS_PROCESS void TProc3::exec()
 {
 	Board::LedError.PowerUp();
 	Board::LedError.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
@@ -187,20 +185,14 @@ OS_PROCESS void TProc2::exec()
 	Board::LedActivity.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
 	Board::LedActivity.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ);
 
-	Board::LedError.Toggle();
-
 	for (;;)
 	{
-		Board::LedError.Toggle();
-		Board::LedActivity.Toggle();
-		HAL::OSAL::SleepMS(20);
-	}
-}
+		if (djiController.err)
+			Board::LedError.On();
 
-template<>
-OS_PROCESS void TProc3::exec()
-{
-	sleep();
+		Board::LedActivity.Toggle();
+		OSAL::Timer::SleepMS(20);
+	}
 }
 
 }

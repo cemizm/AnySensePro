@@ -153,7 +153,7 @@ int USBCDCInterface::ControlRequest(usb_setup_data *req, uint8_t **buf, uint16_t
 	{
 	case USB_CDC_REQ_SET_CONTROL_LINE_STATE:
 	{
-		setConnected(req->wValue == (1 << 0));
+		setConnected(req->wValue & 0x01);
 
 		/*
 		 * This Linux cdc_acm driver requires this to be implemented
@@ -196,15 +196,12 @@ void USBCDCInterface::DataRX()
 	int len = usbd_ep_read_packet(m_usbd_dev, m_DataEPs.RX.bEndpointAddress, buf, 64);
 
 	if (len && m_handler != NULL)
-	{
 		m_handler->DataRX(buf, len);
-	}
 }
 
 void USBCDCInterface::SendData(uint8_t* data, uint8_t len)
 {
-
-	usbd_ep_write_packet(m_usbd_dev, m_DataEPs.RX.bEndpointAddress, data, len);
+	usbd_ep_write_packet(m_usbd_dev, m_DataEPs.TX.bEndpointAddress, data, len);
 }
 
 void USBCDCInterface::setConnected(uint8_t connected)

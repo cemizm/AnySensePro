@@ -116,7 +116,7 @@ struct HCIRequest
 	HCIPacket Packet = HCIPacket();
 	HCIEvent Event = HCIEvent();
 	uint8_t EventSize = 0;
-	HAL::OSALEventFlag EventFlag = HAL::OSALEventFlag();
+	OSAL::EventFlag EventFlag = OSAL::EventFlag();
 
 	void Clear()
 	{

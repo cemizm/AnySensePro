@@ -97,8 +97,8 @@ private:
 	HAL::Pin& m_csn;
 	HAL::Pin& m_irq;
 	HAL::Pin& m_rstn;
-	HAL::OSALEventFlag gotWorkFlag;
-	HAL::OSALEventFlag dmaDoneFlag;
+	OSAL::EventFlag gotWorkFlag;
+	OSAL::EventFlag dmaDoneFlag;
 	uint8_t m_Timeout;
 
 	SPITransaction transaction;
@@ -110,8 +110,8 @@ private:
 
 public:
 	BLEInterface(HAL::SPI& spi, HAL::Pin& csn, HAL::Pin& irq, HAL::Pin& rstn) :
-			m_spi(spi), m_csn(csn), m_irq(irq), m_rstn(rstn), gotWorkFlag(HAL::OSALEventFlag()), dmaDoneFlag(
-					HAL::OSALEventFlag()), m_Timeout(ACTIVEIRQTIMEOUT), transaction(SPITransaction()), tx_queue(), m_handlers()
+			m_spi(spi), m_csn(csn), m_irq(irq), m_rstn(rstn), gotWorkFlag(OSAL::EventFlag()), dmaDoneFlag(
+					OSAL::EventFlag()), m_Timeout(ACTIVEIRQTIMEOUT), transaction(SPITransaction()), tx_queue(), m_handlers()
 	{
 	}
 
