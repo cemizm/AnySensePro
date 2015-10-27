@@ -52,10 +52,10 @@ struct DJIMessageOSDV1
 	struct
 	{
 		float X;									// compensated heading X component
+		float unk0[2];
 		float Y;									// compensated heading Y component
 
-	} Heading;
-	float unk0[2];
+	}__attribute__((packed)) Heading;
 	float unk1[3];
 	struct
 	{

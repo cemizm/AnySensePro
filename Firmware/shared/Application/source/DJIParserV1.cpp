@@ -83,7 +83,7 @@ void DJIParserV1::process(DJIMessageOSDV1* msg)
 	SensorData.SetPositionCurrent(msg->Position.Latitude / M_PI * 180.0, msg->Position.Longitude / M_PI * 180.0);
 	SensorData.SetAltitude(msg->AltitudeBaro);
 
-	float heading = atan2(msg->Heading.Y, msg->Heading.X) / M_PI * 180.0;
+	float heading = atan2f(msg->Heading.Y, msg->Heading.X) / M_PI * 180.0;
 	if (heading < 0)
 		heading += 360.0;
 	SensorData.SetHeading(heading);
@@ -113,7 +113,7 @@ void DJIParserV1::process(DJIMessageGPSV1* msg)
 	else
 		SensorData.SetFixType((GPSFixType) msg->FixType);
 
-	SensorData.SetVdop(msg->DOP.Vertical);
+	SensorData.SetVdop((float) msg->DOP.Vertical / 100);
 
 	float ndop = (float) msg->DOP.North / 100;
 	float edop = (float) msg->DOP.East / 100;
@@ -130,7 +130,7 @@ void DJIParserV1::process(DJIMessageRAWV1* msg)
 	SensorData.SetArmed(msg->Armed);
 	SensorData.SetThrottle(msg->ActualInput.Throttle);
 	SensorData.SetPositionHome(msg->HomePosition.Latitude / M_PI * 180, msg->HomePosition.Longitude / M_PI * 180);
-	SensorData.SetHomeAltitude(msg->HomeAltitude);
+	SensorData.SetHomeAltitude(msg->HomeAltitude - 20);
 	SensorData.SetFlightMode((FlightMode) msg->FlightMode);
 	SensorData.SetRCChannels(msg->RChannels, MAX_DJI_CHANNELS);
 	SensorData.SetMotorOuts(msg->MotorOut, MAX_DJI_MOTORS);
