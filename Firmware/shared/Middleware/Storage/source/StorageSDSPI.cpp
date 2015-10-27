@@ -13,16 +13,16 @@
 namespace Storage
 {
 
-StorageStatus StorageSDSPI::GetStatus()
+uint8_t StorageSDSPI::GetStatus()
 {
 	return m_status;
 }
 
-StorageStatus StorageSDSPI::Init()
+uint8_t StorageSDSPI::Init()
 {
 	uint8_t n, ocr[4];
-	CardType ct = CardType::Unknown;
-	SDCommand cmd = SDCommand::CMD0;
+	uint8_t ct = CardType::Unknown;
+	uint8_t cmd = CMD0;
 
 	if (!m_hwInit)
 		initHardware();
@@ -33,7 +33,7 @@ StorageStatus StorageSDSPI::Init()
 		;
 	m_spi.Xfer8(0xFF);
 
-	HAL::OSAL::SleepMS(10);
+	OSAL::Timer::SleepMS(10);
 
 	if (!detect())
 		return StorageStatus::NoDisk;
@@ -53,7 +53,7 @@ StorageStatus StorageSDSPI::Init()
 			if (ocr[2] == 0x01 && ocr[3] == 0xAA)
 			{
 				while (!t.IsTimeout() && sendCommand(ACMD41, 1UL << 30))
-					HAL::OSAL::SleepMS(100);
+					OSAL::Timer::SleepMS(100);
 
 				if (!t.IsTimeout() && sendCommand(CMD58, 0) == 0)
 				{
@@ -360,12 +360,12 @@ uint8_t StorageSDSPI::select()
 void StorageSDSPI::setSpeed(uint8_t high)
 {
 	if (high)
-		m_spi.SetBaudratePrescaler(SPI_CR1_BR_FPCLK_DIV_4);
+		m_spi.SetBaudratePrescaler(SPI_CR1_BR_FPCLK_DIV_2);
 	else
 		m_spi.SetBaudratePrescaler(SPI_CR1_BR_FPCLK_DIV_256);
 }
 
-uint8_t StorageSDSPI::sendCommand(SDCommand cmd, uint32_t params)
+uint8_t StorageSDSPI::sendCommand(uint8_t cmd, uint32_t params)
 {
 	uint8_t n, res;
 
@@ -488,8 +488,6 @@ uint8_t StorageSDSPI::writeBlock(const uint8_t* buff, uint16_t token)
 
 void StorageSDSPI::ISR()
 {
-	HAL::OSALISRSupport support;
-
 	if (m_cd.EXTI_IsPendingBit())
 	{
 		m_cd.EXTI_ResetPendingBit();

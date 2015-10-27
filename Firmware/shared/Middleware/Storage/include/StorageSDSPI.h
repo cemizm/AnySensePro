@@ -18,113 +18,53 @@
 
 #include "StorageInterface.h"
 
+namespace CardType
+{
+
+static const uint8_t Unknown = 0x00; /* Failure or Unknown */
+static const uint8_t MMC = 0x01; /* MMC ver 3 */
+static const uint8_t SD1 = 0x02; /* SD ver 1 */
+static const uint8_t SD2 = 0x04; /* SD ver 2 */
+static const uint8_t SDC = (SD1 | SD2); /* SD */
+static const uint8_t Block = 0x08; /* Block addressing */
+
+}
+
 namespace Storage
 {
 
-enum SDCommand
-{
-	ACMD = 0x80, /* ACMD Command */
-	CMD0 = 0, /* GO_IDLE_STATE */
-	CMD1 = 1, /* SEND_OP_COND (MMC) */
-	ACMD41 = ACMD + 41, /* SEND_OP_COND (SDC) */
-	CMD8 = 8, /* SEND_IF_COND */
-	CMD9 = 9, /* SEND_CSD */
-	CMD10 = 10, /* SEND_CID */
-	CMD12 = 12, /* STOP_TRANSMISSION */
-	ACMD13 = ACMD + 13, /* SD_STATUS (SDC) */
-	CMD16 = 16, /* SET_BLOCKLEN */
-	CMD17 = 17, /* READ_SINGLE_BLOCK */
-	CMD18 = 18, /* READ_MULTIPLE_BLOCK */
-	CMD23 = 23, /* SET_BLOCK_COUNT (MMC) */
-	ACMD23 = ACMD + 23, /* SET_WR_BLK_ERASE_COUNT (SDC) */
-	CMD24 = 24, /* WRITE_BLOCK */
-	CMD25 = 25, /* WRITE_MULTIPLE_BLOCK */
-	CMD32 = 32, /* ERASE_ER_BLK_START */
-	CMD33 = 33, /* ERASE_ER_BLK_END */
-	CMD38 = 38, /* ERASE */
-	CMD55 = 55, /* APP_CMD */
-	CMD58 = 58, /* READ_OCR */
-};
-
-inline SDCommand operator~(SDCommand a)
-{
-	return (SDCommand) ~(int) a;
-}
-inline SDCommand operator|(SDCommand a, SDCommand b)
-{
-	return (SDCommand) ((int) a | (int) b);
-}
-inline SDCommand operator&(SDCommand a, SDCommand b)
-{
-	return (SDCommand) ((int) a & (int) b);
-}
-inline SDCommand operator^(SDCommand a, SDCommand b)
-{
-	return (SDCommand) ((int) a ^ (int) b);
-}
-inline SDCommand& operator|=(SDCommand& a, SDCommand b)
-{
-	return (SDCommand&) ((int&) a |= (int) b);
-}
-inline SDCommand& operator&=(SDCommand& a, SDCommand b)
-{
-	return (SDCommand&) ((int&) a &= (int) b);
-}
-inline SDCommand& operator^=(SDCommand& a, SDCommand b)
-{
-	return (SDCommand&) ((int&) a ^= (int) b);
-}
-
-enum CardType
-{
-	Unknown = 0x00, /* Failure or Unknown */
-	MMC = 0x01, /* MMC ver 3 */
-	SD1 = 0x02, /* SD ver 1 */
-	SD2 = 0x04, /* SD ver 2 */
-	SDC = (SD1 | SD2), /* SD */
-	Block = 0x08, /* Block addressing */
-
-};
-
-inline CardType operator~(CardType a)
-{
-	return (CardType) ~(int) a;
-}
-inline CardType operator|(CardType a, CardType b)
-{
-	return (CardType) ((int) a | (int) b);
-}
-inline CardType operator&(CardType a, CardType b)
-{
-	return (CardType) ((int) a & (int) b);
-}
-inline CardType operator^(CardType a, CardType b)
-{
-	return (CardType) ((int) a ^ (int) b);
-}
-inline CardType& operator|=(CardType& a, CardType b)
-{
-	return (CardType&) ((int&) a |= (int) b);
-}
-inline CardType& operator&=(CardType& a, CardType b)
-{
-	return (CardType&) ((int&) a &= (int) b);
-}
-inline CardType& operator^=(CardType& a, CardType b)
-{
-	return (CardType&) ((int&) a ^= (int) b);
-}
+static const uint8_t ACMD = 0x80; /* ACMD Command */
+static const uint8_t CMD0 = 0; /* GO_IDLE_STATE */
+static const uint8_t CMD1 = 1; /* SEND_OP_COND (MMC) */
+static const uint8_t ACMD41 = ACMD + 41; /* SEND_OP_COND (SDC) */
+static const uint8_t CMD8 = 8; /* SEND_IF_COND */
+static const uint8_t CMD9 = 9; /* SEND_CSD */
+static const uint8_t CMD10 = 10; /* SEND_CID */
+static const uint8_t CMD12 = 12; /* STOP_TRANSMISSION */
+static const uint8_t ACMD13 = ACMD + 13; /* SD_STATUS (SDC) */
+static const uint8_t CMD16 = 16; /* SET_BLOCKLEN */
+static const uint8_t CMD17 = 17; /* READ_SINGLE_BLOCK */
+static const uint8_t CMD18 = 18; /* READ_MULTIPLE_BLOCK */
+static const uint8_t CMD23 = 23; /* SET_BLOCK_COUNT (MMC) */
+static const uint8_t ACMD23 = ACMD + 23; /* SET_WR_BLK_ERASE_COUNT (SDC) */
+static const uint8_t CMD24 = 24; /* WRITE_BLOCK */
+static const uint8_t CMD25 = 25; /* WRITE_MULTIPLE_BLOCK */
+static const uint8_t CMD32 = 32; /* ERASE_ER_BLK_START */
+static const uint8_t CMD33 = 33; /* ERASE_ER_BLK_END */
+static const uint8_t CMD38 = 38; /* ERASE */
+static const uint8_t CMD55 = 55; /* APP_static const uint8_t CMD */
+static const uint8_t CMD58 = 58; /* READ_OCR */
 
 class StorageSDSPI: public StorageInterface, public HAL::InterruptHandler
 {
 private:
-	StorageStatus m_status;
-	CardType m_cardType;
+	uint8_t m_status;
+	uint8_t m_cardType;
 	HAL::SPI& m_spi;
 	HAL::Pin& m_csn;
 	HAL::Pin& m_cd;
-	HAL::OSALEventFlag m_dmaRXFinished;
-	HAL::OSALEventFlag m_dmaTXFinished;
+	OSAL::EventFlag m_dmaRXFinished;
+	OSAL::EventFlag m_dmaTXFinished;
 	uint8_t m_hwInit;
 	uint16_t m_workbyte[1] = { 0xffff };
 
@@ -136,7 +76,7 @@ private:
 	uint8_t select();
 	void setSpeed(uint8_t high);
 
-	uint8_t sendCommand(SDCommand cmd, uint32_t params);
+	uint8_t sendCommand(uint8_t cmd, uint32_t params);
 
 	uint8_t readBlock(uint8_t* buff, uint16_t btr);
 	uint8_t writeBlock(const uint8_t* buff, uint16_t token);
@@ -149,8 +89,8 @@ public:
 
 	}
 
-	StorageStatus GetStatus() override;
-	StorageStatus Init() override;
+	uint8_t GetStatus() override;
+	uint8_t Init() override;
 	StorageResult Read(uint8_t* buff, uint32_t sector, uint16_t count) override;
 	StorageResult Write(const uint8_t* buff, uint32_t sector, uint16_t count) override;
 	StorageResult IOCtl(StorageCommand cmd, void* buff) override;

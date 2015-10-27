@@ -35,27 +35,41 @@ enum FlashCommand
 	ReleasePowerDown = 0xAB,
 };
 
+#define PAGE_SIZE        	256UL
+#define PAGES_PER_SECTORS   256UL
+#define SECTORS          	32UL
+#define SECTOR_SIZE			(PAGE_SIZE * PAGES_PER_SECTORS)
+#define PAGES            	(SECTORS * PAGES_PER_SECTORS)
+#define SIZE             	(SECTORS * PAGES_PER_SECTORS * PAGE_SIZE)
+
 class StorageFlashSPI: public StorageInterface, public HAL::InterruptHandler
 {
 private:
-	StorageStatus m_status;
+	uint8_t m_status;
+	uint8_t m_initialized;
 	HAL::SPI& m_spi;
 	HAL::Pin& m_csn;
+	uint16_t m_workbyte[1] = { 0xffff };
+	OSAL::EventFlag m_dmaRXFinished;
+	OSAL::EventFlag m_dmaTXFinished;
 
-	uint8_t SendCommand(FlashCommand cmd, uint32_t params);
+	void InitHW();
+
+	uint8_t waitReady(uint16_t timeout);
+	uint8_t writePage(uint32_t page, const uint8_t* data);
+
 public:
 	StorageFlashSPI(HAL::SPI& spi, HAL::Pin& csn) :
-			m_status(StorageStatus::NoInit), m_spi(spi), m_csn(csn)
+			m_status(StorageStatus::NoInit), m_initialized(), m_spi(spi), m_csn(csn), m_dmaRXFinished(), m_dmaTXFinished()
 	{
 
 	}
 
-	StorageStatus GetStatus() override;
-	StorageStatus Init() override;
+	uint8_t GetStatus() override;
+	uint8_t Init() override;
 	StorageResult Read(uint8_t* buff, uint32_t sector, uint16_t count) override;
 	StorageResult Write(const uint8_t* buff, uint32_t sector, uint16_t count) override;
 	StorageResult IOCtl(StorageCommand cmd, void* buff) override;
-
 
 	void ISR() override;
 };

@@ -8,22 +8,15 @@
 #ifndef MIDDLEWARE_STORAGE_INCLUDE_STORAGEINTERFACE_H_
 #define MIDDLEWARE_STORAGE_INCLUDE_STORAGEINTERFACE_H_
 
+namespace StorageStatus
+{
+static const uint8_t NoInit = 0x01;
+static const uint8_t NoDisk = 0x02;
+static const uint8_t WriteProtect = 0x04;
+}
+
 namespace Storage
 {
-
-enum StorageStatus
-{
-	NoInit = 0x01, NoDisk = 0x02, WriteProtect = 0x04,
-};
-
-
-inline StorageStatus operator~ (StorageStatus a) { return (StorageStatus)~(int)a; }
-inline StorageStatus operator| (StorageStatus a, StorageStatus b) { return (StorageStatus)((int)a | (int)b); }
-inline StorageStatus operator& (StorageStatus a, StorageStatus b) { return (StorageStatus)((int)a & (int)b); }
-inline StorageStatus operator^ (StorageStatus a, StorageStatus b) { return (StorageStatus)((int)a ^ (int)b); }
-inline StorageStatus& operator|= (StorageStatus& a, StorageStatus b) { return (StorageStatus&)((int&)a |= (int)b); }
-inline StorageStatus& operator&= (StorageStatus& a, StorageStatus b) { return (StorageStatus&)((int&)a &= (int)b); }
-inline StorageStatus& operator^= (StorageStatus& a, StorageStatus b) { return (StorageStatus&)((int&)a ^= (int)b); }
 
 enum StorageResult
 {
@@ -66,12 +59,12 @@ class StorageInterface
 {
 private:
 public:
-	virtual StorageStatus GetStatus()
+	virtual uint8_t GetStatus()
 	{
 		return StorageStatus::NoInit;
 	}
 
-	virtual StorageStatus Init()
+	virtual uint8_t Init()
 	{
 		return StorageStatus::NoDisk;
 	}
