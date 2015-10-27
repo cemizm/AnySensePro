@@ -28,7 +28,9 @@ struct CANTxMessage
 
 struct CANRxMessage
 {
-	uint32_t Id;bool IsExtendedId;bool RequestTransmit;
+	uint32_t Id;
+	bool IsExtendedId;
+	bool RequestTransmit;
 	uint32_t MatchedFilterId;
 	uint8_t DataLength;
 	uint8_t data[8];
@@ -62,13 +64,13 @@ public:
 		rcc_periph_clock_enable(m_can_clock);
 
 		m_tx_pin.PowerUp();
-		m_tx_pin.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_NONE);
+		m_tx_pin.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_PULLUP);
 		m_tx_pin.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ);
 		m_tx_pin.Alternate(m_pin_alt_func);
 
 		m_rx_pin.PowerUp();
-		m_rx_pin.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_PULLDOWN);
-		m_rx_pin.SetOutputOptions(GPIO_OTYPE_OD, GPIO_OSPEED_100MHZ);
+		m_rx_pin.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_PULLUP);
+		m_rx_pin.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_100MHZ);
 		m_rx_pin.Alternate(m_pin_alt_func);
 
 		return can_init(m_canport, ttcm, abom, awum, nart, rflm, txfp, sjw, ts1, ts2, brp, loopback, silent);
@@ -132,6 +134,16 @@ public:
 	inline void FifoRelease(uint8_t fifo) const
 	{
 		can_fifo_release(m_canport, fifo);
+	}
+
+	inline uint8_t FifoPendig(uint8_t fifo) const
+	{
+		if (fifo == 0)
+		{
+			return CAN_RF0R(m_canport) & CAN_RF0R_FMP0_MASK;
+		}
+
+		return CAN_RF1R(m_canport) & CAN_RF1R_FMP1_MASK;
 	}
 
 	inline uint8_t IsMailboxAvailable() const

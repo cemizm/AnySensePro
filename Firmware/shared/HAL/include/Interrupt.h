@@ -33,6 +33,7 @@ public:
 	void HandleISR(uint8_t irqn);
 	void Enable(uint8_t irqn, uint8_t priority, InterruptHandler* handler);
 	void Disable(uint8_t irqn);
+	uint8_t IsPending(uint8_t irqn);
 };
 
 extern InterruptManager InterruptRegistry;

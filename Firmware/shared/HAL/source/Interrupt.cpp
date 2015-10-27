@@ -7,6 +7,7 @@
 
 #include "Interrupt.h"
 #include <stddef.h>
+#include <OSAL.h>
 
 namespace HAL
 {
@@ -15,6 +16,8 @@ InterruptManager InterruptRegistry;
 
 void InterruptManager::HandleISR(uint8_t irqn)
 {
+	OSAL::ISRSupport support;
+
 	if (m_handler[irqn] != NULL)
 		m_handler[irqn]->ISR();
 }
@@ -32,6 +35,9 @@ void InterruptManager::Disable(uint8_t irqn)
 	m_handler[irqn] = NULL;
 }
 
-
+uint8_t InterruptManager::IsPending(uint8_t irqn)
+{
+	return nvic_get_active_irq(irqn);
+}
 
 }

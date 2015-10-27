@@ -67,22 +67,28 @@ public:
 
 		m_DP.PowerUp();
 		m_DP.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_NONE);
+		m_DP.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ);
 		m_DP.Alternate(m_usb_alt_num);
 
 		m_DM.PowerUp();
 		m_DM.ModeSetup(GPIO_MODE_AF, GPIO_PUPD_NONE);
+		m_DM.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ);
 		m_DM.Alternate(m_usb_alt_num);
 
 		m_Sense.PowerUp();
-		m_Sense.ModeSetup(GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN);
+		m_Sense.ModeSetup(GPIO_MODE_INPUT, GPIO_PUPD_NONE);
 		m_Sense.EXTI_SetTrigger(exti_trigger_type::EXTI_TRIGGER_BOTH);
 		m_Sense.EXTI_SelectSource();
+		m_Sense.EXTI_Enable();
 
 		m_Disconnect.PowerUp();
 		m_Disconnect.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
 		m_Disconnect.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ);
 
 		InterruptRegistry.Enable(m_Sense.EXTI_NVIC_IRQ, 2, this);
+
+		if (IsConnected())
+			Connect();
 	}
 
 	inline void SetConnectedHandler(USBConnectedHandler* handler)
@@ -116,13 +122,11 @@ public:
 		if (m_Sense.EXTI_IsPendingBit())
 		{
 			m_Sense.EXTI_ResetPendingBit();
-			if (m_connectedHandler == NULL) //should not happen
-				return;
 
 			if (IsConnected())
-				m_connectedHandler->DeviceConnected();
+				m_connectedHandler != NULL ? m_connectedHandler->DeviceConnected() : Connect();
 			else
-				m_connectedHandler->DeviceDisconnected();
+				m_connectedHandler != NULL ? m_connectedHandler->DeviceDisconnected() : Disconnect();
 		}
 	}
 
