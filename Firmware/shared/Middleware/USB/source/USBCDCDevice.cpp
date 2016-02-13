@@ -1,46 +1,42 @@
 /*
- * USBCDCInterface.cpp
+ * USBCDCDevice.cpp
  *
- *  Created on: 22.09.2015
+ *  Created on: 12.02.2016
  *      Author: cem
  */
 
-#include <USBCDCInterface.h>
+#include <USBCDCDevice.h>
 
-#include <stdlib.h>
-
-#define USBCDCMAXINTERFACES		5
-
-namespace
-{
-
-struct USBInterfaceInstanceMap
-{
-	usbd_device* usbd_dev;
-	uint8_t ep;
-	USB::USBCDCInterface* interface;
-};
-
-USBInterfaceInstanceMap interfaces[USBCDCMAXINTERFACES];
-
-void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
-{
-	for (uint8_t i = 0; i < USBCDCMAXINTERFACES; i++)
-	{
-		if (interfaces[i].usbd_dev == usbd_dev && interfaces[i].ep == ep)
-			interfaces[i].interface->DataRX();
-	}
-}
-
-}
 
 namespace USB
 {
 
-USBCDCInterface::USBCDCInterface() :
-		m_DataInterface(), m_CommInterface(), m_FunctionDescriptors(), m_DataEPs(), m_CommEP(), m_usbd_dev(
-		NULL), m_connected(0), m_handler(NULL)
+#define _ENDPOINT_DIRECT_IN				1
+#define _ENDPOINT_DIRECT_OUT			0
+#define _ENDPOINT(num, direction)		(uint8_t)(num | direction << 7)
+#define ENDPOINT_IN(num)				_ENDPOINT(num, _ENDPOINT_DIRECT_IN)
+#define ENDPOINT_OUT(num)				_ENDPOINT(num, _ENDPOINT_DIRECT_OUT)
+
+USBCDCDevice::USBCDCDevice(HAL::USB& usb) :
+		m_usb(usb), m_dev(), m_usbd_dev(NULL), m_config(), m_interfaces(), m_FunctionDescriptors(), m_DataEPs(), m_CommEP(), m_handler(
+				NULL)
 {
+
+	m_dev.bLength = USB_DT_DEVICE_SIZE;
+	m_dev.bDescriptorType = USB_DT_DEVICE;
+	m_dev.bcdUSB = 0x0200;
+	m_dev.bDeviceClass = USB_CLASS_CDC;
+	m_dev.bDeviceSubClass = 0;
+	m_dev.bDeviceProtocol = 0;
+	m_dev.bMaxPacketSize0 = 64;
+	m_dev.idVendor = 0x01CB;
+	m_dev.idProduct = 0xAE10;
+	m_dev.bcdDevice = 0x0200;
+	m_dev.iManufacturer = 1;
+	m_dev.iProduct = 2;
+	m_dev.iSerialNumber = 3;
+	m_dev.bNumConfigurations = 1;
+
 	m_CommEP.bLength = USB_DT_ENDPOINT_SIZE;
 	m_CommEP.bDescriptorType = USB_DT_ENDPOINT;
 	m_CommEP.bEndpointAddress = ENDPOINT_IN(3);
@@ -108,43 +104,53 @@ USBCDCInterface::USBCDCInterface() :
 	m_DataInterface.iInterface = 0;
 	m_DataInterface.endpoint = (const usb_endpoint_descriptor*) &m_DataEPs.RX;
 
+	m_interfaces[0].num_altsetting = 1;
+	m_interfaces[0].altsetting = &m_CommInterface;
+
+	m_interfaces[1].num_altsetting = 1;
+	m_interfaces[1].altsetting = &m_DataInterface;
+
+	m_config.bLength = USB_DT_CONFIGURATION_SIZE;
+	m_config.bDescriptorType = USB_DT_CONFIGURATION;
+	m_config.wTotalLength = 0;
+	m_config.bNumInterfaces = 2;
+	m_config.bConfigurationValue = 1;
+	m_config.iConfiguration = 0;
+	m_config.bmAttributes = 0x80;
+	m_config.bMaxPower = 0x64;
+	m_config.interface = m_interfaces;
+
 }
 
-void USBCDCInterface::FillInterfaces(USBInterfaceStorage& interfaceStorage)
+void USBCDCDevice::Init()
 {
-	m_DataEPs.RX.bEndpointAddress = ENDPOINT_OUT(interfaceStorage.GetNextEndpointId());
-	m_DataEPs.TX.bEndpointAddress = ENDPOINT_IN(interfaceStorage.GetNextEndpointId());
-	m_CommEP.bEndpointAddress = ENDPOINT_IN(interfaceStorage.GetNextEndpointId());
+	HAL::InterruptRegistry.Enable(m_usb.IRQN_USB_LP, 15, this);
 
-	InterfaceReg interfaces[2];
-	interfaces[1].numAltSettings = 1;
-	interfaces[1].altSetting = &m_DataInterface;
-	interfaces[0].numAltSettings = 1;
-	interfaces[0].altSetting = &m_CommInterface;
+	m_usb.Init();
+	m_usbd_dev = usbd_init(m_usb.Driver, &m_dev, &m_config, m_usb_strings, 3, m_usbd_control_buffer,
+			sizeof(m_usbd_control_buffer));
 
-	interfaceStorage.RegisterInterfaces(interfaces, 2);
-
-	m_FunctionDescriptors.cdc_union.bControlInterface = m_CommInterface.bInterfaceNumber;
-	m_FunctionDescriptors.cdc_union.bSubordinateInterface0 = m_DataInterface.bInterfaceNumber;
-	m_FunctionDescriptors.call_mgmt.bDataInterface = m_DataInterface.bInterfaceNumber;
-
+	usbd_register_set_config_callback(m_usbd_dev, usb_set_config);
 }
 
-void USBCDCInterface::SetUSBDDevice(usbd_device* device)
+void USBCDCDevice::SendData(uint8_t* data, uint8_t len)
 {
-	m_usbd_dev = device;
-	for (uint8_t i = 0; i < USBCDCMAXINTERFACES; i++)
-	{
-		if (interfaces[i].usbd_dev == NULL)
-		{
-			interfaces[i].usbd_dev = m_usbd_dev;
-			interfaces[i].ep = m_DataEPs.RX.bEndpointAddress;
-			interfaces[i].interface = this;
-		}
-	}
+	usbd_ep_write_packet(m_usbd_dev, m_DataEPs.TX.bEndpointAddress, data, len);
 }
 
-int USBCDCInterface::ControlRequest(usb_setup_data *req, uint8_t **buf, uint16_t *len, usbd_control_complete_callback *complete)
+void USBCDCDevice::SetConfig(uint16_t wValue)
+{
+	(void) wValue;
+
+	usbd_ep_setup(m_usbd_dev, m_DataEPs.RX.bEndpointAddress, USB_ENDPOINT_ATTR_BULK, 64, cdcacm_data_rx_cb);
+	usbd_ep_setup(m_usbd_dev, m_DataEPs.TX.bEndpointAddress, USB_ENDPOINT_ATTR_BULK, 64, NULL);
+	usbd_ep_setup(m_usbd_dev, m_CommEP.bEndpointAddress, USB_ENDPOINT_ATTR_INTERRUPT, 8, NULL);
+
+	usbd_register_control_callback(m_usbd_dev, USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+	USB_REQ_TYPE_TYPE | USB_REQ_TYPE_RECIPIENT, (usbd_control_callback) usb_control_request);
+}
+
+int USBCDCDevice::ControlRequest(usb_setup_data *req, uint8_t **buf, uint16_t *len, usbd_control_complete_callback *complete)
 {
 	(void) complete;
 	(void) buf;
@@ -153,8 +159,6 @@ int USBCDCInterface::ControlRequest(usb_setup_data *req, uint8_t **buf, uint16_t
 	{
 	case USB_CDC_REQ_SET_CONTROL_LINE_STATE:
 	{
-		setConnected(req->wValue & 0x01);
-
 		/*
 		 * This Linux cdc_acm driver requires this to be implemented
 		 * even though it's optional in the CDC spec, and we don't
@@ -183,14 +187,17 @@ int USBCDCInterface::ControlRequest(usb_setup_data *req, uint8_t **buf, uint16_t
 	return USBD_REQ_NOTSUPP;
 }
 
-void USBCDCInterface::EPSetup()
+void USBCDCDevice::Poll()
 {
-	usbd_ep_setup(m_usbd_dev, m_DataEPs.RX.bEndpointAddress, USB_ENDPOINT_ATTR_BULK, 64, cdcacm_data_rx_cb);
-	usbd_ep_setup(m_usbd_dev, m_DataEPs.TX.bEndpointAddress, USB_ENDPOINT_ATTR_BULK, 64, NULL);
-	usbd_ep_setup(m_usbd_dev, m_CommEP.bEndpointAddress, USB_ENDPOINT_ATTR_INTERRUPT, 8, NULL);
+	usbd_poll(m_usbd_dev);
 }
 
-void USBCDCInterface::DataRX()
+void USBCDCDevice::ISR()
+{
+	Poll();
+}
+
+void USBCDCDevice::DataRX()
 {
 	uint8_t buf[64];
 	int len = usbd_ep_read_packet(m_usbd_dev, m_DataEPs.RX.bEndpointAddress, buf, 64);
@@ -199,25 +206,24 @@ void USBCDCInterface::DataRX()
 		m_handler->DataRX(buf, len);
 }
 
-void USBCDCInterface::SendData(uint8_t* data, uint8_t len)
+void USBCDCDevice::usb_set_config(usbd_device *usbd_dev, uint16_t wValue)
 {
-	usbd_ep_write_packet(m_usbd_dev, m_DataEPs.TX.bEndpointAddress, data, len);
+	(void)usbd_dev;
+	CDCDevice.SetConfig(wValue);
 }
 
-void USBCDCInterface::setConnected(uint8_t connected)
+int USBCDCDevice::usb_control_request(usbd_device *usbd_dev, struct usb_setup_data *req, uint8_t **buf, uint16_t *len,
+		usbd_control_complete_callback *complete)
 {
-	if (m_connected == connected)
-		return;
-
-	m_connected = connected;
-
-	if (m_handler == NULL)
-		return;
-
-	if (m_connected)
-		m_handler->Connected();
-	else
-		m_handler->Disconnected();
+	(void)usbd_dev;
+	return CDCDevice.ControlRequest(req, buf, len, complete);
 }
 
-} /* namespace USB */
+void USBCDCDevice::cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
+{
+	(void)usbd_dev;
+	(void)ep;
+	CDCDevice.DataRX();
+}
+
+} /* namespace tests */

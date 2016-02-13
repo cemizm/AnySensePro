@@ -123,14 +123,15 @@ public:
 		{
 			m_Sense.EXTI_ResetPendingBit();
 
-			if (IsConnected())
-				m_connectedHandler != NULL ? m_connectedHandler->DeviceConnected() : Connect();
-			else
-				m_connectedHandler != NULL ? m_connectedHandler->DeviceDisconnected() : Disconnect();
+			if (m_connectedHandler != NULL)
+				IsConnected() ? m_connectedHandler->DeviceConnected() : m_connectedHandler->DeviceDisconnected();
+
+			IsConnected() ? Connect() : Disconnect();
 		}
 	}
 
-};
+}
+;
 
 }
 
