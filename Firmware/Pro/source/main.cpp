@@ -9,11 +9,11 @@
 #include <StorageSDSPI.h>
 #include <StorageFlashSPI.h>
 
-#include <USBDevice.h>
-#include <USBInterface.h>
-#include <USBCDCInterface.h>
+#include <USBCDCDevice.h>
 
 #include <DJIController.h>
+
+#include <MAVLinkComm.h>
 
 #include <Stopwatch.h>
 #include <scmRTOS.h>
@@ -29,26 +29,27 @@ using namespace App;
 
 Storage::StorageSDSPI sdStorage(Board::MicroSD::SPI, Board::MicroSD::CSN, Board::MicroSD::CD);
 
-USB::USBCDCInterface cdcInterface;
-USB::USBInterface* iFaces[] = { &cdcInterface };
+USB::USBCDCDevice CDCDevice(Board::USB);
 
-USB::USBDevice usb_device(Board::USB, iFaces, 1);
-
-USBWorker usb_worker(cdcInterface);
+USBWorker usb_worker(CDCDevice);
 
 DJIController djiController(Board::FC::CAN);
 
+MAVLinkComm mavLinkComm(Board::OSD::USART);
+
 // Process types
-typedef OS::process<OS::pr0, 2048> TProc0;
-typedef OS::process<OS::pr1, 2048> TProc1;
+typedef OS::process<OS::pr0, 1024> TProc0;
+typedef OS::process<OS::pr1, 1024> TProc1;
 typedef OS::process<OS::pr2, 2048> TProc2;
-typedef OS::process<OS::pr3, 300> TProc3;
+typedef OS::process<OS::pr3, 1024> TProc3;
+typedef OS::process<OS::pr4, 300> TProc4;
 
 // Process objects
 TProc0 Proc0;
 TProc1 Proc1;
 TProc2 Proc2;
 TProc3 Proc3;
+TProc4 Proc4;
 
 #define BUFFER		2048
 #define F10MB		10485760/BUFFER
@@ -73,7 +74,7 @@ int main()
 
 	f_mount(&fatFs, "SD:", 0);
 
-	usb_device.Init();
+	CDCDevice.Init();
 
 	OS::run();
 }
@@ -89,6 +90,13 @@ OS_PROCESS void TProc0::exec()
 
 template<>
 OS_PROCESS void TProc1::exec()
+{
+	mavLinkComm.Init();
+	mavLinkComm.Run();
+}
+
+template<>
+OS_PROCESS void TProc2::exec()
 {
 	Utils::Stopwatch sp;
 	uint32_t read = 0;
@@ -169,13 +177,13 @@ OS_PROCESS void TProc1::exec()
 }
 
 template<>
-OS_PROCESS void TProc2::exec()
+OS_PROCESS void TProc3::exec()
 {
 	usb_worker.Run();
 }
 
 template<>
-OS_PROCESS void TProc3::exec()
+OS_PROCESS void TProc4::exec()
 {
 	Board::LedError.PowerUp();
 	Board::LedError.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);

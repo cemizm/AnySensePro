@@ -8,11 +8,12 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
-#include "Pin.h"
-#include "SPI.h"
-#include "DMA.h"
-#include "CAN.h"
-#include "USB.h"
+#include <Pin.h>
+#include <SPI.h>
+#include <DMA.h>
+#include <CAN.h>
+#include <USB.h>
+#include <USART.h>
 #include <BLEDevice.h>
 
 namespace Board
@@ -47,14 +48,30 @@ extern HAL::SPI SPI;
 
 }
 
-namespace Telemetry
-{
-}
 
 namespace FC
 {
 extern HAL::CAN CAN;
+extern HAL::USART USART;
+
 }
+
+namespace Telemetry
+{
+extern HAL::USART USART;
+}
+
+namespace Sensor
+{
+extern HAL::USART USART;
+}
+
+namespace OSD
+{
+extern HAL::USART USART;
+}
+
+
 
 }
 

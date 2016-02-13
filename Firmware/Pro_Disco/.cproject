@@ -60,6 +60,7 @@
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.1158435942" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="../include"/>
 									<listOptionValue builtIn="false" value="../../libs/libopencm3/include"/>
+									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 									<listOptionValue builtIn="false" value="../../shared/utils/include"/>
 									<listOptionValue builtIn="false" value="../../shared/HAL/include"/>
 									<listOptionValue builtIn="false" value="../../shared/scmRTOS/Common"/>
@@ -94,6 +95,7 @@
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
+									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1766875594" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -122,6 +124,7 @@
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
+									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.93125110" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>
@@ -241,6 +244,7 @@
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
+									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.534347944" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -263,6 +267,7 @@
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
+									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1808653940" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -289,6 +294,7 @@
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
+									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.430344351" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>
@@ -367,4 +373,5 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

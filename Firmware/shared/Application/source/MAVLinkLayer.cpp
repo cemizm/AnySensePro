@@ -33,7 +33,7 @@ MAVLinkLayer::MAVLinkLayer(mavlink_channel_t channel) :
 
 uint8_t MAVLinkLayer::Decode(uint8_t data, mavlink_message_t* msg)
 {
-	return mavlink_parse_char(m_channel, data, msg, &m_status) ? 1 : 0;
+	return mavlink_parse_char(m_channel, data, msg, &m_status);
 }
 uint16_t MAVLinkLayer::PackHeartbeat(mavlink_message_t* msg)
 {
@@ -51,9 +51,9 @@ uint16_t MAVLinkLayer::PackGPS(mavlink_message_t* msg)
 	const GPSPosition& gps = SensorData.GetPositionCurrent();
 
 	return mavlink_msg_gps_raw_int_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 0, SensorData.GetFixType(),
-			gps.Latitude * 10000000, gps.Longitude * 10000000, SensorData.GetAltitude() * 1000, SensorData.GetHdop() * 100,
-			SensorData.GetVdop() * 100, SensorData.GetSpeed() * 100, SensorData.GetCourseOverGround() * 100,
-			SensorData.GetSatellites());
+			gps.Latitude * 10000000, gps.Longitude * 10000000, SensorData.GetRelativeAltitude() * 1000,
+			SensorData.GetHdop() * 100, SensorData.GetVdop() * 100, SensorData.GetSpeed() * 100,
+			SensorData.GetCourseOverGround() * 100, SensorData.GetSatellites());
 }
 uint16_t MAVLinkLayer::PackVFRHud(mavlink_message_t* msg)
 {
@@ -62,19 +62,17 @@ uint16_t MAVLinkLayer::PackVFRHud(mavlink_message_t* msg)
 }
 uint16_t MAVLinkLayer::PackAttitude(mavlink_message_t* msg)
 {
-	return mavlink_msg_attitude_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 0, SensorData.GetRoll(), SensorData.GetPitch(),
-			SensorData.GetYaw(), 0, 0, 0);
+	return mavlink_msg_attitude_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 0, SensorData.GetRoll() * M_PI / 180,
+			SensorData.GetPitch() * M_PI / 180, SensorData.GetHeading() * M_PI / 180, 0, 0, 0);
 }
 uint16_t MAVLinkLayer::PackRCOut(mavlink_message_t* msg)
 {
-
 	return mavlink_msg_rc_channels_raw_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 0, 10, SensorData.GetRCChannel(1),
 			SensorData.GetRCChannel(2), SensorData.GetRCChannel(5), SensorData.GetRCChannel(3), SensorData.GetRCChannel(7),
 			SensorData.GetRCChannel(8), SensorData.GetRCChannel(4), SensorData.GetRCChannel(9), 255);
 }
 uint16_t MAVLinkLayer::PackBatteryPack(mavlink_message_t* msg)
 {
-
 	return mavlink_msg_battery_status_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 1, MAV_BATTERY_FUNCTION_ALL,
 			MAV_BATTERY_TYPE_LIPO, SensorData.GetTemperatur1(), SensorData.GetCells(), -1, -1, -1, -1);
 }

@@ -78,33 +78,21 @@ void DJIParserV1::process(DJIMessageOSDV1* msg)
 			data[i] ^= msg->Mask;
 	}
 
-	OSD = *msg;
-
 	SensorData.SetPositionCurrent(msg->Position.Latitude / M_PI * 180.0, msg->Position.Longitude / M_PI * 180.0);
 	SensorData.SetAltitude(msg->AltitudeBaro);
 
-	float heading = atan2f(msg->Heading.Y, msg->Heading.X) / M_PI * 180.0;
-	if (heading < 0)
-		heading += 360.0;
-	SensorData.SetHeading(heading);
+	SensorData.SetHeading(msg->Quaternation.getHeading());
+	SensorData.SetRoll(msg->Quaternation.getRoll());
+	SensorData.SetPitch(msg->Quaternation.getPitch());
 
-	float speed = sqrtf(msg->Velocity.North * msg->Velocity.North + msg->Velocity.East * msg->Velocity.East);
-	SensorData.SetSpeed(speed);
-
+	SensorData.SetSpeed(msg->Velocity.getSpeed());
 	SensorData.SetVerticalSpeed(-msg->Velocity.Down);
-
-	float cog = -(atan2f(msg->Velocity.East, msg->Velocity.North) / M_PI * 180);
-	if (cog < 0)
-		cog += 360;
-	SensorData.SetCourseOverGround(cog);
-
+	SensorData.SetCourseOverGround(msg->Velocity.getCOG());
 	SensorData.SetSatellites(msg->Satellites);
 }
 
 void DJIParserV1::process(DJIMessageGPSV1* msg)
 {
-	GPS = *msg;
-
 	SensorData.SetDateTime(msg->DateTime.Years, msg->DateTime.Months, msg->DateTime.Days, msg->DateTime.Hours,
 			msg->DateTime.Minutes, msg->DateTime.Seconds);
 
@@ -122,11 +110,7 @@ void DJIParserV1::process(DJIMessageGPSV1* msg)
 
 void DJIParserV1::process(DJIMessageRAWV1* msg)
 {
-	RAW = *msg;
-
 	SensorData.SetBattery(msg->Voltage.Battery);
-	SensorData.SetRoll(msg->Roll);
-	SensorData.SetPitch(msg->Pitch);
 	SensorData.SetArmed(msg->Armed);
 	SensorData.SetThrottle(msg->ActualInput.Throttle);
 	SensorData.SetPositionHome(msg->HomePosition.Latitude / M_PI * 180, msg->HomePosition.Longitude / M_PI * 180);

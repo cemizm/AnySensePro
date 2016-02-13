@@ -51,18 +51,38 @@ struct DJIMessageOSDV1
 	float AltitudeBaro;								// altitude from barometric sensor (meters)
 	struct
 	{
-		float X;									// compensated heading X component
-		float unk0[2];
-		float Y;									// compensated heading Y component
-
-	}__attribute__((packed)) Heading;
+		float X;
+		float Y;
+		float Z;
+		float W;
+		float getRoll()
+		{
+			return (atan2f((2.0 * (X * Y + W * Z)), W * W + X * X - Y * Y - Z * Z)) / M_PI * 180;
+		}
+		float getPitch()
+		{
+			return (-asin(-2.0 * (X * Z - W * Y))) / M_PI * 180;
+		}
+		float getHeading()
+		{
+			return (-(atan2f((2.0 * (Y * Z + W * X)), W * W - X * X - Y * Y + Z * Z)) / M_PI * 180) + 180;
+		}
+	}__attribute__((packed, aligned(1))) Quaternation;
 	float unk1[3];
 	struct
 	{
 		float North;
 		float East;
 		float Down;
-	}__attribute__((packed)) Velocity;				// averaged notrh,east,down velocity or 0 when less than 5 satellites locked (m/s)
+		float getSpeed()
+		{
+			return sqrtf(North * North + East * East);
+		}
+		float getCOG()
+		{
+			return (-(atan2f(East, North) / M_PI * 180)) + 180;
+		}
+	}__attribute__((packed)) Velocity;			// averaged notrh,east,down velocity or 0 when less than 5 satellites locked (m/s)
 	float unk2[3];
 	struct
 	{
@@ -75,7 +95,7 @@ struct DJIMessageOSDV1
 	uint8_t Mask;
 	uint16_t Sequence;								// sequence number - increases with every message
 	uint32_t Footer;
-}__attribute__((packed));
+}__attribute__((packed, aligned(1)));
 
 struct DJIMessageGPSV1
 {
@@ -194,9 +214,6 @@ union DJIMessageV1
 class DJIParserV1: public DJIParser
 {
 private:
-	DJIMessageOSDV1 OSD;
-	DJIMessageGPSV1 GPS;
-	DJIMessageRAWV1 RAW;
 	void findNext(DJIChannel* channel);
 	void moveToSyncPos(DJIChannel* channel);
 	void process(DJIMessageV1* msg);

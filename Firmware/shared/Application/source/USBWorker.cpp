@@ -23,7 +23,7 @@ void USBWorker::Run()
 			//process
 			m_delay_ms = USB_WORKER_DELAY_CONNECTED;
 		}
-		else if (m_CDC.IsConnected())
+		else if ( m_CDC.IsConnected())
 		{
 			switch (currentItem)
 			{
@@ -62,11 +62,11 @@ void USBWorker::Run()
 	}
 }
 
-void USBWorker::Connected()
+void USBWorker::DeviceConnected()
 {
 	m_delay_ms = USB_WORKER_DELAY_CONNECTED;
 }
-void USBWorker::Disconnected()
+void USBWorker::DeviceDisconnected()
 {
 	m_delay_ms = USB_WORKER_DELAY_DISCONNECTED;
 }

@@ -68,7 +68,7 @@ private:
 	float m_HomeAltitude = 0; // home altitude from barometric sensor plus 20m (meters)
 	float m_VerticalSpeed = 0; //vertical speed (barometric) in m/s (a.k.a. climb speed)
 
-	float m_Heading = 0; //heading in degrees (titlt compensated)
+	float m_Heading = 0; //heading in degree
 
 	float m_Pitch = 0; //pitch in degree
 	float m_Roll = 0; //roll in degree
@@ -276,11 +276,6 @@ public:
 	void SetPitch(float pitch = 0)
 	{
 		m_Pitch = pitch;
-	}
-
-	float GetYaw()
-	{
-		return m_Heading * M_PI / 180;
 	}
 
 	const GPSPosition& GetPositionCurrent() const
