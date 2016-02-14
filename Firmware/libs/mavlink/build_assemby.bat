@@ -1,1 +1,1 @@
-python -m pymavlink.generator.mavgen ..\shared\mavlink\UniAdapter.xml --lang CS -o ConfigTool\UniAdapter
+python -m pymavlink.tools.mavgen ..\Firmware\libs\mavlink\AnySense.xml --lang CS -o ..\GroundTools\xeniC.AnySense.Shared\xeniC.AnySense.Library\MavLink\AnySense

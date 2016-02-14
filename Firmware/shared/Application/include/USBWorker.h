@@ -15,7 +15,7 @@
 #include <Pool.h>
 #include <Queue.h>
 
-#define USB_WORKER_DELAY_CONNECTED		50
+#define USB_WORKER_DELAY_CONNECTED		10
 #define USB_WORKER_DELAY_DISCONNECTED	1000
 #define USB_WORKER_MESSAGES				3
 
@@ -32,10 +32,11 @@ private:
 	mavlink_message_t m_msg;
 	mavlink_message_t m_msg_rcv;
 	uint8_t m_buffer[MAVLINK_MAX_PACKET_LEN];
+	uint8_t established;
 
 public:
 	USBWorker(USB::USBCDCDevice& cdc) :
-			m_CDC(cdc), m_channels(), m_mavlink(MAVLINK_COMM_0), m_delay_ms(USB_WORKER_DELAY_CONNECTED), m_buffer()
+			m_CDC(cdc), m_channels(), m_mavlink(MAVLINK_COMM_0), m_delay_ms(USB_WORKER_DELAY_CONNECTED), m_buffer(), established(0)
 	{
 		m_CDC.RegisterHandler(this);
 	}

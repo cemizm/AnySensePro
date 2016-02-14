@@ -7,6 +7,8 @@
 
 #include <USBWorker.h>
 #include <stddef.h>
+#include "Board.h"
+#include "MAVLinkLayer.h"
 
 namespace App
 {
@@ -20,10 +22,18 @@ void USBWorker::Run()
 	{
 		if (m_channels.pop(m_msg, delay_ms(m_delay_ms)))
 		{
-			//process
 			m_delay_ms = USB_WORKER_DELAY_CONNECTED;
+			established = 1;
+
+			switch (m_msg.msgid)
+			{
+			case MAVLINK_MSG_ID_CONFIGURATION_CONTROL:
+				dataLen = mavlink_msg_configuration_version3_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, &m_msg, FIRMWARE_VERSION,
+						HARDWARE_VERSION);
+				break;
+			}
 		}
-		else if ( m_CDC.IsConnected())
+		else if (established == 1)
 		{
 			switch (currentItem)
 			{
@@ -69,6 +79,7 @@ void USBWorker::DeviceConnected()
 void USBWorker::DeviceDisconnected()
 {
 	m_delay_ms = USB_WORKER_DELAY_DISCONNECTED;
+	established = 0;
 }
 
 void USBWorker::DataRX(uint8_t* data, uint8_t len)

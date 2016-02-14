@@ -1,0 +1,13 @@
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\bin\Debug\xeniC.AnySense.Controls.dll
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\bin\Debug\xeniC.AnySense.Controls.pdb
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\AvionicGauge.g.cs
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\xeniC.AnySense.Controls_MarkupCompile.cache
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\xeniC.AnySense.Controls_MarkupCompile.lref
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\AvionicGauge.baml
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\xeniC.AnySense.Controls.g.resources
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\xeniC.AnySense.Controls.Properties.Resources.resources
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\xeniC.AnySense.Controls.csproj.GenerateResource.Cache
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\xeniC.AnySense.Controls.dll
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\xeniC.AnySense.Controls.pdb
+C:\development\AnySense\GroundTools\xeniC.AnySense.KonfigurationManager\xeniC.AnySense.Controls\obj\Debug\xeniC.AnySense.Controls.csprojResolveAssemblyReference.cache

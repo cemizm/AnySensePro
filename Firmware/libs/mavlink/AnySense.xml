@@ -78,5 +78,9 @@
           <field type="uint8_t" name="port1" enum="CONFIG_PROTOCOL">Protocol used on Port 1</field>
           <field type="uint8_t" name="port2" enum="CONFIG_PROTOCOL">Protocol used on Port 2</field>
         </message>
+        <message id="185" name="CONFIGURATION_VERSION3">
+          <field type="uint32_t" name="fw_version">Firmware Version</field>
+          <field type="uint8_t" name="hw_version">Hardware Version</field>
+        </message>
 			</messages>
 		</mavlink>

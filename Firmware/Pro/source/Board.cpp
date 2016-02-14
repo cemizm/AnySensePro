@@ -15,6 +15,7 @@
 #include <libopencm3/stm32/st_usbfs.h>
 #include <libopencm3/stm32/syscfg.h>
 
+
 namespace Board
 {
 
@@ -69,13 +70,13 @@ HAL::Pin TX(GPIOB, RCC_GPIOB, GPIO9);
 
 HAL::CAN CAN(CAN1, RCC_CAN, TX, RX, GPIO_AF9, NVIC_USB_HP_CAN1_TX_IRQ, NVIC_USB_LP_CAN1_RX0_IRQ, NVIC_CAN1_RX1_IRQ);
 
-HAL::Pin USART_RX(GPIOA, RCC_GPIOA, GPIO10);
-HAL::Pin USART_TX(GPIOA, RCC_GPIOA, GPIO9);
+HAL::Pin USART_RX(GPIOA, RCC_GPIOA, GPIO3);
+HAL::Pin USART_TX(GPIOA, RCC_GPIOA, GPIO2);
 
-HAL::DMA RX_DMA(DMA2, DMA_CHANNEL5, NVIC_DMA2_CHANNEL5_IRQ, rcc_periph_clken::RCC_DMA2);
-HAL::DMA TX_DMA(DMA2, DMA_CHANNEL5, NVIC_DMA2_CHANNEL5_IRQ, rcc_periph_clken::RCC_DMA2);
+HAL::DMA RX_DMA(DMA1, DMA_CHANNEL6, NVIC_DMA1_CHANNEL6_IRQ, rcc_periph_clken::RCC_DMA1);
+HAL::DMA TX_DMA(DMA1, DMA_CHANNEL7, NVIC_DMA1_CHANNEL7_IRQ, rcc_periph_clken::RCC_DMA1);
 
-HAL::USART USART(UART4, RCC_UART4, RX, TX, GPIO_AF6, NVIC_UART4_EXTI34_IRQ, RX_DMA, TX_DMA);
+HAL::USART USART(USART2, RCC_USART2, RX, TX, GPIO_AF7, NVIC_USART2_EXTI26_IRQ, RX_DMA, TX_DMA);
 }
 
 namespace Telemetry
@@ -84,22 +85,22 @@ namespace Telemetry
 HAL::Pin RX(GPIOA, RCC_GPIOA, GPIO10);
 HAL::Pin TX(GPIOA, RCC_GPIOA, GPIO9);
 
-HAL::DMA RX_DMA(DMA2, DMA_CHANNEL5, NVIC_DMA2_CHANNEL5_IRQ, rcc_periph_clken::RCC_DMA2);
-HAL::DMA TX_DMA(DMA2, DMA_CHANNEL5, NVIC_DMA2_CHANNEL5_IRQ, rcc_periph_clken::RCC_DMA2);
+HAL::DMA TX_DMA(DMA1, DMA_CHANNEL4, NVIC_DMA1_CHANNEL4_IRQ, rcc_periph_clken::RCC_DMA1);
+HAL::DMA RX_DMA(DMA1, DMA_CHANNEL5, NVIC_DMA1_CHANNEL5_IRQ, rcc_periph_clken::RCC_DMA1);
 
-HAL::USART USART(UART4, RCC_UART4, RX, TX, GPIO_AF6, NVIC_UART4_EXTI34_IRQ, RX_DMA, TX_DMA);
+HAL::USART USART(USART1, RCC_USART1, RX, TX, GPIO_AF7, NVIC_USART1_EXTI25_IRQ, RX_DMA, TX_DMA);
 
 }
 
 namespace Sensor
 {
-HAL::Pin RX(GPIOA, RCC_GPIOA, GPIO10);
-HAL::Pin TX(GPIOA, RCC_GPIOA, GPIO9);
+HAL::Pin RX(GPIOB, RCC_GPIOB, GPIO11);
+HAL::Pin TX(GPIOB, RCC_GPIOB, GPIO10);
 
-HAL::DMA RX_DMA(DMA2, DMA_CHANNEL5, NVIC_DMA2_CHANNEL5_IRQ, rcc_periph_clken::RCC_DMA2);
-HAL::DMA TX_DMA(DMA2, DMA_CHANNEL5, NVIC_DMA2_CHANNEL5_IRQ, rcc_periph_clken::RCC_DMA2);
+HAL::DMA RX_DMA(DMA1, DMA_CHANNEL3, NVIC_DMA1_CHANNEL3_IRQ, rcc_periph_clken::RCC_DMA1);
+HAL::DMA TX_DMA(DMA1, DMA_CHANNEL2, NVIC_DMA1_CHANNEL2_IRQ, rcc_periph_clken::RCC_DMA1);
 
-HAL::USART USART(UART4, RCC_UART4, RX, TX, GPIO_AF6, NVIC_UART4_EXTI34_IRQ, RX_DMA, TX_DMA);
+HAL::USART USART(USART3, RCC_USART3, RX, TX, GPIO_AF7, NVIC_USART3_EXTI28_IRQ, RX_DMA, TX_DMA);
 }
 
 namespace OSD
@@ -166,6 +167,21 @@ void SystemInit()
 	SYSCFG_MEMRM |= 1 << 5; //USB Remap
 }
 
+}
+
+extern "C" void usart1_exti25_isr(void)
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_USART1_EXTI25_IRQ);
+}
+
+extern "C" void usart2_exti26_isr(void)
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_USART2_EXTI26_IRQ);
+}
+
+extern "C" void usart3_exti28_isr(void)
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_USART3_EXTI28_IRQ);
 }
 
 extern "C" void uart4_exti34_isr()
@@ -246,6 +262,16 @@ extern "C" void dma1_channel4_isr()
 extern "C" void dma1_channel5_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL5_IRQ);
+}
+
+extern "C" void dma1_channel6_isr(void)
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL6_IRQ);
+}
+
+extern "C" void dma1_channel7_isr(void)
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_DMA1_CHANNEL7_IRQ);
 }
 
 extern "C" void dma2_channel1_isr()
