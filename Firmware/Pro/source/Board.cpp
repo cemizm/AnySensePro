@@ -119,26 +119,26 @@ void InitClock()
 {
 
 	/* Enable internal high-speed oscillator. */
-	rcc_osc_on(HSI);
-	rcc_wait_for_osc_ready(HSI);
+	rcc_osc_on(RCC_HSI);
+	rcc_wait_for_osc_ready(RCC_HSI);
 
 	/* Select HSI as SYSCLK source. */
 	rcc_set_sysclk_source(RCC_CFGR_SW_HSI);
 
 	/* Enable external high-speed oscillator 8MHz. */
-	rcc_osc_on(HSE);
-	rcc_wait_for_osc_ready(HSE);
+	rcc_osc_on(RCC_HSE);
+	rcc_wait_for_osc_ready(RCC_HSE);
 
 	rcc_set_hpre(RCC_CFGR_HPRE_DIV_NONE);
 	rcc_set_ppre1(RCC_CFGR_PPRE1_DIV_2);
 	rcc_set_ppre2(RCC_CFGR_PPRE2_DIV_NONE);
 
 	rcc_set_pll_source(RCC_CFGR_PLLSRC_HSE_PREDIV);
-	rcc_set_main_pll_hsi(RCC_CFGR_PLLMUL_PLL_IN_CLK_X9);
+	rcc_set_pll_multiplier(RCC_CFGR_PLLMUL_PLL_IN_CLK_X9);
 
 	/* Enable PLL oscillator and wait for it to stabilize. */
-	rcc_osc_on(PLL);
-	rcc_wait_for_osc_ready(PLL);
+	rcc_osc_on(RCC_PLL);
+	rcc_wait_for_osc_ready(RCC_PLL);
 
 	/* Configure flash settings. */
 	flash_set_ws(FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY_2WS);
@@ -147,14 +147,14 @@ void InitClock()
 	rcc_set_sysclk_source(RCC_CFGR_SW_PLL);
 
 	/* Wait for PLL clock to be selected. */
-	rcc_wait_for_sysclk_status(PLL);
+	rcc_wait_for_sysclk_status(RCC_PLL);
 
 	/* Set the peripheral clock frequencies used. */
 	rcc_apb1_frequency = 36000000;
 	rcc_apb2_frequency = 72000000;
 
 	/* Disable internal high-speed oscillator. */
-	rcc_osc_off(HSI);
+	rcc_osc_off(RCC_HSI);
 }
 
 void SystemInit()
