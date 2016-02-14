@@ -39,3 +39,10 @@
 # System files
 .DS_Store
 ~$*.xlsx
+*.pdb
+
+# Csharp
+obj/
+bin/
+*.suo
+*.csproj.user
