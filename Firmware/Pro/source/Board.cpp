@@ -169,6 +169,8 @@ void SystemInit()
 
 }
 
+#ifndef INTERRUPT_FORWARDING
+
 extern "C" void usart1_exti25_isr(void)
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_USART1_EXTI25_IRQ);
@@ -293,3 +295,5 @@ extern "C" void dma2_channel5_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_DMA2_CHANNEL5_IRQ);
 }
+
+#endif
