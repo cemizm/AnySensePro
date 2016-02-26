@@ -152,7 +152,7 @@ namespace MavLink
 			{128, new MavPacketInfo(Deserialize_GPS2_RTK, 226)},
 			{129, new MavPacketInfo(Deserialize_SCALED_IMU3, 46)},
 			{130, new MavPacketInfo(Deserialize_DATA_TRANSMISSION_HANDSHAKE, 29)},
-			{131, new MavPacketInfo(Deserialize_ENCAPSULATED_DATA, 223)},
+			{131, new MavPacketInfo(Deserialize_ENCAPSULATED_DATA, 225)},
 			{132, new MavPacketInfo(Deserialize_DISTANCE_SENSOR, 85)},
 			{133, new MavPacketInfo(Deserialize_TERRAIN_REQUEST, 6)},
 			{134, new MavPacketInfo(Deserialize_TERRAIN_DATA, 229)},
@@ -1668,7 +1668,7 @@ namespace MavLink
 			return new Msg_encapsulated_data
 			{
 				seqnr = bitconverter.ToUInt16(bytes, offset + 0),
-				data =  ByteArrayUtil.ToUInt8(bytes, offset + 2, 253),
+				data =  ByteArrayUtil.ToUInt8(bytes, offset + 2, 240),
 			};
 		}
 
@@ -3408,8 +3408,8 @@ namespace MavLink
 		internal static int Serialize_ENCAPSULATED_DATA(this Msg_encapsulated_data msg, byte[] bytes, ref int offset)
 		{
 			bitconverter.GetBytes(msg.seqnr, bytes, offset + 0);
-			ByteArrayUtil.ToByteArray(msg.data, bytes, offset + 2, 253);
-			offset += 255;
+			ByteArrayUtil.ToByteArray(msg.data, bytes, offset + 2, 240);
+			offset += 242;
 			return 131;
 		}
 

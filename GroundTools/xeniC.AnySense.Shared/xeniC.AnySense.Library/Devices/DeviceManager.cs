@@ -83,7 +83,8 @@ namespace xeniC.AnySense.Library.Devices
 
             Msg_configuration_control configCMD = new Msg_configuration_control();
             configCMD.command = (byte)CONFIG_COMMAND.CONFIG_COMMAND_GET_VERSION;
-
+            Msg_data_transmission_handshake handshake = new Msg_data_transmission_handshake();
+            
             PacketReceivedEventHandler pr = (o, e) =>
             {
                 if (e.Message.GetType() == typeof(Msg_configuration_version2))

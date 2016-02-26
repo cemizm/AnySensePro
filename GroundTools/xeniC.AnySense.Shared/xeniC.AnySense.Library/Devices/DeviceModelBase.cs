@@ -31,6 +31,10 @@ namespace xeniC.AnySense.Library.Devices
 
         #region Properties
 
+        protected SerialMavlinkLayer Mavlink { get { return mavlink; } }
+
+        public UInt32 Version { get { return version; } }
+
         public string Firmware { get; protected set; }
 
         public double Roll

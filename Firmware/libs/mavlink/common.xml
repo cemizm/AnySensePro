@@ -2793,7 +2793,7 @@
         </message>
         <message id="131" name="ENCAPSULATED_DATA">
             <field type="uint16_t" name="seqnr">sequence number (starting with 0 on every transmission)</field>
-            <field type="uint8_t[253]" name="data">image data bytes</field>
+            <field type="uint8_t[240]" name="data">image data bytes</field>
         </message>
         <message id="132" name="DISTANCE_SENSOR">
             <field type="uint32_t" name="time_boot_ms">Time since system boot</field>

@@ -5,22 +5,22 @@
 typedef struct __mavlink_encapsulated_data_t
 {
  uint16_t seqnr; /*< sequence number (starting with 0 on every transmission)*/
- uint8_t data[253]; /*< image data bytes*/
+ uint8_t data[240]; /*< image data bytes*/
 } mavlink_encapsulated_data_t;
 
-#define MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN 255
-#define MAVLINK_MSG_ID_131_LEN 255
+#define MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN 242
+#define MAVLINK_MSG_ID_131_LEN 242
 
-#define MAVLINK_MSG_ID_ENCAPSULATED_DATA_CRC 223
-#define MAVLINK_MSG_ID_131_CRC 223
+#define MAVLINK_MSG_ID_ENCAPSULATED_DATA_CRC 225
+#define MAVLINK_MSG_ID_131_CRC 225
 
-#define MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN 253
+#define MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN 240
 
 #define MAVLINK_MESSAGE_INFO_ENCAPSULATED_DATA { \
 	"ENCAPSULATED_DATA", \
 	2, \
 	{  { "seqnr", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_encapsulated_data_t, seqnr) }, \
-         { "data", NULL, MAVLINK_TYPE_UINT8_T, 253, 2, offsetof(mavlink_encapsulated_data_t, data) }, \
+         { "data", NULL, MAVLINK_TYPE_UINT8_T, 240, 2, offsetof(mavlink_encapsulated_data_t, data) }, \
          } \
 }
 
@@ -41,12 +41,12 @@ static inline uint16_t mavlink_msg_encapsulated_data_pack(uint8_t system_id, uin
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN];
 	_mav_put_uint16_t(buf, 0, seqnr);
-	_mav_put_uint8_t_array(buf, 2, data, 253);
+	_mav_put_uint8_t_array(buf, 2, data, 240);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN);
 #else
 	mavlink_encapsulated_data_t packet;
 	packet.seqnr = seqnr;
-	mav_array_memcpy(packet.data, data, sizeof(uint8_t)*253);
+	mav_array_memcpy(packet.data, data, sizeof(uint8_t)*240);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN);
 #endif
 
@@ -75,12 +75,12 @@ static inline uint16_t mavlink_msg_encapsulated_data_pack_chan(uint8_t system_id
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN];
 	_mav_put_uint16_t(buf, 0, seqnr);
-	_mav_put_uint8_t_array(buf, 2, data, 253);
+	_mav_put_uint8_t_array(buf, 2, data, 240);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN);
 #else
 	mavlink_encapsulated_data_t packet;
 	packet.seqnr = seqnr;
-	mav_array_memcpy(packet.data, data, sizeof(uint8_t)*253);
+	mav_array_memcpy(packet.data, data, sizeof(uint8_t)*240);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN);
 #endif
 
@@ -133,7 +133,7 @@ static inline void mavlink_msg_encapsulated_data_send(mavlink_channel_t chan, ui
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN];
 	_mav_put_uint16_t(buf, 0, seqnr);
-	_mav_put_uint8_t_array(buf, 2, data, 253);
+	_mav_put_uint8_t_array(buf, 2, data, 240);
 #if MAVLINK_CRC_EXTRA
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ENCAPSULATED_DATA, buf, MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN, MAVLINK_MSG_ID_ENCAPSULATED_DATA_CRC);
 #else
@@ -142,7 +142,7 @@ static inline void mavlink_msg_encapsulated_data_send(mavlink_channel_t chan, ui
 #else
 	mavlink_encapsulated_data_t packet;
 	packet.seqnr = seqnr;
-	mav_array_memcpy(packet.data, data, sizeof(uint8_t)*253);
+	mav_array_memcpy(packet.data, data, sizeof(uint8_t)*240);
 #if MAVLINK_CRC_EXTRA
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ENCAPSULATED_DATA, (const char *)&packet, MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN, MAVLINK_MSG_ID_ENCAPSULATED_DATA_CRC);
 #else
@@ -164,7 +164,7 @@ static inline void mavlink_msg_encapsulated_data_send_buf(mavlink_message_t *msg
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char *buf = (char *)msgbuf;
 	_mav_put_uint16_t(buf, 0, seqnr);
-	_mav_put_uint8_t_array(buf, 2, data, 253);
+	_mav_put_uint8_t_array(buf, 2, data, 240);
 #if MAVLINK_CRC_EXTRA
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ENCAPSULATED_DATA, buf, MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN, MAVLINK_MSG_ID_ENCAPSULATED_DATA_CRC);
 #else
@@ -173,7 +173,7 @@ static inline void mavlink_msg_encapsulated_data_send_buf(mavlink_message_t *msg
 #else
 	mavlink_encapsulated_data_t *packet = (mavlink_encapsulated_data_t *)msgbuf;
 	packet->seqnr = seqnr;
-	mav_array_memcpy(packet->data, data, sizeof(uint8_t)*253);
+	mav_array_memcpy(packet->data, data, sizeof(uint8_t)*240);
 #if MAVLINK_CRC_EXTRA
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_ENCAPSULATED_DATA, (const char *)packet, MAVLINK_MSG_ID_ENCAPSULATED_DATA_LEN, MAVLINK_MSG_ID_ENCAPSULATED_DATA_CRC);
 #else
@@ -205,7 +205,7 @@ static inline uint16_t mavlink_msg_encapsulated_data_get_seqnr(const mavlink_mes
  */
 static inline uint16_t mavlink_msg_encapsulated_data_get_data(const mavlink_message_t* msg, uint8_t *data)
 {
-	return _MAV_RETURN_uint8_t_array(msg, data, 253,  2);
+	return _MAV_RETURN_uint8_t_array(msg, data, 240,  2);
 }
 
 /**

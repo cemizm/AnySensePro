@@ -106,9 +106,9 @@
                 <Label Grid.Row="3" Grid.Column="0" Content="Pitch" Style="{StaticResource Title}"/>
                 <Slider Grid.Row="3" Grid.Column="1" Maximum="90" Minimum="-90" Value="{Binding Device.Pitch}" VerticalAlignment="Center" IsEnabled="False" />
                 <Label Grid.Row="4" Grid.Column="0" Content="Altitude" Style="{StaticResource Title}"/>
-                <Label Grid.Row="4" Grid.Column="1" Content="{Binding Value, ElementName=zoomLvl}" Style="{StaticResource Value}"/>
+                <Label Grid.Row="4" Grid.Column="1" Content="{Binding Device.UpdateMessage}" Style="{StaticResource Value}"/>
                 <Label Grid.Row="5" Grid.Column="0" Content="Home Altitude" Style="{StaticResource Title}"/>
-                <Label Grid.Row="5" Grid.Column="1" Content="0.00 m" Style="{StaticResource Value}"/>
+                <Label Grid.Row="5" Grid.Column="1" Content="{Binding Device.UpdatePercent}" Style="{StaticResource Value}"/>
                 <Label Grid.Row="6" Grid.Column="0" Content="Vertical Speed" Style="{StaticResource Title}"/>
                 <Label Grid.Row="6" Grid.Column="1" Content="0.00 m/s" Style="{StaticResource Value}"/>
                 <Label Grid.Row="7" Grid.Column="0" Content="Heading" Style="{StaticResource Title}"/>
@@ -134,12 +134,21 @@
 				    HorizontalAlignment="Center" 
                     SmallChange="1" 
                     Minimum="0" Maximum="25" Value="16"  />
-            <Button Grid.Row="2"
+            <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom" IsEnabled="{Binding Connected}">
+                <Button Padding="1"
+				Width="50" Command="{Binding Device.ExecuteUpdate}"
+				Height="50"
+				Style="{DynamicResource MetroCircleButtonStyle}">
+                    <fa:ImageAwesome Icon="Download" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="White"/>
+                </Button>
+                <Button Padding="1"
 				Width="50" Click="Button_Click"
 				Height="50"
-				Style="{DynamicResource MetroCircleButtonStyle}" VerticalAlignment="Bottom">
-                <fa:ImageAwesome Icon="Cogs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="White"/>
-            </Button>
+				Style="{DynamicResource MetroCircleButtonStyle}">
+                    <fa:ImageAwesome Icon="Cogs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="White"/>
+                </Button>
+
+            </StackPanel>
         </Grid>
     </Grid>
 </Controls:MetroWindow>

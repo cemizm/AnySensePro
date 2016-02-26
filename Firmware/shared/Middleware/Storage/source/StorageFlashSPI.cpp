@@ -58,7 +58,7 @@ int32_t StorageFlashSPI::Init()
 	return SPIFFS_OK;
 }
 
-int32_t StorageFlashSPI::Mount(spiffs* fs)
+int32_t StorageFlashSPI::_Mount()
 {
 	spiffs_config cfg;
 	cfg.phys_size = SIZE; // use all spi flash
@@ -71,7 +71,7 @@ int32_t StorageFlashSPI::Mount(spiffs* fs)
 	cfg.hal_write_f = spiffs_write;
 	cfg.hal_erase_f = spiffs_erase;
 
-	return SPIFFS_mount(fs, &cfg, work_buf, fds, sizeof(fds), cache_buf, sizeof(cache_buf), 0);
+	return SPIFFS_mount(&fs, &cfg, work_buf, fds, sizeof(fds), cache_buf, sizeof(cache_buf), 0);
 }
 
 uint8_t StorageFlashSPI::waitReady(uint16_t timeout)
@@ -223,6 +223,43 @@ s32_t StorageFlashSPI::spiffs_write(u32_t addr, u32_t size, u8_t *src)
 s32_t StorageFlashSPI::spiffs_erase(u32_t addr, u32_t size)
 {
 	return flashStorage.Erase(addr, size);
+}
+
+int32_t StorageFlashSPI::Mount()
+{
+	return flashStorage._Mount();
+}
+
+void StorageFlashSPI::Unmount(){
+	 SPIFFS_unmount(&flashStorage.fs);
+}
+
+int32_t StorageFlashSPI::Format(){
+	return SPIFFS_format(&flashStorage.fs);
+}
+
+spiffs_file StorageFlashSPI::Open(const char *path, spiffs_flags flags, spiffs_mode mode)
+{
+	return SPIFFS_open(&flashStorage.fs, path, flags, mode);
+}
+
+int32_t StorageFlashSPI::Write(spiffs_file fh, void *buf, int32_t len)
+{
+	return SPIFFS_write(&flashStorage.fs, fh, buf, len);
+}
+
+int32_t StorageFlashSPI::Close(spiffs_file fh)
+{
+	return SPIFFS_close(&flashStorage.fs, fh);
+}
+
+int32_t StorageFlashSPI::Rename(const char* oldPath, const char* newPath){
+	return SPIFFS_rename(&flashStorage.fs, oldPath, newPath);
+}
+
+int32_t StorageFlashSPI::Remove(const char* path)
+{
+	SPIFFS_remove(&flashStorage.fs, path);
 }
 
 }

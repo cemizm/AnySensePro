@@ -32,7 +32,17 @@ private:
 	mavlink_message_t m_msg;
 	mavlink_message_t m_msg_rcv;
 	uint8_t m_buffer[MAVLINK_MAX_PACKET_LEN];
+	uint8_t m_data_buffer[MAVLINK_MAX_PACKET_LEN];
 	uint8_t established;
+
+	void ReceiveUpdate(uint32_t size);
+
+	void SendAck(MAV_CMD_ACK ack);
+
+	enum TransferType
+	{
+		FW_Update = 0,
+	};
 
 public:
 	USBWorker(USB::USBCDCDevice& cdc) :

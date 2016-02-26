@@ -65,31 +65,10 @@ namespace OS
 template<>
 OS_PROCESS void TProc0::exec()
 {
-//	u32_t total = 0, used = 0;
-//
-//
-//	flashStorage.Mount(&fs);
-//	SPIFFS_unmount(&fs);
-//	SPIFFS_format(&fs);
-//	flashStorage.Mount(&fs);
-//
-//	SPIFFS_info(&fs, &total, &used);
-//	char buf[12];
-//
-//	// Surely, I've mounted spiffs before entering here
-//
-//	spiffs_file fd = SPIFFS_open(&fs, "my_file", SPIFFS_CREAT | SPIFFS_TRUNC | SPIFFS_RDWR, 0);
-//
-//	for (int i = 0; i < 65; i++)
-//		SPIFFS_write(&fs, fd, content, BUFFER);
-//	SPIFFS_close(&fs, fd);
-//
-//	SPIFFS_info(&fs, &total, &used);
-//
-//	fd = SPIFFS_open(&fs, "my_file", SPIFFS_RDWR, 0);
-//	SPIFFS_read(&fs, fd, (u8_t *) buf, 12);
-//
-//	SPIFFS_close(&fs, fd);
+	Storage::StorageFlashSPI::Mount();
+	Storage::StorageFlashSPI::Unmount();
+	Storage::StorageFlashSPI::Format();
+	Storage::StorageFlashSPI::Mount();
 
 	djiController.Init();
 	djiController.Run();

@@ -54,8 +54,10 @@ private:
 	u8_t work_buf[PAGE_SIZE * 2];
 	u8_t fds[32 * 4];
 	u8_t cache_buf[(PAGE_SIZE + 32) * 4];
+	spiffs fs;
 
 	void InitHW();
+	int32_t _Mount();
 
 	static s32_t spiffs_read(u32_t addr, u32_t size, u8_t *dst);
 	static s32_t spiffs_write(u32_t addr, u32_t size, u8_t *src);
@@ -72,11 +74,19 @@ public:
 	}
 
 	int32_t Init();
-	int32_t Mount(spiffs* fs);
 
 	int32_t Read(uint32_t addr, uint32_t size, uint8_t* buff);
 	int32_t Write(uint32_t addr, uint32_t size, const uint8_t* buff);
 	int32_t Erase(uint32_t addr, uint32_t size);
+
+	static int32_t Mount();
+	static void Unmount();
+	static int32_t Format();
+	static spiffs_file Open(const char *path, spiffs_flags flags, spiffs_mode mode);
+	static int32_t Write(spiffs_file fh, void *buf, int32_t len);
+	static int32_t Close(spiffs_file fh);
+	static int32_t Rename(const char* oldPath, const char* newPath);
+	static int32_t Remove(const char* path);
 
 	void ISR() override;
 };

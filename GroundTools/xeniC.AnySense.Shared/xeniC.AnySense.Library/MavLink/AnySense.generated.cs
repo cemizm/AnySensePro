@@ -7409,7 +7409,7 @@ namespace MavLink
 		/// <summary>
 		/// image data bytes
 		/// </summary>
-		public byte[] data; // Array size 253
+		public byte[] data; // Array size 240
 
         public override int Serialize(byte[] bytes, ref int offset)
             {
