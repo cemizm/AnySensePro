@@ -9,12 +9,20 @@
 
 #include <Interrupt.h>
 
+#include <USBCDCDevice.h>
+
+#include <StorageManager.h>
+#include <StorageSDSPI.h>
+
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/can.h>
 #include <libopencm3/stm32/st_usbfs.h>
 #include <libopencm3/stm32/syscfg.h>
 
+
+USB::USBCDCDevice CDCDevice(Board::USB);
+Storage::StorageFlashSPI flashStorage(Board::Flash::SPI, Board::Flash::CSN);
 
 namespace Board
 {
@@ -44,6 +52,10 @@ HAL::DMA RX(DMA1, DMA_CHANNEL2, NVIC_DMA1_CHANNEL2_IRQ, rcc_periph_clken::RCC_DM
 HAL::DMA TX(DMA1, DMA_CHANNEL3, NVIC_DMA1_CHANNEL3_IRQ, rcc_periph_clken::RCC_DMA1);
 
 HAL::SPI SPI(SPI1, rcc_periph_clken::RCC_SPI1, MOSI, MISO, SCK, GPIO_AF5, RX, TX);
+
+Storage::StorageSDSPI INTERFACE(Board::MicroSD::SPI, Board::MicroSD::CSN, Board::MicroSD::CD);
+
+FATFS FS;
 
 }
 
@@ -157,7 +169,7 @@ void InitClock()
 	rcc_osc_off(RCC_HSI);
 }
 
-void SystemInit()
+void Init()
 {
 
 	InitClock();
@@ -165,6 +177,13 @@ void SystemInit()
 	rcc_periph_clock_enable(rcc_periph_clken::RCC_SYSCFG);
 
 	SYSCFG_MEMRM |= 1 << 5; //USB Remap
+
+	flashStorage.Init();
+
+	Storage::Instance.RegisterStorage(Storages::SDStorage, &MicroSD::INTERFACE);
+	f_mount(&MicroSD::FS, "SD:", 0);
+
+	CDCDevice.Init();
 }
 
 }

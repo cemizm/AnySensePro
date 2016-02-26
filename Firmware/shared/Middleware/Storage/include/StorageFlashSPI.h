@@ -14,7 +14,7 @@
 #include <SPI.h>
 #include <Pin.h>
 
-#include "StorageInterface.h"
+#include <spiffs.h>
 
 namespace Storage
 {
@@ -42,39 +42,49 @@ enum FlashCommand
 #define PAGES            	(SECTORS * PAGES_PER_SECTORS)
 #define SIZE             	(SECTORS * PAGES_PER_SECTORS * PAGE_SIZE)
 
-class StorageFlashSPI: public StorageInterface, public HAL::InterruptHandler
+class StorageFlashSPI: public HAL::InterruptHandler
 {
 private:
-	uint8_t m_status;
-	uint8_t m_initialized;
 	HAL::SPI& m_spi;
 	HAL::Pin& m_csn;
 	uint16_t m_workbyte[1] = { 0xffff };
 	OSAL::EventFlag m_dmaRXFinished;
 	OSAL::EventFlag m_dmaTXFinished;
 
+	u8_t work_buf[PAGE_SIZE * 2];
+	u8_t fds[32 * 4];
+	u8_t cache_buf[(PAGE_SIZE + 32) * 4];
+
 	void InitHW();
 
+	static s32_t spiffs_read(u32_t addr, u32_t size, u8_t *dst);
+	static s32_t spiffs_write(u32_t addr, u32_t size, u8_t *src);
+	static s32_t spiffs_erase(u32_t addr, u32_t size);
+
 	uint8_t waitReady(uint16_t timeout);
-	uint8_t writePage(uint32_t page, const uint8_t* data);
+	uint8_t writePage(uint32_t addr, uint32_t size, const uint8_t* data);
 
 public:
 	StorageFlashSPI(HAL::SPI& spi, HAL::Pin& csn) :
-			m_status(StorageStatus::NoInit), m_initialized(), m_spi(spi), m_csn(csn), m_dmaRXFinished(), m_dmaTXFinished()
+			m_spi(spi), m_csn(csn), m_dmaRXFinished(), m_dmaTXFinished()
 	{
 
 	}
 
-	uint8_t GetStatus() override;
-	uint8_t Init() override;
-	StorageResult Read(uint8_t* buff, uint32_t sector, uint16_t count) override;
-	StorageResult Write(const uint8_t* buff, uint32_t sector, uint16_t count) override;
-	StorageResult IOCtl(StorageCommand cmd, void* buff) override;
+	int32_t Init();
+	int32_t Mount(spiffs* fs);
+
+	int32_t Read(uint32_t addr, uint32_t size, uint8_t* buff);
+	int32_t Write(uint32_t addr, uint32_t size, const uint8_t* buff);
+	int32_t Erase(uint32_t addr, uint32_t size);
 
 	void ISR() override;
 };
 
 }
+
+extern Storage::StorageFlashSPI flashStorage;
+
 /* namespace Storage */
 
 #endif /* MIDDLEWARE_STORAGE_INCLUDE_STORAGESDSPI_H_ */

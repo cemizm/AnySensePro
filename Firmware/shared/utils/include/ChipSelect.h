@@ -25,12 +25,16 @@ public:
 	}
 	~ChipSelect()
 	{
-		m_pin.On();
+		Deselect();
 	}
 	inline void Reselect()
 	{
 		m_pin.On();
 		m_pin.Off();
+	}
+	inline void Deselect()
+	{
+		m_pin.On();
 	}
 };
 

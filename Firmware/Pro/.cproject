@@ -69,11 +69,11 @@
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/spiffs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
 									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 									<listOptionValue builtIn="false" value="/opt/local/include/"/>
-									<listOptionValue builtIn="false" value="../../libs/spiffs/src/"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1723522377" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -97,11 +97,11 @@
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/spiffs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
 									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 									<listOptionValue builtIn="false" value="/opt/local/include/"/>
-									<listOptionValue builtIn="false" value="../../libs/spiffs/src/"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.otherwarnings.246241079" name="Other warning flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.otherwarnings" useByScannerDiscovery="true" value="-Wno-packed-bitfield-compat" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1766875594" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
@@ -130,11 +130,11 @@
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/spiffs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
 									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 									<listOptionValue builtIn="false" value="/opt/local/include/"/>
-									<listOptionValue builtIn="false" value="../../libs/spiffs/src/"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.93125110" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>
@@ -253,11 +253,11 @@
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/spiffs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
 									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 									<listOptionValue builtIn="false" value="/opt/local/include/"/>
-									<listOptionValue builtIn="false" value="../../libs/spiffs/src/"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.534347944" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -279,11 +279,11 @@
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/spiffs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
 									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 									<listOptionValue builtIn="false" value="/opt/local/include/"/>
-									<listOptionValue builtIn="false" value="../../libs/spiffs/src/"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1808653940" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -309,11 +309,11 @@
 									<listOptionValue builtIn="false" value="../../shared/Application/include/"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/USB/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/FatFs/include"/>
+									<listOptionValue builtIn="false" value="../../shared/Middleware/spiffs/include"/>
 									<listOptionValue builtIn="false" value="../../shared/Middleware/Storage/include"/>
 									<listOptionValue builtIn="false" value="../../shared/OSAL/include"/>
 									<listOptionValue builtIn="false" value="../../libs/mavlink/onboard/AnySense"/>
 									<listOptionValue builtIn="false" value="/opt/local/include/"/>
-									<listOptionValue builtIn="false" value="../../libs/spiffs/src/"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.430344351" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>

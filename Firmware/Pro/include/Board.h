@@ -16,6 +16,8 @@
 #include <USART.h>
 #include <BLEDevice.h>
 
+#include <StorageFlashSPI.h>
+
 
 #define FIRMWARE_VERSION		0x00010001
 #define HARDWARE_VERSION		0x01
@@ -28,7 +30,7 @@ enum Storages
 	FlashStorage = 0, SDStorage = 1,
 };
 
-extern void SystemInit();
+extern void Init();
 
 extern HAL::Pin LedActivity;
 extern HAL::Pin LedError;

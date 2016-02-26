@@ -11,21 +11,11 @@
 #include <TimeoutTimer.h>
 #include <ChipSelect.h>
 
-#define FAT_SECTOR_SIZE			512
-
 namespace Storage
 {
 
-uint8_t StorageFlashSPI::GetStatus()
-{
-	return m_status;
-}
-
 void StorageFlashSPI::InitHW()
 {
-	if (m_initialized)
-		return;
-
 	m_csn.On();
 	m_csn.PowerUp();
 	m_csn.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
@@ -47,13 +37,10 @@ void StorageFlashSPI::InitHW()
 	HAL::InterruptRegistry.Enable(m_spi.GetRXDMA().NVIC_IRQn, 15, this);
 
 	m_spi.Enable();
-
-	m_initialized = 1;
 }
 
-uint8_t StorageFlashSPI::Init()
+int32_t StorageFlashSPI::Init()
 {
-	m_status = StorageStatus::NoInit;
 
 	InitHW();
 
@@ -65,10 +52,26 @@ uint8_t StorageFlashSPI::Init()
 	uint16_t deviceID = m_spi.Xfer8(0xFF) << 8; //Device ID
 	deviceID |= m_spi.Xfer8(0xFF);
 
-	if (deviceID == 0x2015)
-		m_status &= ~(StorageStatus::NoInit | StorageStatus::NoDisk | StorageStatus::WriteProtect);
+	if (deviceID != 0x2015)
+		return SPIFFS_ERR_INTERNAL;
 
-	return m_status;
+	return SPIFFS_OK;
+}
+
+int32_t StorageFlashSPI::Mount(spiffs* fs)
+{
+	spiffs_config cfg;
+	cfg.phys_size = SIZE; // use all spi flash
+	cfg.phys_addr = 0; // start spiffs at start of spi flash
+	cfg.phys_erase_block = SECTOR_SIZE; // according to datasheet
+	cfg.log_block_size = SECTOR_SIZE; // let us not complicate things
+	cfg.log_page_size = PAGE_SIZE; // as we said
+
+	cfg.hal_read_f = spiffs_read;
+	cfg.hal_write_f = spiffs_write;
+	cfg.hal_erase_f = spiffs_erase;
+
+	return SPIFFS_mount(fs, &cfg, work_buf, fds, sizeof(fds), cache_buf, sizeof(cache_buf), 0);
 }
 
 uint8_t StorageFlashSPI::waitReady(uint16_t timeout)
@@ -88,62 +91,7 @@ uint8_t StorageFlashSPI::waitReady(uint16_t timeout)
 	return (d & 0x01) == 0x00 ? 1 : 0;
 }
 
-StorageResult StorageFlashSPI::Read(uint8_t* buff, uint32_t sector, uint16_t count)
-{
-	if (m_status & StorageStatus::NoInit)
-		return StorageResult::NotReady;
-
-	sector *= FAT_SECTOR_SIZE;
-
-	Utils::ChipSelect select(m_csn);
-
-	m_spi.Xfer8(FlashCommand::FastReadData);
-	m_spi.Xfer8(sector >> 16); // Address
-	m_spi.Xfer8(sector >> 8);
-	m_spi.Xfer8(sector);
-
-	m_spi.Xfer8(0xFF); // Dummy
-
-	m_spi.InitDMATransfer(HAL::SPIDMADirection::FromDevice, (uint32_t) m_workbyte, (uint32_t) buff, count * FAT_SECTOR_SIZE);
-
-	m_dmaRXFinished.clear();
-
-	m_spi.EnableRXDma();
-	m_spi.EnableTXDma();
-
-	if (!m_dmaRXFinished.wait(delay_ms(100)))
-	{
-		m_spi.DisableClearAll();
-		return StorageResult::Error;
-	}
-
-	m_spi.DisableClearAll();
-
-	return StorageResult::OK;
-}
-
-StorageResult StorageFlashSPI::Write(const uint8_t* buff, uint32_t sector, uint16_t count)
-{
-	sector *= FAT_SECTOR_SIZE;
-	count *= 2;
-
-	do
-	{
-		if (!writePage(sector, buff))
-			break;
-
-		if (!waitReady(10))
-			break;
-
-		sector += PAGE_SIZE;
-		buff += PAGE_SIZE;
-
-	} while (--count);
-
-	return count > 0 ? StorageResult::Error : StorageResult::OK;
-}
-
-uint8_t StorageFlashSPI::writePage(uint32_t sector, const uint8_t* buff)
+uint8_t StorageFlashSPI::writePage(uint32_t addr, uint32_t size, const uint8_t* buff)
 {
 	Utils::ChipSelect select(m_csn);
 
@@ -152,11 +100,11 @@ uint8_t StorageFlashSPI::writePage(uint32_t sector, const uint8_t* buff)
 	select.Reselect();
 
 	m_spi.Xfer8(FlashCommand::PageProgram);
-	m_spi.Xfer8(sector >> 16); // Address
-	m_spi.Xfer8(sector >> 8);
-	m_spi.Xfer8(sector);
+	m_spi.Xfer8(addr >> 16); // Address
+	m_spi.Xfer8(addr >> 8);
+	m_spi.Xfer8(addr);
 
-	m_spi.InitDMATransfer(HAL::SPIDMADirection::ToDevice, (uint32_t) buff, (uint32_t) m_workbyte, PAGE_SIZE);
+	m_spi.InitDMATransfer(HAL::SPIDMADirection::ToDevice, (uint32_t) buff, (uint32_t) m_workbyte, size);
 
 	m_dmaRXFinished.clear();
 
@@ -173,37 +121,79 @@ uint8_t StorageFlashSPI::writePage(uint32_t sector, const uint8_t* buff)
 	return 1;
 }
 
-StorageResult StorageFlashSPI::IOCtl(StorageCommand cmd, void* buff)
+int32_t StorageFlashSPI::Read(uint32_t addr, uint32_t size, uint8_t* buff)
 {
-	StorageResult res = StorageResult::Error;
+	Utils::ChipSelect select(m_csn);
 
-	if (m_status & StorageStatus::NoInit)
-		return StorageResult::NotReady;
+	m_spi.Xfer8(FlashCommand::FastReadData);
+	m_spi.Xfer8(addr >> 16); // Address
+	m_spi.Xfer8(addr >> 8);
+	m_spi.Xfer8(addr);
 
-	switch (cmd)
+	m_spi.Xfer8(0xFF); // Dummy
+
+	m_spi.InitDMATransfer(HAL::SPIDMADirection::FromDevice, (uint32_t) m_workbyte, (uint32_t) buff, size);
+
+	m_dmaRXFinished.clear();
+
+	m_spi.EnableRXDma();
+	m_spi.EnableTXDma();
+
+	if (!m_dmaRXFinished.wait(delay_ms(100)))
 	{
-	case StorageCommand::Sync: /* Make sure that no pending write process */
-		if (waitReady(500))
-			res = StorageResult::OK;
-		break;
-	case StorageCommand::GetSectorCount: /* Get number of sectors on the disk (DWORD) */
-		*(uint32_t*) buff = SIZE / FAT_SECTOR_SIZE;
-		res = StorageResult::OK;
-		break;
-	case StorageCommand::GetSectorSize: /* Get R/W sector size (WORD) */
-		*(uint32_t*) buff = FAT_SECTOR_SIZE;
-		res = StorageResult::OK;
-		break;
-	case StorageCommand::GetBlockSize:
-		*(uint32_t*) buff = SECTOR_SIZE / FAT_SECTOR_SIZE;
-		res = StorageResult::OK;
-		break;
-
-	default:
-		res = StorageResult::InvalidParameter;
+		m_spi.DisableClearAll();
+		return SPIFFS_ERR_INTERNAL;
 	}
 
-	return res;
+	m_spi.DisableClearAll();
+
+	return SPIFFS_OK;
+}
+
+int32_t StorageFlashSPI::Write(uint32_t addr, uint32_t size, const uint8_t* buff)
+{
+
+	uint32_t buff_size = PAGE_SIZE;
+	do
+	{
+		buff_size = size > PAGE_SIZE ? PAGE_SIZE : size;
+
+		if (!writePage(addr, buff_size, buff))
+			break;
+
+		if (!waitReady(10))
+			break;
+
+		addr += buff_size;
+		buff += buff_size;
+		size -= buff_size;
+
+	} while (size > 0);
+
+	return size > 0 ? SPIFFS_ERR_INTERNAL : SPIFFS_OK;
+}
+
+int32_t StorageFlashSPI::Erase(uint32_t addr, uint32_t size)
+{
+	(void) size;
+
+	Utils::ChipSelect select(m_csn);
+
+	m_spi.Xfer8(FlashCommand::WriteEnable);
+
+	select.Reselect();
+
+	m_spi.Xfer8(FlashCommand::SectorErase);
+	m_spi.Xfer8(addr >> 16); // Address
+	m_spi.Xfer8(addr >> 8);
+	m_spi.Xfer8(addr);
+
+	select.Deselect();
+
+	if (!waitReady(3100))
+		return SPIFFS_ERR_ERASE_FAIL;
+
+	return SPIFFS_OK;
 }
 
 void StorageFlashSPI::ISR()
@@ -218,6 +208,21 @@ void StorageFlashSPI::ISR()
 		m_spi.GetTXDMA().ClearInterruptFlags(DMA_TCIF);
 		m_dmaTXFinished.signal_isr();
 	}
+}
+
+s32_t StorageFlashSPI::spiffs_read(u32_t addr, u32_t size, u8_t *dst)
+{
+	return flashStorage.Read(addr, size, dst);
+}
+
+s32_t StorageFlashSPI::spiffs_write(u32_t addr, u32_t size, u8_t *src)
+{
+	return flashStorage.Write(addr, size, src);
+}
+
+s32_t StorageFlashSPI::spiffs_erase(u32_t addr, u32_t size)
+{
+	return flashStorage.Erase(addr, size);
 }
 
 }

@@ -5,12 +5,6 @@
  *      Author: cem
  */
 
-#include <StorageManager.h>
-#include <StorageSDSPI.h>
-#include <StorageFlashSPI.h>
-
-#include <USBCDCDevice.h>
-
 #include <DJIController.h>
 
 #include <MAVLinkComm.h>
@@ -27,14 +21,8 @@
 
 using namespace App;
 
-Storage::StorageSDSPI sdStorage(Board::MicroSD::SPI, Board::MicroSD::CSN, Board::MicroSD::CD);
-
-USB::USBCDCDevice CDCDevice(Board::USB);
-
 USBWorker usb_worker(CDCDevice);
-
 DJIController djiController(Board::FC::CAN);
-
 MAVLinkComm mavLinkComm(Board::OSD::USART);
 
 // Process types
@@ -55,10 +43,9 @@ TProc4 Proc4;
 #define F10MB		10485760/BUFFER
 #define F100MB		104857600/BUFFER
 
-FATFS fatFs;
-FATFS fatFsFlash;
+spiffs fs;
 FIL file;
-char* content[BUFFER] = { 0 };
+char content[BUFFER] = { 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd' };
 
 uint32_t get_fattime(void)
 {
@@ -68,13 +55,7 @@ uint32_t get_fattime(void)
 
 int main()
 {
-	Board::SystemInit();
-
-	Storage::Instance.RegisterStorage(Board::Storages::SDStorage, &sdStorage);
-
-	f_mount(&fatFs, "SD:", 0);
-
-	CDCDevice.Init();
+	Board::Init();
 
 	OS::run();
 }
@@ -84,6 +65,32 @@ namespace OS
 template<>
 OS_PROCESS void TProc0::exec()
 {
+//	u32_t total = 0, used = 0;
+//
+//
+//	flashStorage.Mount(&fs);
+//	SPIFFS_unmount(&fs);
+//	SPIFFS_format(&fs);
+//	flashStorage.Mount(&fs);
+//
+//	SPIFFS_info(&fs, &total, &used);
+//	char buf[12];
+//
+//	// Surely, I've mounted spiffs before entering here
+//
+//	spiffs_file fd = SPIFFS_open(&fs, "my_file", SPIFFS_CREAT | SPIFFS_TRUNC | SPIFFS_RDWR, 0);
+//
+//	for (int i = 0; i < 65; i++)
+//		SPIFFS_write(&fs, fd, content, BUFFER);
+//	SPIFFS_close(&fs, fd);
+//
+//	SPIFFS_info(&fs, &total, &used);
+//
+//	fd = SPIFFS_open(&fs, "my_file", SPIFFS_RDWR, 0);
+//	SPIFFS_read(&fs, fd, (u8_t *) buf, 12);
+//
+//	SPIFFS_close(&fs, fd);
+
 	djiController.Init();
 	djiController.Run();
 }
@@ -98,7 +105,7 @@ OS_PROCESS void TProc1::exec()
 template<>
 OS_PROCESS void TProc2::exec()
 {
-	Utils::Stopwatch sp;
+	//Utils::Stopwatch sp;
 	uint32_t read = 0;
 	uint32_t written = 0;
 
@@ -108,7 +115,7 @@ OS_PROCESS void TProc2::exec()
 	for (;;)
 	{
 		//Write 10.485.760 Bytes
-		sp.Reset();
+		//sp.Reset();
 		fr = f_open(&file, "SD:10.bin", FA_READ | FA_WRITE | FA_CREATE_ALWAYS);
 		if (fr == FR_OK)
 		{
@@ -120,12 +127,12 @@ OS_PROCESS void TProc2::exec()
 			f_close(&file);
 		}
 
-		if (stop[1] == 0)
-			stop[1] = sp.ElapsedTime();
-		stop[1] = (sp.ElapsedTime() + stop[1]) / 2;
+		//if (stop[1] == 0)
+		//	stop[1] = sp.ElapsedTime();
+		//stop[1] = (sp.ElapsedTime() + stop[1]) / 2;
 
 		//Write 104.857.600 Bytes
-		sp.Reset();
+		//sp.Reset();
 		fr = f_open(&file, "SD:100.bin", FA_READ | FA_WRITE | FA_CREATE_ALWAYS);
 		if (fr == FR_OK)
 		{
@@ -136,12 +143,12 @@ OS_PROCESS void TProc2::exec()
 
 			f_close(&file);
 		}
-		if (stop[2] == 0)
-			stop[2] = sp.ElapsedTime();
-		stop[2] = (sp.ElapsedTime() + stop[2]) / 2;
+		//if (stop[2] == 0)
+		//	stop[2] = sp.ElapsedTime();
+		//stop[2] = (sp.ElapsedTime() + stop[2]) / 2;
 
 		//Read 10.485.760 Bytes
-		sp.Reset();
+		//sp.Reset();
 		fr = f_open(&file, "SD:10.bin", FA_READ | FA_OPEN_EXISTING);
 		if (fr == FR_OK)
 		{
@@ -152,12 +159,12 @@ OS_PROCESS void TProc2::exec()
 
 			f_close(&file);
 		}
-		if (stop[3] == 0)
-			stop[3] = sp.ElapsedTime();
-		stop[3] = (sp.ElapsedTime() + stop[3]) / 2;
+		//if (stop[3] == 0)
+		//	stop[3] = sp.ElapsedTime();
+		//stop[3] = (sp.ElapsedTime() + stop[3]) / 2;
 
 		//Read 104.857.600 Bytes
-		sp.Reset();
+		//sp.Reset();
 		fr = f_open(&file, "SD:100.bin", FA_READ | FA_OPEN_EXISTING);
 		if (fr == FR_OK)
 		{
@@ -168,9 +175,9 @@ OS_PROCESS void TProc2::exec()
 
 			f_close(&file);
 		}
-		if (stop[4] == 0)
-			stop[4] = sp.ElapsedTime();
-		stop[4] = (sp.ElapsedTime() + stop[4]) / 2;
+		//if (stop[4] == 0)
+		//	stop[4] = sp.ElapsedTime();
+		//stop[4] = (sp.ElapsedTime() + stop[4]) / 2;
 
 		sleep(delay_ms(500));
 	}
