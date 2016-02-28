@@ -45,6 +45,8 @@ public:
 
 		for (; channel->SyncPosition < (channel->Count - (sizeof(T) - 1)); channel->SyncPosition++)
 		{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
 			if (*((T*) &channel->Data[channel->SyncPosition]) == sign)
 			{
 				MoveToSyncPos(channel);
@@ -52,6 +54,7 @@ public:
 				return;
 			}
 		}
+#pragma GCC diagnostic pop
 
 		if (channel->IsSnyc == 0 && (channel->Count + 8) > DJIChannelSize)
 			MoveToSyncPos(channel);

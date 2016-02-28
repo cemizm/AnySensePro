@@ -31,6 +31,8 @@ void DJIParserV1::Parse(DJIChannel* channel, HAL::CANRxMessage* msg)
 			}
 			else if (channel->Count >= (djiMessage->Header.Size + MessageSize))
 			{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
 				if (*((uint32_t*) &channel->Data[djiMessage->Header.Size + sizeof(DJIMessageHeaderV1)]) == MessageEnd)
 				{
 					process(djiMessage);
@@ -43,6 +45,7 @@ void DJIParserV1::Parse(DJIChannel* channel, HAL::CANRxMessage* msg)
 					channel->IsSnyc = 0;
 					channel->SyncPosition = 1;
 				}
+#pragma GCC diagnostic pop
 			}
 		}
 	}

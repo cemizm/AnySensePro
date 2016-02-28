@@ -100,6 +100,8 @@ struct DJIMessageOSDV1
 struct DJIMessageGPSV1
 {
 	DJIMessageHeaderV1 Header;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpacked-bitfield-compat"
 	struct
 	{
 		uint8_t Seconds :6;
@@ -109,6 +111,7 @@ struct DJIMessageGPSV1
 		uint8_t Months :4;
 		uint8_t Years :7;
 	}__attribute__((packed)) DateTime;
+#pragma GCC diagnostic pop
 
 	struct
 	{
