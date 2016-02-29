@@ -30,7 +30,9 @@ enum Storages
 	FlashStorage = 0, SDStorage = 1,
 };
 
-extern void Init();
+void Init();
+void InitBootLoader();
+void JumpToBootLoader();
 
 extern HAL::Pin LedActivity;
 extern HAL::Pin LedError;

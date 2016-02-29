@@ -12,6 +12,8 @@
 
 #include <StorageFlashSPI.h>
 
+#include "libopencm3/cm3/scb.h"
+
 namespace App
 {
 
@@ -96,7 +98,6 @@ void USBWorker::ReceiveUpdate(uint32_t size)
 
 	spiffs_file fd = Storage::StorageFlashSPI::Open("tmp", SPIFFS_CREAT | SPIFFS_TRUNC | SPIFFS_RDWR, 0);
 
-
 	if (fd < 0)
 		ack = MAV_CMD_ACK_ERR_FAIL;
 
@@ -118,6 +119,8 @@ void USBWorker::ReceiveUpdate(uint32_t size)
 
 				size -= chunkSize;
 			}
+			else
+				ack = MAV_CMD_ACK_ERR_FAIL;
 		}
 		else
 			ack = MAV_CMD_ACK_ERR_FAIL;
@@ -147,10 +150,11 @@ void USBWorker::ReceiveUpdate(uint32_t size)
 		return;
 	}
 
-	SendAck (MAV_CMD_ACK_OK);
+	SendAck(MAV_CMD_ACK_OK);
 
-	OSAL::Timer::SleepSeconds(1);
-	//reboot
+	OSAL::Timer::SleepMS(300);
+
+	Board::InitBootLoader();
 }
 
 void USBWorker::SendAck(MAV_CMD_ACK ack)

@@ -19,10 +19,18 @@
 #include <libopencm3/stm32/can.h>
 #include <libopencm3/stm32/st_usbfs.h>
 #include <libopencm3/stm32/syscfg.h>
+#include <libopencm3/cm3/scb.h>
 
+#define	BOOTLOADER_SWITCH_MEM					0x2000F3E0
+#define BOOTLOADER_SWITCH_VALUE					0xDEADBEEF
+#define BOOTLOADER_ADDRESS						0x08078000
+
+volatile uint32_t* bootSwitch = (uint32_t *) BOOTLOADER_SWITCH_MEM;
 
 USB::USBCDCDevice CDCDevice(Board::USB);
 Storage::StorageFlashSPI flashStorage(Board::Flash::SPI, Board::Flash::CSN);
+
+
 
 namespace Board
 {
@@ -171,7 +179,7 @@ void InitClock()
 
 void Init()
 {
-
+	JumpToBootLoader();
 	InitClock();
 
 	rcc_periph_clock_enable(rcc_periph_clken::RCC_SYSCFG);
@@ -184,6 +192,33 @@ void Init()
 	f_mount(&MicroSD::FS, "SD:", 0);
 
 	CDCDevice.Init();
+}
+
+void InitBootLoader()
+{
+	*bootSwitch = BOOTLOADER_SWITCH_VALUE;
+
+	scb_reset_system();
+}
+
+void JumpToBootLoader()
+{
+	if (*bootSwitch != BOOTLOADER_SWITCH_VALUE)
+		return;
+
+	*bootSwitch = 0;
+
+	const uint32_t *app_base = (const uint32_t *) BOOTLOADER_ADDRESS;
+
+	/* switch exception handlers to the application */
+	SCB_VTOR = BOOTLOADER_ADDRESS;
+
+	/* extract the stack and entrypoint from the app vector table and go */
+	asm volatile(
+			"msr msp, %0	\n"
+			"bx	%1	\n"
+			: : "r"(app_base[0]), "r"(app_base[1]) :);
+
 }
 
 }
