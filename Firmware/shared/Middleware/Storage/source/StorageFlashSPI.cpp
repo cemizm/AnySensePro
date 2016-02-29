@@ -91,6 +91,24 @@ uint8_t StorageFlashSPI::waitReady(uint16_t timeout)
 	return (d & 0x01) == 0x00 ? 1 : 0;
 }
 
+uint8_t StorageFlashSPI::waitReadyAsync(uint16_t timeout)
+{
+	Utils::ChipSelect select(m_csn);
+
+	volatile uint8_t d = 0x00;
+	Utils::TimeoutTimer t(delay_ms(timeout));
+
+	m_spi.Xfer8(FlashCommand::ReadStatus);
+
+	do
+	{
+		d = m_spi.Xfer8(0xFF);
+		OSAL::Timer::SleepMS(200);
+	} while (((d & 0x01) == 0x01) && !t.IsTimeout());
+
+	return (d & 0x01) == 0x00 ? 1 : 0;
+}
+
 uint8_t StorageFlashSPI::writePage(uint32_t addr, uint32_t size, const uint8_t* buff)
 {
 	Utils::ChipSelect select(m_csn);
@@ -190,7 +208,7 @@ int32_t StorageFlashSPI::Erase(uint32_t addr, uint32_t size)
 
 	select.Deselect();
 
-	if (!waitReady(3100))
+	if (!waitReadyAsync(3100))
 		return SPIFFS_ERR_ERASE_FAIL;
 
 	return SPIFFS_OK;
@@ -259,7 +277,7 @@ int32_t StorageFlashSPI::Rename(const char* oldPath, const char* newPath){
 
 int32_t StorageFlashSPI::Remove(const char* path)
 {
-	SPIFFS_remove(&flashStorage.fs, path);
+	return SPIFFS_remove(&flashStorage.fs, path);
 }
 
 }

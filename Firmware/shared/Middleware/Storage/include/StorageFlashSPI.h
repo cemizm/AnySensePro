@@ -64,6 +64,7 @@ private:
 	static s32_t spiffs_erase(u32_t addr, u32_t size);
 
 	uint8_t waitReady(uint16_t timeout);
+	uint8_t waitReadyAsync(uint16_t timeout);
 	uint8_t writePage(uint32_t addr, uint32_t size, const uint8_t* data);
 
 public:
