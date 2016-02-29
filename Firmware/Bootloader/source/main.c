@@ -15,10 +15,9 @@ int8_t mount();
 
 u8_t work_buf[FLASH_PAGE_SIZE * 2];
 u8_t fds[32 * 4];
-u8_t cache_buf[(FLASH_PAGE_SIZE + 32) * 4];
 
 #define UPDATE_BUFFER_SIZE			2048
-#define DELAY_TIME					250*FLASH_TIMEOUT_COEF
+
 uint8_t update_buffer[UPDATE_BUFFER_SIZE];
 uint16_t* range = (uint16_t*) (update_buffer + UPDATE_BUFFER_SIZE);
 
@@ -29,9 +28,6 @@ int8_t mount();
 
 int main()
 {
-	for (uint64_t delay = 0; delay < DELAY_TIME; delay++)
-		;
-
 	InitClock();
 	BootIndicate();
 
@@ -97,15 +93,9 @@ void doCheckUpdate()
 int8_t mount()
 {
 	spiffs_config cfg;
-	cfg.phys_size = FLASH_SIZE; // use all spi flash
-	cfg.phys_addr = FLASH_START; // start spiffs at start of spi flash
-	cfg.phys_erase_block = FLASH_SECTOR_SIZE; // according to datasheet
-	cfg.log_block_size = FLASH_SECTOR_SIZE; // let us not complicate things
-	cfg.log_page_size = FLASH_PAGE_SIZE; // as we said
-
 	cfg.hal_read_f = flash_read;
 	cfg.hal_write_f = flash_write;
 	cfg.hal_erase_f = flash_erase;
 
-	return SPIFFS_mount(&fs, &cfg, work_buf, fds, sizeof(fds), cache_buf, sizeof(cache_buf), 0);
+	return SPIFFS_mount(&fs, &cfg, work_buf, fds, sizeof(fds), 0, 0, 0);
 }
