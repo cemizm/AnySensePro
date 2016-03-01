@@ -66,9 +66,6 @@ template<>
 OS_PROCESS void TProc0::exec()
 {
 	Storage::StorageFlashSPI::Mount();
-	Storage::StorageFlashSPI::Unmount();
-	Storage::StorageFlashSPI::Format();
-	Storage::StorageFlashSPI::Mount();
 
 	djiController.Init();
 	djiController.Run();
@@ -84,6 +81,7 @@ OS_PROCESS void TProc1::exec()
 template<>
 OS_PROCESS void TProc2::exec()
 {
+
 	//Utils::Stopwatch sp;
 	uint32_t read = 0;
 	uint32_t written = 0;
