@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:difx="http://schemas.microsoft.com/wix/DifxAppExtension">
+  <Product Id="9C79570E-74CE-4BAE-92C7-6635617D6864" 
+           Name="AnySense Driver (x64)" 
+           Language="1033" Version="1.0.0.0" 
+           Manufacturer="xeniC GmbH" UpgradeCode="DF524F2E-58B7-4475-A0FF-8996D9EF657B">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <Media Id='1' Cabinet='Installer.cab' EmbedCab='yes' DiskPrompt='AnySense Driver Media' />
+    <Property Id='DiskPrompt' Value='AnySense Driver Media' />
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder'>
+        <Directory Id='INSTALLDIR' Name='AnySense'>
+          <Directory Id='DriverDir' Name='Drivers'>
+            <Component Id='AnySenseDriver' Guid='3F209A1E-16C9-4620-87E7-414B8E464E37'>
+              <File Id='AnySenseDriveInf' Name='AnySensePro.inf' DiskId='1' Source='AnySensePro.inf' />
+              <difx:Driver Legacy='yes' AddRemovePrograms='no' PlugAndPlayPrompt='no' />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+    <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='AnySenseDriver' />
+    </Feature>
+  </Product>
+</Wix>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Product xmlns="http://schemas.microsoft.com/developer/2004/01/bootstrapper"
+         ProductCode="xeniC.AnySense.Driver.Package">
+  <RelatedProducts>
+    <DependsOnProduct Code="Microsoft.Windows.Installer.3.1" />
+  </RelatedProducts>
+  <PackageFiles>
+    <PackageFile Name="xeniC.AnySense.DriverInstaller_x64.msi" />
+    <PackageFile Name="xeniC.AnySense.DriverInstaller_x86.msi" />
+  </PackageFiles>
+  <InstallChecks>
+    <MsiProductCheck Property="IsMsiInstalled_x64" Product="{9C79570E-74CE-4BAE-92C7-6635617D6864}"/>
+    <MsiProductCheck Property="IsMsiInstalled_x86" Product="{E4AE61D2-DE30-49FF-B73C-1C24791C040D}"/>
+  </InstallChecks>
+  <Commands>
+    <Command PackageFile="xeniC.AnySense.DriverInstaller_x64.msi" Arguments="">
+      <InstallConditions>
+        <BypassIf Property="ProcessorArchitecture" Compare="ValueNotEqualTo" Value="amd64" />
+        <BypassIf Property="IsMsiInstalled_x64" Compare="ValueGreaterThan" Value="0"/>
+        <FailIf Property="AdminUser" Compare="ValueNotEqualTo" Value="True" String="NotAnAdmin"/>
+      </InstallConditions>
+      <ExitCodes>
+        <ExitCode Value="0" Result="Success"/>
+        <ExitCode Value="1641" Result="SuccessReboot"/>
+        <ExitCode Value="3010" Result="SuccessReboot"/>
+        <DefaultExitCode Result="Fail" String="GeneralFailure"/>
+      </ExitCodes>
+    </Command>
+    <Command PackageFile="xeniC.AnySense.DriverInstaller_x86.msi" Arguments="">
+      <InstallConditions>
+        <BypassIf Property="ProcessorArchitecture" Compare="ValueNotEqualTo" Value="Intel" />
+        <BypassIf Property="IsMsiInstalled_x86" Compare="ValueGreaterThan" Value="0"/>
+        <FailIf Property="AdminUser" Compare="ValueNotEqualTo" Value="True" String="NotAnAdmin"/>
+      </InstallConditions>
+      <ExitCodes>
+        <ExitCode Value="0" Result="Success"/>
+        <ExitCode Value="1641" Result="SuccessReboot"/>
+        <ExitCode Value="3010" Result="SuccessReboot"/>
+        <DefaultExitCode Result="Fail" String="GeneralFailure"/>
+      </ExitCodes>
+    </Command>
+  </Commands>
+</Product>

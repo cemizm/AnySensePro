@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Package
+  xmlns="http://schemas.microsoft.com/developer/2004/01/bootstrapper"
+  Name="DisplayName"
+  Culture="Culture">
+
+  <Strings>
+    <String Name="DisplayName">AnySense Pro Treiber  (x86/x64)</String>
+    <String Name="Culture">de</String>
+    <String Name="NotAnAdmin">Sie müssen ein Administrator sein, um dieses Paket zu installieren.</String>
+    <String Name="GeneralFailure">Ein allgemeiner Fehler ist während der Installation aufgetreten.</String>
+  </Strings>
+</Package>
