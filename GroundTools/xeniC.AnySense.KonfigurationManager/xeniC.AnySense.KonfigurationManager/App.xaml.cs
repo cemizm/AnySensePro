@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace xeniC.AnySense.KonfigurationManager
+namespace xeniC.AnySense.Studio
 {
     /// <summary>
     /// Interaktionslogik für "App.xaml"
@@ -17,7 +17,7 @@ namespace xeniC.AnySense.KonfigurationManager
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            ThemeManager.AddAccent("AnySenseAccent", new Uri("pack://application:,,,/AnySense.Toolbox;component/styles/AnySenseAccent.xaml"));
+            ThemeManager.AddAccent("AnySenseAccent", new Uri("pack://application:,,,/AnySenseStudio;component/styles/AnySenseAccent.xaml"));
 
             // get the theme from the current application
             var theme = ThemeManager.DetectAppStyle(Application.Current);

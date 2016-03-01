@@ -5,10 +5,10 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:mControl="clr-namespace:xeniC.AnySense.Controls;assembly=xeniC.AnySense.Controls"
         xmlns:c="clr-namespace:xeniC.AnySense.Controls.Converter;assembly=xeniC.AnySense.Controls"
-        xmlns:u="clr-namespace:xeniC.AnySense.KonfigurationManager"
+        xmlns:u="clr-namespace:xeniC.AnySense.Studio"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
-        xmlns:cal="http://www.caliburnproject.org" x:Class="xeniC.AnySense.KonfigurationManager.MainWindow"
-    
+        xmlns:cal="http://www.caliburnproject.org" x:Class="xeniC.AnySense.Studio.MainWindow"
+        ContentRendered="MetroWindow_ContentRendered"
         BorderThickness="0"
         WindowButtonCommandsOverlayBehavior="Never"
         Title="AnySense - Studio" MinHeight="600" MinWidth="800"
