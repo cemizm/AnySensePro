@@ -18,10 +18,10 @@ namespace xeniC.AnySense.Library
         public MainViewModel()
         {
             deviceManager = new DeviceManager();
-            deviceManager.DeviceConnected += (o, e) => { if(Device == null) Device = e.Device; };
-            deviceManager.DeviceDisconnected += (o, e) => { if(Device == e.Device) Device = null; };
+            deviceManager.DeviceConnected += (o, e) => { if (Device == null) Device = e.Device; };
+            deviceManager.DeviceDisconnected += (o, e) => { if (Device == e.Device) Device = null; };
             deviceManager.StartPolling();
-        }
+        }    
 
         #region Properties
 

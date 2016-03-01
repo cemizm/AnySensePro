@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MavLink
 {
-    public class SerialMavlinkLayer : Mavlink, IDisposable
+    public class SerialMavlinkLayer : BaseMavlinkLayer
     {
         private SerialPort serial;
 
@@ -35,7 +35,7 @@ namespace MavLink
             serial.Open();
         }
 
-        public void SendMessage(MavlinkMessage msg)
+        public override void SendMessage(MavlinkMessage msg)
         {
             MavlinkPacket packet = CreatePacket(msg);
             byte[] bytes = Send(packet);
@@ -52,8 +52,7 @@ namespace MavLink
             return packet;
         }
 
-
-        public void Dispose()
+        public override void Dispose()
         {
             if (serial != null)
                 serial.Dispose();

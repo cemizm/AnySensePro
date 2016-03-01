@@ -11,7 +11,7 @@ namespace xeniC.AnySense.Library.Devices
 {
     public abstract class DeviceModelBase : ViewModelBase, IDisposable
     {
-        private SerialMavlinkLayer mavlink;
+        private BaseMavlinkLayer mavlink;
 
         private UInt32 version;
 
@@ -19,7 +19,7 @@ namespace xeniC.AnySense.Library.Devices
         private double pitch;
 
 
-        public DeviceModelBase(SerialMavlinkLayer mv, UInt32 version)
+        public DeviceModelBase(BaseMavlinkLayer mv, UInt32 version)
         {
             this.version = version;
             mavlink = mv;
@@ -31,7 +31,7 @@ namespace xeniC.AnySense.Library.Devices
 
         #region Properties
 
-        protected SerialMavlinkLayer Mavlink { get { return mavlink; } }
+        protected BaseMavlinkLayer Mavlink { get { return mavlink; } }
 
         public UInt32 Version { get { return version; } }
 

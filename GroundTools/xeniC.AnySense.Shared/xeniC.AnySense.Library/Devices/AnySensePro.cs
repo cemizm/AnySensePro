@@ -15,7 +15,7 @@ namespace xeniC.AnySense.Library.Devices
     {
         private const UInt32 LatestVersion = 0x00010002;
 
-        public AnySensePro(SerialMavlinkLayer mv, UInt32 version)
+        public AnySensePro(BaseMavlinkLayer mv, UInt32 version)
             : base(mv, version)
         {
             Firmware = string.Format("AnySense Pro {0}.{1}.{2}", (byte)(version >> 16), (byte)(version >> 8), (byte)version);
@@ -28,7 +28,7 @@ namespace xeniC.AnySense.Library.Devices
             get
             {
                 if (_executeUpdate == null)
-                    _executeUpdate = new RelayCommand(DoUpdate, () => { return LatestVersion > Version; });
+                    _executeUpdate = new RelayCommand(DoUpdate);//, () => { return LatestVersion > Version; });
 
                 return _executeUpdate;
             }
