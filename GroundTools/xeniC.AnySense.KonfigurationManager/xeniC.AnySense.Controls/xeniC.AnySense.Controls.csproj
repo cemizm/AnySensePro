@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Converter\DoubleIntegerConverter.cs" />
     <Compile Include="Converter\PitchConverter.cs" />
+    <Compile Include="Converter\VisibilityConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
