@@ -22,7 +22,7 @@
 /* Define memory regions. */
 MEMORY
 {
-	rom (rx) : ORIGIN = 0x08078000, LENGTH = 32K
+	rom (rx) : ORIGIN = 0x0807C000, LENGTH = 16K
 	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 64K
 }
 
