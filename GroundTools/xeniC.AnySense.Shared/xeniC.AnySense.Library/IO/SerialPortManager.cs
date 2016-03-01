@@ -16,7 +16,7 @@ namespace xeniC.AnySense.Library.IO
         public SerialPortManager()
         {
             Ports = new List<SerialPortInfo>(GetPortInformations());
-            eventWatcher = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_DeviceChangeEvent WHERE EventType = 2 or EventType = 3 GROUP WITHIN 3"));
+            eventWatcher = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_DeviceChangeEvent WHERE EventType = 2 or EventType = 3 GROUP WITHIN 1"));
 
             eventWatcher.EventArrived += (o, args) =>
             {
