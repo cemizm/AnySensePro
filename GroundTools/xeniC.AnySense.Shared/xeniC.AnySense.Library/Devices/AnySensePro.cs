@@ -14,7 +14,7 @@ namespace xeniC.AnySense.Library.Devices
 {
     public class AnySensePro : DeviceModelBase
     {
-        private const UInt32 LatestVersion = 0x00010003;
+        private const UInt32 LatestVersion = 0x00010002;
 
         public AnySensePro(BaseMavlinkLayer mv, UInt32 version)
             : base(mv, version)
