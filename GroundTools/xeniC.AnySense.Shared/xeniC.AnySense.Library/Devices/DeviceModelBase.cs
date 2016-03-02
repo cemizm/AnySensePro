@@ -17,7 +17,8 @@ namespace xeniC.AnySense.Library.Devices
 
         private double roll;
         private double pitch;
-
+        private double heading;
+        private PositionData position;
 
         public DeviceModelBase(BaseMavlinkLayer mv, UInt32 version)
         {
@@ -63,6 +64,32 @@ namespace xeniC.AnySense.Library.Devices
             }
         }
 
+        public double Heading
+        {
+            get { return heading; }
+            set
+            {
+                if (heading != value)
+                {
+                    heading = value;
+                    RaisePropertyChanged(() => Heading);
+                }
+            }
+        }
+
+        public PositionData Position
+        {
+            get { return position; }
+            set
+            {
+                if (position != value)
+                {
+                    position = value;
+                    RaisePropertyChanged(() => Position);
+                }
+            }
+        }
+
         #endregion
 
         #region Message Process
@@ -73,16 +100,24 @@ namespace xeniC.AnySense.Library.Devices
                 Process(msg as Msg_vfr_hud);
             else if (msg.GetType() == typeof(Msg_attitude))
                 Process(msg as Msg_attitude);
+            else if (msg.GetType() == typeof(Msg_gps_raw_int))
+                Process(msg as Msg_gps_raw_int);
         }
 
         private void Process(Msg_attitude msg)
         {
             Roll = msg.roll * 180.0 / Math.PI;
             Pitch = msg.pitch * 180.0 / Math.PI;
+            Heading = msg.yaw * 180.0 / Math.PI;
         }
 
         private void Process(Msg_vfr_hud hud)
         {
+        }
+
+        private void Process(Msg_gps_raw_int gps)
+        {
+            Position = new PositionData() { Latitude = gps.lat / 10000000d, Longitude = gps.lon / 10000000d };
         }
 
         #endregion
@@ -92,5 +127,12 @@ namespace xeniC.AnySense.Library.Devices
             if (mavlink != null)
                 mavlink.Dispose();
         }
+
+        public class PositionData
+        {
+            public double Longitude { get; set; }
+            public double Latitude { get; set; }
+        }
+
     }
 }

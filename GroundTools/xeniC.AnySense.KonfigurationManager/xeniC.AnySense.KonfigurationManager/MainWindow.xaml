@@ -27,7 +27,10 @@
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
     <Controls:MetroWindow.Resources>
-            <c:DoubleIntegerConverter x:Key="doubleIntegerConverter" />
+        <c:DoubleIntegerConverter x:Key="doubleIntegerConverter" />
+        <c:PositionConverter x:Key="positionConverter" />
+        <c:VisibilityConverter x:Key="invertedVisibiltyConverter" FalseValue="Visible" TrueValue="Collapsed" />
+        <m:Location x:Key="defaultPosition" Latitude="53.581418" Longitude="10.010357"/>
     </Controls:MetroWindow.Resources>
     <Grid Background="{StaticResource BackgroundColorBrush}">
         <Grid.ColumnDefinitions>
@@ -48,9 +51,30 @@
                 </Style>
             </mControl:AvionicGauge.Resources>
         </mControl:AvionicGauge>
-        <m:Map Grid.RowSpan="2" Grid.Column="1" 
-			CredentialsProvider="W3G3hvCFkqPZKLmIlQKP~Z-cKfu9jLkqpc8DrNNdthw~AgA42M_i4L3DTEqge0pt2pbTs69ehI1JYJwYdYKnpzcXBe1B5iMPGvmHulvKDJR8" Center="51.998619,8.588573"
-			ZoomLevel="{Binding Value, ElementName=zoomLvl}" Heading="{Binding Value, ElementName=zoomLvl}"/>
+        <mControl:BindableMap Grid.RowSpan="2" Grid.Column="1" 
+                              CredentialsProvider="W3G3hvCFkqPZKLmIlQKP~Z-cKfu9jLkqpc8DrNNdthw~AgA42M_i4L3DTEqge0pt2pbTs69ehI1JYJwYdYKnpzcXBe1B5iMPGvmHulvKDJR8" 
+                              ZoomLevel="{Binding Value, ElementName=zoomLvl}"
+                              Center="{Binding Device.Position, Converter={StaticResource positionConverter}, FallbackValue={StaticResource defaultPosition}}" />
+        <ContentControl Grid.RowSpan="2" Grid.Column="1" RenderTransformOrigin="0.5,0.5" Width="15" Height="15"  >
+            <ContentControl.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="{Binding Device.Heading}"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </ContentControl.RenderTransform>
+            <fa:ImageAwesome Icon="LocationArrow" Foreground="Red" RenderTransformOrigin="0.5,0.5">
+                <fa:ImageAwesome.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="315"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </fa:ImageAwesome.RenderTransform>
+            </fa:ImageAwesome>
+        </ContentControl>
         <ScrollViewer Grid.Row="1" Grid.Column="0" >
             <Grid Margin="5"
 			ScrollViewer.CanContentScroll="True" 
@@ -122,10 +146,10 @@
                 <Label Grid.Row="11" Grid.Column="1" Content="8" Style="{StaticResource Value}"/>
             </Grid>
         </ScrollViewer>
-        <Grid Grid.RowSpan="2" Grid.Column="2" Background="#FF2D486A">
+        <Grid Grid.RowSpan="2" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="3*" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Slider Grid.Row="1" x:Name="zoomLvl"
@@ -135,19 +159,20 @@
                     SmallChange="1" 
                     Minimum="0" Maximum="25" Value="16"  />
             <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom" IsEnabled="{Binding Connected}">
-                <Button Padding="1"
-				Width="50" Command="{Binding Device.ExecuteUpdate}"
-				Height="50"
-				Style="{DynamicResource MetroCircleButtonStyle}">
-                    <fa:ImageAwesome Icon="Download" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="White"/>
-                </Button>
-                <Button Padding="1"
+               <Button Padding="1"
 				Width="50" Click="Button_Click"
 				Height="50"
 				Style="{DynamicResource MetroCircleButtonStyle}">
-                    <fa:ImageAwesome Icon="Cogs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="White"/>
+                    <fa:ImageAwesome Icon="Cogs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
                 </Button>
 
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Visibility="{Binding Connected, Converter={StaticResource invertedVisibiltyConverter}}"
+              Background="{DynamicResource AccentColorBrush3}" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal">
+                <fa:ImageAwesome Icon="Warning" Width="20" Height="20"  Margin="10,0,0,0" Grid.Column="0" Foreground="#FFFFD23A" />
+                <Label Grid.Column="1" Content="AnySense not connected. Please connect AnySense and turn on your model." Foreground="{DynamicResource IdealForegroundColorBrush}" FontSize="14" FontWeight="Bold"/>
             </StackPanel>
         </Grid>
     </Grid>
