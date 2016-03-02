@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Ioc;
 using MavLink;
 using System;
 using System.Collections.Generic;
@@ -13,57 +14,34 @@ namespace xeniC.AnySense.Library.Devices
 {
     public class AnySensePro : DeviceModelBase
     {
-        private const UInt32 LatestVersion = 0x00010002;
+        private const UInt32 LatestVersion = 0x00010003;
 
         public AnySensePro(BaseMavlinkLayer mv, UInt32 version)
             : base(mv, version)
         {
             Firmware = string.Format("AnySense Pro {0}.{1}.{2}", (byte)(version >> 16), (byte)(version >> 8), (byte)version);
-
+            CheckForUpdate();
         }
 
-        private RelayCommand _executeUpdate;
-        public RelayCommand ExecuteUpdate
+        private void CheckForUpdate()
         {
-            get
-            {
-                if (_executeUpdate == null)
-                    _executeUpdate = new RelayCommand(DoUpdate);//, () => { return LatestVersion > Version; });
+            if (Version >= LatestVersion)
+                return;
 
-                return _executeUpdate;
-            }
-        }
-
-        private string updateMessage;
-        public string UpdateMessage
-        {
-            get { return updateMessage; }
-            private set
-            {
-                if (updateMessage == value)
-                    return;
-
-                updateMessage = value;
-                RaisePropertyChanged(() => UpdateMessage);
-            }
-        }
-
-        private int updatePercent;
-        public int UpdatePercent
-        {
-            get { return updatePercent; }
-            private set
-            {
-                if (updatePercent == value)
-                    return;
-
-                updatePercent = value;
-                RaisePropertyChanged(() => UpdatePercent);
-            }
+            Task.Run(() => DoUpdate());
         }
 
         public async void DoUpdate()
         {
+            IDialogController dlg = SimpleIoc.Default.GetInstance<IDialogController>();
+
+            if (dlg == null)
+                throw new InvalidOperationException("Kein Dialog Controller vorhanden!");
+
+            IProgressController progress = await dlg.ShowProgress("Firmware Update", "Initializing Update...");
+            progress.SetIndeterminate();
+
+
             int state = 0;
             int timeout = 0;
             int read = 0;
@@ -75,9 +53,6 @@ namespace xeniC.AnySense.Library.Devices
             data.data = new byte[240];
 
             Stream s = Assembly.GetAssembly(GetType()).GetManifestResourceStream(@"xeniC.AnySense.Library.Firmware.AnySensePro.bin");
-
-            UpdatePercent = 0;
-            UpdateMessage = "Initializing Update...";
 
             PacketReceivedEventHandler pr = (o, e) =>
             {
@@ -97,7 +72,7 @@ namespace xeniC.AnySense.Library.Devices
                     {
                         if (state == 0)
                         {
-                            UpdateMessage = "Uploading Firmware...";
+                            progress.SetMessage("Uploading Firmware...");
                             state++;
                         }
 
@@ -110,13 +85,15 @@ namespace xeniC.AnySense.Library.Devices
 
                         data.seqnr++;
 
-                        UpdatePercent = (int)(((float)total / (float)s.Length) * 100f);
+                        progress.SetProgress((double)total / (double)s.Length);
+
+                        //UpdatePercent = (int)(( * 100f);
 
                         total += read;
                     }
                     else if (state == 2)
                     {
-                        UpdateMessage = "Updating Device...";
+                        progress.SetMessage("Updating Device...");
                         state++;
                     }
 
@@ -137,13 +114,26 @@ namespace xeniC.AnySense.Library.Devices
                 timeout++;
             } while (state != 3 && state != -1 && timeout < 5);
 
-            if (timeout >= 5)
-                UpdateMessage = "Error";
-
             s.Close();
             s.Dispose();
 
             Mavlink.PacketReceived -= pr;
+
+            if (timeout >= 5)
+            {
+                await progress.CloseAsync();
+                await dlg.ShowMessage("Firmware Update", "Error while updating!", DialogStyle.Affirmative);
+                /*
+                progress.SetProgress(1d);
+                progress.SetMessage("Error while updating!");
+
+                await Task.Delay(3000);*/
+            }
+            else
+            {
+                await Task.Delay(1500);
+                await progress.CloseAsync();
+            }
         }
     }
 }
