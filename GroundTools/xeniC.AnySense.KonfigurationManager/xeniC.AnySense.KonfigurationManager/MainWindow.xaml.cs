@@ -16,18 +16,20 @@ using MahApps.Metro.Controls;
 using xeniC.AnySense.Library;
 using System.Deployment.Application;
 using MahApps.Metro.Controls.Dialogs;
+using GalaSoft.MvvmLight.Ioc;
 
 namespace xeniC.AnySense.Studio
 {
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : MetroWindow, IDialogController
     {
 
         public MainWindow()
         {
             InitializeComponent();
+            SimpleIoc.Default.Register<IDialogController>(() => { return this; });
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -35,7 +37,6 @@ namespace xeniC.AnySense.Studio
             var flyout = this.Flyouts.Items[0] as Flyout;
             if (flyout == null)
                 return;
-
             flyout.IsOpen = !flyout.IsOpen;
         }
 
@@ -54,7 +55,7 @@ namespace xeniC.AnySense.Studio
                     if (args.Error != null)
                         return;
 
-                    System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                    System.Windows.Forms.Application.Restart();
                     Application.Current.Shutdown();
                 };
 
@@ -99,6 +100,79 @@ namespace xeniC.AnySense.Studio
 
             DataContext = new MainViewModel();
         }
+
+        #region IDialogController implementation
+
+        public Task<string> ShowInput(string title, string message)
+        {
+            return this.ShowInputAsync(title, message);
+        }
+
+        public async Task<DialogResult> ShowMessage(string title, string message, DialogStyle style = DialogStyle.Affirmative, DialogSettings settings = null)
+        {
+            var x = await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                return this.ShowMessageAsync(title, message, (MessageDialogStyle)style, settings != null ? new BridgeMetroDialogSettings(settings) : null);
+            });
+
+            x.Wait();
+
+            if (x.Exception != null)
+                throw x.Exception;
+
+            return (DialogResult)x.Result;
+        }
+
+        public async Task<IProgressController> ShowProgress(string title, string message, bool isCancelable = false, DialogSettings settings = null)
+        {
+            var x = await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                return this.ShowProgressAsync(title, message, isCancelable, settings != null ? new BridgeMetroDialogSettings(settings) : null);
+            });
+
+            x.Wait();
+
+            if (x.Exception != null)
+                throw x.Exception;
+
+            return new BridgeProgressController(x.Result);
+        }
+
+        private class BridgeMetroDialogSettings : MetroDialogSettings
+        {
+            public BridgeMetroDialogSettings(DialogSettings settings)
+            {
+                base.DefaultText = settings.DefaultText;
+                base.AffirmativeButtonText = settings.AffirmativeButtonText;
+                base.NegativeButtonText = settings.NegativeButtonText;
+                base.FirstAuxiliaryButtonText = settings.FirstAuxiliaryButtonText;
+                base.SecondAuxiliaryButtonText = settings.SecondAuxiliaryButtonText;
+                base.MaximumBodyHeight = settings.MaximumBodyHeight;
+                base.AnimateShow = settings.AnimateShow;
+                base.AnimateHide = settings.AnimateHide;
+            }
+        }
+
+        private class BridgeProgressController : IProgressController
+        {
+            private ProgressDialogController pd;
+
+            public BridgeProgressController(ProgressDialogController pd)
+            {
+                this.pd = pd;
+            }
+
+            public bool IsCanceled { get { return pd.IsCanceled; } }
+            public bool IsOpen { get { return pd.IsOpen; } }
+            public Task CloseAsync() { return pd.CloseAsync(); }
+            public void SetCancelable(bool value) { pd.SetCancelable(value); }
+            public void SetIndeterminate() { pd.SetIndeterminate(); }
+            public void SetMessage(string message) { pd.SetMessage(message); }
+            public void SetProgress(double value) { pd.SetProgress(value); }
+            public void SetTitle(string title) { pd.SetTitle(title); }
+        }
+
+        #endregion
 
     }
 }

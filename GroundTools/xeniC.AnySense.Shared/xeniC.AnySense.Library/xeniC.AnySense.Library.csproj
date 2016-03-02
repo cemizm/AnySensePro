@@ -68,6 +68,7 @@
     <Compile Include="Devices\AnySensePro.cs" />
     <Compile Include="Devices\DeviceManager.cs" />
     <Compile Include="Devices\DeviceModelBase.cs" />
+    <Compile Include="IDialogController.cs" />
     <Compile Include="IO\SerialPortManager.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MAVLink\AnySense.generated.cs" />
