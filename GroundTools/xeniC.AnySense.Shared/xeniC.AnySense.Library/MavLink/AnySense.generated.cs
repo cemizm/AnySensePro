@@ -210,7 +210,32 @@ namespace MavLink
 		/// ASLUAV autopilot -- http://www.asl.ethz.ch
 		/// </summary>
 		MAV_AUTOPILOT_ASLUAV = 17,
-		MAV_AUTOPILOT_ENUM_END = 18,
+
+		/// <summary>
+		/// DJI Naza V1/V2 and Phantom V1
+		/// </summary>
+		MAV_AUTOPILOT_NAZA = 18,
+
+		/// <summary>
+		/// DJI Phantom V2
+		/// </summary>
+		MAV_AUTOPILOT_PHANTOM = 19,
+
+		/// <summary>
+		/// DJI Wookong M
+		/// </summary>
+		MAV_AUTOPILOT_WOOKONG = 20,
+
+		/// <summary>
+		/// DJI A2
+		/// </summary>
+		MAV_AUTOPILOT_A2 = 21,
+
+		/// <summary>
+		/// Tarot ZYX-M
+		/// </summary>
+		MAV_AUTOPILOT_TAROT_ZYX_M = 22,
+		MAV_AUTOPILOT_ENUM_END = 23,
 
 	}
 

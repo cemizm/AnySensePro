@@ -57,7 +57,12 @@ typedef enum MAV_AUTOPILOT
 	MAV_AUTOPILOT_ARMAZILA=15, /* Armazila -- http://armazila.com | */
 	MAV_AUTOPILOT_AEROB=16, /* Aerob -- http://aerob.ru | */
 	MAV_AUTOPILOT_ASLUAV=17, /* ASLUAV autopilot -- http://www.asl.ethz.ch | */
-	MAV_AUTOPILOT_ENUM_END=18, /*  | */
+	MAV_AUTOPILOT_NAZA=18, /* DJI Naza V1/V2 and Phantom V1 | */
+	MAV_AUTOPILOT_PHANTOM=19, /* DJI Phantom V2 | */
+	MAV_AUTOPILOT_WOOKONG=20, /* DJI Wookong M | */
+	MAV_AUTOPILOT_A2=21, /* DJI A2 | */
+	MAV_AUTOPILOT_TAROT_ZYX_M=22, /* Tarot ZYX-M | */
+	MAV_AUTOPILOT_ENUM_END=23, /*  | */
 } MAV_AUTOPILOT;
 #endif
 
