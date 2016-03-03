@@ -19,7 +19,7 @@
 #include <StorageFlashSPI.h>
 
 
-#define FIRMWARE_VERSION		0x00010001
+#define FIRMWARE_VERSION		0x01000103
 #define HARDWARE_VERSION		0x01
 
 namespace Board

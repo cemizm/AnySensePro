@@ -16,7 +16,6 @@ namespace App
 #define MAVLINK_SYSTEM_ID						0xCE
 #define MAVLINK_COMP_ID							MAV_COMP_ID_UART_BRIDGE
 #define MAVLINK_TYPE							MAV_TYPE_QUADROTOR
-#define MAVLINK_AP_TYPE							MAV_AUTOPILOT_INVALID
 #define MAVLINK_SENSORS							MAV_SYS_STATUS_SENSOR_3D_GYRO | MAV_SYS_STATUS_SENSOR_3D_ACCEL | \
 												MAV_SYS_STATUS_SENSOR_3D_MAG | MAV_SYS_STATUS_SENSOR_ABSOLUTE_PRESSURE | \
 												MAV_SYS_STATUS_SENSOR_GPS | MAV_SYS_STATUS_SENSOR_ATTITUDE_STABILIZATION | \
@@ -24,6 +23,8 @@ namespace App
 
 //Manual = 0, GPS = 1, Failsafe = 2, Attitude = 3
 uint8_t MAVLINK_MODE_MAP[] = { 1, 0, 6, 2 };
+uint8_t MAVLINK_AP_MAP[] = { MAV_AUTOPILOT_INVALID, MAV_AUTOPILOT_NAZA, MAV_AUTOPILOT_PHANTOM, MAV_AUTOPILOT_WOOKONG,
+		MAV_AUTOPILOT_A2, MAV_AUTOPILOT_PX4, MAV_AUTOPILOT_TAROT_ZYX_M };
 
 MAVLinkLayer::MAVLinkLayer(mavlink_channel_t channel) :
 		m_channel(channel), m_status()
@@ -37,8 +38,8 @@ uint8_t MAVLinkLayer::Decode(uint8_t data, mavlink_message_t* msg)
 }
 uint16_t MAVLinkLayer::PackHeartbeat(mavlink_message_t* msg)
 {
-	return mavlink_msg_heartbeat_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, MAVLINK_TYPE, MAVLINK_AP_TYPE,
-			SensorData.GetArmed() ? 128 : 0, MAVLINK_MODE_MAP[SensorData.GetFlightMode()],
+	return mavlink_msg_heartbeat_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, MAVLINK_TYPE,
+			MAVLINK_AP_MAP[SensorData.GetFCType()], SensorData.GetArmed() ? 128 : 0, MAVLINK_MODE_MAP[SensorData.GetFlightMode()],
 			SensorData.GetFlightMode() == FlightMode::Failsafe ? MAV_STATE_CRITICAL : MAV_STATE_ACTIVE);
 }
 uint16_t MAVLinkLayer::PackSystemStatus(mavlink_message_t* msg)
@@ -80,6 +81,15 @@ uint16_t MAVLinkLayer::PackBatteryPack(mavlink_message_t* msg)
 uint16_t MAVLinkLayer::FillBytes(mavlink_message_t* msg, uint8_t* data)
 {
 	return mavlink_msg_to_send_buffer(data, msg);
+}
+
+uint16_t MAVLinkLayer::PackCommandAck(mavlink_message_t* msg, MAV_CMD_ACK ack)
+{
+	return mavlink_msg_command_ack_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, ack, 0);
+}
+
+uint16_t MAVLinkLayer::PackConfigurationVersion3(mavlink_message_t* msg, uint32_t firmware, uint8_t hardware) {
+	return mavlink_msg_configuration_version3_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, firmware, hardware);
 }
 
 } /* namespace App */

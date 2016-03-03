@@ -32,8 +32,7 @@ void USBWorker::Run()
 			switch (m_msg.msgid)
 			{
 			case MAVLINK_MSG_ID_CONFIGURATION_CONTROL:
-				dataLen = mavlink_msg_configuration_version3_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, &m_msg, FIRMWARE_VERSION,
-				HARDWARE_VERSION);
+				dataLen = m_mavlink.PackConfigurationVersion3(&m_msg, FIRMWARE_VERSION, HARDWARE_VERSION);
 				break;
 			case MAVLINK_MSG_ID_DATA_TRANSMISSION_HANDSHAKE:
 				TransferType type = (TransferType) mavlink_msg_data_transmission_handshake_get_type(&m_msg);
@@ -159,7 +158,7 @@ void USBWorker::ReceiveUpdate(uint32_t size)
 
 void USBWorker::SendAck(MAV_CMD_ACK ack)
 {
-	uint16_t dataLen = mavlink_msg_command_ack_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, &m_msg, ack, 0);
+	uint16_t dataLen = m_mavlink.PackCommandAck(&m_msg, ack);
 	dataLen = m_mavlink.FillBytes(&m_msg, m_buffer);
 	m_CDC.SendData(m_buffer, dataLen);
 }

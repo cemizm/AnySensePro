@@ -12,16 +12,6 @@
 
 namespace App
 {
-
-#define MAVLINK_SYSTEM_ID						0xCE
-#define MAVLINK_COMP_ID							MAV_COMP_ID_UART_BRIDGE
-#define MAVLINK_TYPE							MAV_TYPE_QUADROTOR
-#define MAVLINK_AP_TYPE							MAV_AUTOPILOT_INVALID
-#define MAVLINK_SENSORS							MAV_SYS_STATUS_SENSOR_3D_GYRO | MAV_SYS_STATUS_SENSOR_3D_ACCEL | \
-												MAV_SYS_STATUS_SENSOR_3D_MAG | MAV_SYS_STATUS_SENSOR_ABSOLUTE_PRESSURE | \
-												MAV_SYS_STATUS_SENSOR_GPS | MAV_SYS_STATUS_SENSOR_ATTITUDE_STABILIZATION | \
-												MAV_SYS_STATUS_SENSOR_MOTOR_OUTPUTS | MAV_SYS_STATUS_SENSOR_RC_RECEIVER
-
 class MAVLinkLayer
 {
 private:
@@ -40,6 +30,9 @@ public:
 	uint16_t PackAttitude(mavlink_message_t* msg);
 	uint16_t PackRCOut(mavlink_message_t* msg);
 	uint16_t PackBatteryPack(mavlink_message_t* msg);
+
+	uint16_t PackCommandAck(mavlink_message_t* msg, MAV_CMD_ACK ack);
+	uint16_t PackConfigurationVersion3(mavlink_message_t* msg, uint32_t firmware, uint8_t hardware);
 };
 
 } /* namespace Utils */

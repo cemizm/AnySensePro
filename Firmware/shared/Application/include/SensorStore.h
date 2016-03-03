@@ -20,7 +20,7 @@ namespace App
 
 enum FCType
 {
-	Unknown = 0, Naza = 1, Phantom = 2, Wookong = 3, A2 = 4, APM = 5,
+	Unknown = 0, Naza = 1, Phantom = 2, Wookong = 3, A2 = 4, APM = 5, ZYX_M = 6,
 };
 
 enum GPSFixType
