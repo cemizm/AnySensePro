@@ -10,7 +10,7 @@
     <Color x:Key="AccentColor3">#66cc0b10</Color>
     <Color x:Key="AccentColor4">#33cc0b10</Color>
 
-    <Color x:Key="BackgroundColor">#FF2D486A</Color>
+    <Color x:Key="BackgroundColor">#FF292929</Color>
     <Color x:Key="ForegroundColor">#FF63A9C7</Color>
 
     <SolidColorBrush x:Key="BackgroundColorBrush" Color="{StaticResource BackgroundColor}" options:Freeze="True" />

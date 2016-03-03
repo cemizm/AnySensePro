@@ -77,7 +77,12 @@
     <Compile Include="BindableMap.xaml.cs">
       <DependentUpon>BindableMap.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CircularProgressBar.xaml.cs">
+      <DependentUpon>CircularProgressBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converter\DoubleIntegerConverter.cs" />
+    <Compile Include="Converter\EnumConverter.cs" />
+    <Compile Include="Converter\PercentageConverter.cs" />
     <Compile Include="Converter\PitchConverter.cs" />
     <Compile Include="Converter\PositionConverter.cs" />
     <Compile Include="Converter\VisibilityConverter.cs" />
@@ -111,6 +116,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="BindableMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CircularProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

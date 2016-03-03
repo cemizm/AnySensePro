@@ -5,14 +5,16 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:mControl="clr-namespace:xeniC.AnySense.Controls;assembly=xeniC.AnySense.Controls"
         xmlns:c="clr-namespace:xeniC.AnySense.Controls.Converter;assembly=xeniC.AnySense.Controls"
+        xmlns:vm.d="clr-namespace:xeniC.AnySense.Library.Devices;assembly=xeniC.AnySense.Library"
         xmlns:u="clr-namespace:xeniC.AnySense.Studio"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
-        xmlns:cal="http://www.caliburnproject.org" x:Class="xeniC.AnySense.Studio.MainWindow"
+        xmlns:cal="http://www.caliburnproject.org" 
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        x:Class="xeniC.AnySense.Studio.MainWindow"
         ContentRendered="MetroWindow_ContentRendered"
         BorderThickness="0"
-        WindowButtonCommandsOverlayBehavior="Never"
         Title="AnySense - Studio" MinHeight="600" MinWidth="800"
-        GlowBrush="{DynamicResource AccentColorBrush}">
+        GlowBrush="{DynamicResource AccentColorBrush}" Icon="Logo_Quadratisch_32_transparent.ico" WindowStartupLocation="CenterScreen" ShowIconOnTitleBar="False">
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
             <Controls:Flyout x:Name="fTest" Header="Settings" Position="Right" Width="450" IsModal="True" Theme="Accent">
@@ -30,6 +32,8 @@
         <c:DoubleIntegerConverter x:Key="doubleIntegerConverter" />
         <c:PositionConverter x:Key="positionConverter" />
         <c:VisibilityConverter x:Key="invertedVisibiltyConverter" FalseValue="Visible" TrueValue="Collapsed" />
+        <c:EnumConverter x:Key="enumConverter" />
+        <c:PercentageConverter x:Key="percentageConverter" />
         <m:Location x:Key="defaultPosition" Latitude="53.581418" Longitude="10.010357"/>
     </Controls:MetroWindow.Resources>
     <Grid Background="{StaticResource BackgroundColorBrush}">
@@ -43,7 +47,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <mControl:AvionicGauge Roll="{Binding Device.Roll}"
-			Pitch="{Binding Device.Pitch}">
+			Pitch="{Binding Device.Pitch}" Altitude="{Binding Device.Altitude}">
             <mControl:AvionicGauge.Resources>
                 <Style TargetType="{x:Type Label}">
                     <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}" />
@@ -81,22 +85,54 @@
 			ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 			ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <Grid.Resources>
-                    <Style TargetType="{x:Type Label}" x:Key="Value">
+                    <Style TargetType="{x:Type TextBlock}" x:Key="Value">
                         <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}" />
                         <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Margin" Value="3,0" />
                     </Style>
-                    <Style TargetType="{x:Type Label}" x:Key="Title">
+                    <Style TargetType="{x:Type TextBlock}" x:Key="Title">
                         <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}" />
                         <Setter Property="FontSize" Value="14" />
                         <Setter Property="FontWeight" Value="Black" />
+                        <Setter Property="Margin" Value="3,0" />
                     </Style>
-                    <Style TargetType="{x:Type Label}" x:Key="Header" BasedOn="{StaticResource Title}">
+                    <Style TargetType="{x:Type Label}" x:Key="Header">
+                        <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}" />
                         <Setter Property="FontSize" Value="20" />
                         <Setter Property="FontWeight" Value="Black" />
                         <Setter Property="Margin" Value="0,10,10,10" />
                         <Setter Property="BorderBrush" Value="{StaticResource ForegroundColorBrush}" />
                         <Setter Property="BorderThickness" Value="0,0,0,1" />
                     </Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Width" Value="90" />
+                        <Style.Resources>
+                            <Style TargetType="{x:Type Grid}">
+                                <Setter Property="Margin" Value="5" />
+                                <Style.Resources>
+                                    <Style TargetType="{x:Type mControl:CircularProgressBar}">
+                                        <Setter Property="SegmentColor" Value="{StaticResource AccentColorBrush}" />
+                                        <Setter Property="SegmentBackground" Value="{StaticResource IdealForegroundColorBrush}" />
+                                        <Setter Property="StrokeThickness" Value="3"/>
+                                    </Style>
+                                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Value}">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                    </Style>
+                                </Style.Resources>
+                            </Style>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Title}">
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                            </Style>
+                        </Style.Resources>
+                    </Style>
+                    <sys:Int32 x:Key="MaxSat">10</sys:Int32>
+                    <sys:Int32 x:Key="MaxCurrent">150</sys:Int32>
+                    <sys:Int32 x:Key="MaxDop">-25</sys:Int32>
+                    <sys:Int32 x:Key="MaxCOG">360</sys:Int32>
+                    <sys:Int32 x:Key="MaxSpeed">30</sys:Int32>
+                    <sys:Int32 x:Key="MaxAltitude">800</sys:Int32>
+                    <sys:Int32 x:Key="MaxClimbRate">5</sys:Int32>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="150" />
@@ -108,42 +144,120 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Basic" Style="{StaticResource Header}"/>
-                <Label Grid.Row="1" Grid.Column="0" Content="Firmware" Style="{StaticResource Title}"/>
-                <Label Grid.Row="1" Grid.Column="1" Content="{Binding Device.Firmware}" Style="{StaticResource Value}"/>
-                <Label Grid.Row="2" Grid.Column="0" Content="Roll" Style="{StaticResource Title}"/>
-                <Slider Grid.Row="2" Grid.Column="1" Maximum="90" Minimum="-90" Value="{Binding Device.Roll}" VerticalAlignment="Center" IsEnabled="False" />
-                <Label Grid.Row="3" Grid.Column="0" Content="Pitch" Style="{StaticResource Title}"/>
-                <Slider Grid.Row="3" Grid.Column="1" Maximum="90" Minimum="-90" Value="{Binding Device.Pitch}" VerticalAlignment="Center" IsEnabled="False" />
-                <Label Grid.Row="4" Grid.Column="0" Content="Altitude" Style="{StaticResource Title}"/>
-                <Label Grid.Row="4" Grid.Column="1" Content="{Binding Device.UpdateMessage}" Style="{StaticResource Value}"/>
-                <Label Grid.Row="5" Grid.Column="0" Content="Home Altitude" Style="{StaticResource Title}"/>
-                <Label Grid.Row="5" Grid.Column="1" Content="{Binding Device.UpdatePercent}" Style="{StaticResource Value}"/>
-                <Label Grid.Row="6" Grid.Column="0" Content="Vertical Speed" Style="{StaticResource Title}"/>
-                <Label Grid.Row="6" Grid.Column="1" Content="0.00 m/s" Style="{StaticResource Value}"/>
-                <Label Grid.Row="7" Grid.Column="0" Content="Heading" Style="{StaticResource Title}"/>
-                <Label Grid.Row="7" Grid.Column="1" Content="0 °" Style="{StaticResource Value}"/>
-                <Label Grid.Row="8" Grid.Column="0" Content="Flightmode" Style="{StaticResource Title}"/>
-                <Label Grid.Row="8" Grid.Column="1" Content="GPS" Style="{StaticResource Value}"/>
-                <Label Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Content="GPS" Style="{StaticResource Header}"/>
-                <Label Grid.Row="10" Grid.Column="0" Content="GPS Fix" Style="{StaticResource Title}"/>
-                <Label Grid.Row="10" Grid.Column="1" Content="3D" Style="{StaticResource Value}"/>
-                <Label Grid.Row="11" Grid.Column="0" Content="Satellites" Style="{StaticResource Title}"/>
-                <Label Grid.Row="11" Grid.Column="1" Content="8" Style="{StaticResource Value}"/>
+                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Telemetry" Style="{StaticResource Header}"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Device" Style="{StaticResource Title}"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Device.Firmware, FallbackValue='not connected'}" Style="{StaticResource Value}"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Flightcontroller" Style="{StaticResource Title}" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Device.FlightController, Converter={StaticResource enumConverter}, FallbackValue='not connected'}" Style="{StaticResource Value}" />
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="GPS Position" Style="{StaticResource Title}" />
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Device.Position, FallbackValue='53.581418 10.010357'}" Style="{StaticResource Value}" />
+                <WrapPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="0"/>
+                            <TextBlock Text="{Binding Device.FlightMode, FallbackValue='GPS'}" />
+                        </Grid>
+                        <TextBlock Text="Flightmode" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="{Binding Device.Charge, FallbackValue=85}" />
+                            <TextBlock Text="{Binding Device.Battery, StringFormat='{}{0:0.0} V', FallbackValue='12.4 V'}" />
+                        </Grid>
+                        <TextBlock Text="Battery" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="{Binding Device.Current, 
+                                                                               Converter={StaticResource percentageConverter}, 
+                                                                               ConverterParameter={StaticResource MaxCurrent},
+                                                                               FallbackValue=15}" />
+                            <TextBlock Text="{Binding Device.Current, StringFormat='{}{0:0.0} A', FallbackValue='1.5 A'}" />
+                        </Grid>
+                        <TextBlock Text="Current" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="{Binding Device.GPSFix, 
+                                                                               Converter={StaticResource percentageConverter}, 
+                                                                               ConverterParameter={x:Static vm.d:DeviceModelBase+GPSFixType.FIX_DGPS},
+                                                                               FallbackValue=50}" />
+                            <TextBlock Text="{Binding Device.GPSFix, Converter={StaticResource enumConverter}, FallbackValue='2D'}" />
+                        </Grid>
+                        <TextBlock Text="GPS Fix" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="{Binding Device.Sats, 
+                                                                               Converter={StaticResource percentageConverter}, 
+                                                                               ConverterParameter={StaticResource MaxSat},
+                                                                               FallbackValue=50}" />
+                            <TextBlock Text="{Binding Device.Sats, Converter={StaticResource enumConverter}, FallbackValue='4'}" />
+                        </Grid>
+                        <TextBlock Text="Satellites" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="{Binding Device.HDOP, 
+                                                                               Converter={StaticResource percentageConverter}, 
+                                                                               ConverterParameter={StaticResource MaxDop},
+                                                                               FallbackValue=85}" />
+                            <TextBlock Text="{Binding Device.HDOP, StringFormat='{}{0:0.00}', FallbackValue='1.52'}" />
+                        </Grid>
+                        <TextBlock Text="HDOP" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="{Binding Device.VDOP, 
+                                                                               Converter={StaticResource percentageConverter}, 
+                                                                               ConverterParameter={StaticResource MaxDop},
+                                                                               FallbackValue=94}" />
+                            <TextBlock Text="{Binding Device.VDOP, StringFormat='{}{0:0.00}', FallbackValue='0.73'}" />
+                        </Grid>
+                        <TextBlock Text="VDOP" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="{Binding Device.COG, 
+                                                                               Converter={StaticResource percentageConverter}, 
+                                                                               ConverterParameter={StaticResource MaxCOG},
+                                                                               FallbackValue=50}" />
+                            <TextBlock Text="{Binding Device.COG, StringFormat='{}{0:0} °', FallbackValue='180 °'}"/>
+                        </Grid>
+                        <TextBlock Text="COG" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="{Binding Device.Speed, 
+                                                                               Converter={StaticResource percentageConverter}, 
+                                                                               ConverterParameter={StaticResource MaxSpeed},
+                                                                               FallbackValue=85}" />
+                            <TextBlock Text="{Binding Device.Speed, StringFormat='{}{0:0.0} m/s', FallbackValue='1,2 m/s'}" />
+                        </Grid>
+                        <TextBlock Text="Speed" HorizontalAlignment="Center" Style="{StaticResource Title}" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="{Binding Device.Altitude, 
+                                                                               Converter={StaticResource percentageConverter}, 
+                                                                               ConverterParameter={StaticResource MaxAltitude},
+                                                                               FallbackValue=0}" />
+                            <TextBlock Text="{Binding Device.Altitude, StringFormat='{}{0:0.00} m', FallbackValue='0,32 m'}" />
+                        </Grid>
+                        <TextBlock Text="Altitude" />
+                    </StackPanel>
+                    <StackPanel>
+                        <Grid>
+                            <mControl:CircularProgressBar Percentage="{Binding Device.ClimbRate, 
+                                                                               Converter={StaticResource percentageConverter}, 
+                                                                               ConverterParameter={StaticResource MaxClimbRate},
+                                                                               FallbackValue=0}" />
+                            <TextBlock Text="{Binding Device.ClimbRate, StringFormat='{}{0:0.0} m/s', FallbackValue='0,1 m/s'}"/>
+                        </Grid>
+                        <TextBlock Text="Climb rate" />
+                    </StackPanel>
+                </WrapPanel>
             </Grid>
         </ScrollViewer>
         <Grid Grid.RowSpan="2" Grid.Column="2">
@@ -159,7 +273,7 @@
                     SmallChange="1" 
                     Minimum="0" Maximum="25" Value="16"  />
             <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom" IsEnabled="{Binding Connected}">
-               <Button Padding="1"
+                <Button Padding="1"
 				Width="50" Click="Button_Click"
 				Height="50"
 				Style="{DynamicResource MetroCircleButtonStyle}">
@@ -168,11 +282,11 @@
 
             </StackPanel>
         </Grid>
-        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Visibility="{Binding Connected, Converter={StaticResource invertedVisibiltyConverter}}"
-              Background="{DynamicResource AccentColorBrush3}" VerticalAlignment="Top">
-            <StackPanel Orientation="Horizontal">
-                <fa:ImageAwesome Icon="Warning" Width="20" Height="20"  Margin="10,0,0,0" Grid.Column="0" Foreground="#FFFFD23A" />
+        <Grid Grid.ColumnSpan="3" Visibility="{Binding Connected, Converter={StaticResource invertedVisibiltyConverter}}"
+              Background="{DynamicResource ProgressBrush}" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Label Grid.Column="1" Content="AnySense not connected. Please connect AnySense and turn on your model." Foreground="{DynamicResource IdealForegroundColorBrush}" FontSize="14" FontWeight="Bold"/>
+                <fa:ImageAwesome Icon="Warning" Width="20" Height="20"  Margin="0,0,10,0" Grid.Column="0" Foreground="#FFFFD23A" />
             </StackPanel>
         </Grid>
     </Grid>

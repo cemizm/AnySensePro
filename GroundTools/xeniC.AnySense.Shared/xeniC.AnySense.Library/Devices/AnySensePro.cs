@@ -14,12 +14,12 @@ namespace xeniC.AnySense.Library.Devices
 {
     public class AnySensePro : DeviceModelBase
     {
-        private const UInt32 LatestVersion = 0x00010002;
+        private const UInt32 LatestVersion = 0x01000103;
 
         public AnySensePro(BaseMavlinkLayer mv, UInt32 version)
             : base(mv, version)
         {
-            Firmware = string.Format("AnySense Pro {0}.{1}.{2}", (byte)(version >> 16), (byte)(version >> 8), (byte)version);
+            Firmware = string.Format("AnySense Pro {0}.{1}.{2}", (byte)(version >> 24), (byte)(version >> 16), (byte)(version >> 8));
             CheckForUpdate();
         }
 
