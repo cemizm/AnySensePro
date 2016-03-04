@@ -19,6 +19,7 @@
 
 #include "DJIParser.h"
 #include "DJIParserV1.h"
+#include "DJIParserV2.h"
 
 namespace App
 {
@@ -35,15 +36,16 @@ private:
 	uint_fast32_t m_nextTimeout;
 	DJIChannel channels[DJIChannels];
 	DJIParserV1 v1Parser;
+	DJIParserV2 v2Parser;
 
 	DJIChannel* findChannel(uint16_t id);
 public:
 	DJIController(HAL::CAN& can) :
-			m_can(can), m_channel(), m_tmp_msg(), m_nextHeartbeat(), m_nextTimeout(), v1Parser(), err(0)
+			m_can(can), m_channel(), m_tmp_msg(), m_nextHeartbeat(), m_nextTimeout(), v1Parser(), v2Parser()
 	{
 
 	}
-	uint8_t err;
+
 	void Init();
 	void Run();
 	void ISR() override;

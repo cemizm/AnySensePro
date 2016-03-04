@@ -7,23 +7,20 @@
 
 #include "DJIController.h"
 
+#include "CRC.h"
+
 namespace App
 {
 
 void DJIController::Init()
 {
 	m_can.Init(0, 0, 0, 1, 0, 0, CAN_BTR_SJW_1TQ, CAN_BTR_TS1_8TQ, CAN_BTR_TS2_3TQ, 3, 0, 0);
-	/*
-	 CAN_FilterInitStructure.CAN_FilterIdHigh = 0x090 << 5;
-	 CAN_FilterInitStructure.CAN_FilterIdHigh = 0x108 << 5;
-	 CAN_FilterInitStructure.CAN_FilterIdHigh = 0x7F8 << 5;
-	 CAN_FilterInitStructure.CAN_FilterIdHigh = 0x388 << 5;
-	 CAN_FilterInitStructure.CAN_FilterIdHigh = 0x308 << 5;
-	 */
 
 	m_can.FilterIdList16BitInit(0, 0x90 << 5, 0x108 << 5, 0x7F8 << 5, 0x388 << 5, 0, 1);
-	m_can.FilterIdList16BitInit(1, 0x308 << 5, 0x00, 0x00, 0x00, 0, 1);
-	//m_can.FilterIdMask32BitInit(0, 0, 0, 0, 1);
+	m_can.FilterIdList16BitInit(1, 0x308 << 5, 0x92 << 5, 0x00, 0x00, 0, 1);
+	m_can.FilterIdMask32BitInit(0, 0, 0, 0, 1);
+
+	HAL::CRC::PowerUp();
 
 	HAL::InterruptRegistry.Enable(m_can.NVIC_RX0_IRQn, 15, this);
 
@@ -62,6 +59,9 @@ void DJIController::Run()
 				case 0x90:
 					SensorData.SetFCType(FCType::Naza);
 					break;
+				case 0x92:
+					SensorData.SetFCType(FCType::A2);
+					break;
 				default:
 					break;
 				}
@@ -75,7 +75,7 @@ void DJIController::Run()
 				parser = &v1Parser;
 				break;
 			case FCType::A2:
-				parser = NULL;
+				parser = &v2Parser;
 				break;
 			default:
 				parser = NULL;
@@ -128,7 +128,6 @@ void DJIController::ISR()
 	{
 		if (m_channel.get_free_size() == 0)
 		{
-			err = 1;
 			m_can.FifoRelease(0);
 		}
 		else

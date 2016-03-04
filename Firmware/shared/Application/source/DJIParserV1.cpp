@@ -9,9 +9,11 @@
 #include <DJIParserV1.h>
 #include <string.h>
 #include <math.h>
+#include <System.h>
 
 namespace App
 {
+
 
 void DJIParserV1::Parse(DJIChannel* channel, HAL::CANRxMessage* msg)
 {
@@ -20,9 +22,9 @@ void DJIParserV1::Parse(DJIChannel* channel, HAL::CANRxMessage* msg)
 
 	if (channel->IsSnyc)
 	{
-		if (channel->Count > sizeof(DJIMessageHeaderV1))
+		if (channel->Count > sizeof(DJIHeader))
 		{
-			DJIMessageV1* djiMessage = (DJIMessageV1*) channel->Data;
+			DJIMessage* djiMessage = (DJIMessage*) channel->Data;
 
 			if ((djiMessage->Header.Size + MessageSize) > DJIChannelSize)
 			{
@@ -33,8 +35,14 @@ void DJIParserV1::Parse(DJIChannel* channel, HAL::CANRxMessage* msg)
 			{
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
-				if (*((uint32_t*) &channel->Data[djiMessage->Header.Size + sizeof(DJIMessageHeaderV1)]) == MessageEnd)
+				if (*((uint32_t*) &channel->Data[djiMessage->Header.Size + sizeof(DJIHeader)]) == MessageEnd)
 				{
+					if (SensorData.GetFCType() == FCType::Naza)
+					{
+						if (channel->ChannelId == channelIdWookong)
+							SensorData.SetFCType(FCType::Wookong);
+					}
+
 					process(djiMessage);
 
 					channel->IsSnyc = 0;
@@ -54,47 +62,27 @@ void DJIParserV1::Parse(DJIChannel* channel, HAL::CANRxMessage* msg)
 		FindNext<uint32_t>(channel, MessageStart);
 }
 
-void DJIParserV1::process(DJIMessageV1* msg)
+void DJIParserV1::process(DJIMessage* msg)
 {
 	switch (msg->Header.Id)
 	{
-	case 0x1002:
-		process(&msg->OSD);
+	case packetIdOSD:
+		DJIParser::process(&msg->OSD.Data);
 		break;
-	case 0x1003:
+	case packetIdGPS:
 		process(&msg->GPS);
 		break;
-	case 0x1009:
+	case packetIdRAW:
 		process(&msg->RAW);
 		break;
+	case packetIdBAT:
+		process(&msg->BAT);
 	default:
 		break; //discard...
 	}
 }
 
-void DJIParserV1::process(DJIMessageOSDV1* msg)
-{
-	if (msg->Mask != 0)
-	{
-		uint8_t* data = (uint8_t*) &msg->Position;
-		for (uint8_t i = 0; i < msg->Header.Size; i++)
-			data[i] ^= msg->Mask;
-	}
-
-	SensorData.SetPositionCurrent(msg->Position.Latitude / M_PI * 180.0, msg->Position.Longitude / M_PI * 180.0);
-	SensorData.SetAltitude(msg->AltitudeBaro);
-
-	SensorData.SetHeading(msg->Quaternation.getHeading());
-	SensorData.SetRoll(msg->Quaternation.getRoll());
-	SensorData.SetPitch(msg->Quaternation.getPitch());
-
-	SensorData.SetSpeed(msg->Velocity.getSpeed());
-	SensorData.SetVerticalSpeed(-msg->Velocity.Down);
-	SensorData.SetCourseOverGround(msg->Velocity.getCOG());
-	SensorData.SetSatellites(msg->Satellites);
-}
-
-void DJIParserV1::process(DJIMessageGPSV1* msg)
+void DJIParserV1::process(DJIMessageGPS* msg)
 {
 	SensorData.SetDateTime(msg->DateTime.Years, msg->DateTime.Months, msg->DateTime.Days, msg->DateTime.Hours,
 			msg->DateTime.Minutes, msg->DateTime.Seconds);
@@ -104,23 +92,48 @@ void DJIParserV1::process(DJIMessageGPSV1* msg)
 	else
 		SensorData.SetFixType((GPSFixType) msg->FixType);
 
-	SensorData.SetVdop((float) msg->DOP.Vertical / 100);
+	SensorData.SetVdop(msg->DOP.Vertical / 100.0f);
 
-	float ndop = (float) msg->DOP.North / 100;
-	float edop = (float) msg->DOP.East / 100;
+	float ndop = msg->DOP.North / 100.0f;
+	float edop = msg->DOP.East / 100.0f;
 	SensorData.SetHdop(sqrtf(ndop * ndop + edop * edop));
 }
 
-void DJIParserV1::process(DJIMessageRAWV1* msg)
+void DJIParserV1::process(DJIMessageRAW* msg)
 {
-	SensorData.SetBattery(msg->Voltage.Battery);
+	if (SensorData.GetFCType() != FCType::Phantom)
+		SensorData.SetBattery(msg->Voltage.Battery);
+
+	if(SensorData.GetFCType() == FCType::Wookong)
+	{
+	}
+	else
+	{
+		SensorData.SetPositionHome(msg->HomePosition.Latitude / M_PI * 180, msg->HomePosition.Longitude / M_PI * 180);
+		SensorData.SetHomeAltitude(msg->HomeAltitude - 20);
+		SensorData.SetFlightMode((FlightMode) msg->FlightMode);
+	}
+
+
 	SensorData.SetArmed(msg->Armed);
 	SensorData.SetThrottle(msg->ActualInput.Throttle);
-	SensorData.SetPositionHome(msg->HomePosition.Latitude / M_PI * 180, msg->HomePosition.Longitude / M_PI * 180);
-	SensorData.SetHomeAltitude(msg->HomeAltitude - 20);
-	SensorData.SetFlightMode((FlightMode) msg->FlightMode);
-	SensorData.SetRCChannels(msg->RChannels, MAX_DJI_CHANNELS);
-	SensorData.SetMotorOuts(msg->MotorOut, MAX_DJI_MOTORS);
+	SensorData.SetRCChannels(msg->RChannels, MaxRCChannels);
+	SensorData.SetMotorOuts(msg->MotorOut, MaxMotorOuts);
+}
+
+void DJIParserV1::process(DJIMessageBAT* msg)
+{
+	SensorData.SetFCType(FCType::Phantom);
+
+	SensorData.SetBattery(msg->voltage);
+	SensorData.SetCharge(msg->percentage_charge);
+	SensorData.SetCurrent(-(msg->current / 1000.0f));
+	SensorData.SetCellCount(3);
+	SensorData.SetCell(0, msg->cell1);
+	SensorData.SetCell(1, msg->cell2);
+	SensorData.SetCell(2, msg->cell3);
+	SensorData.SetTemperatur1(msg->temperature / 10.0f);
+	SensorData.SetCapacity(msg->capacity_current);
 }
 
 } /* namespace Application */
