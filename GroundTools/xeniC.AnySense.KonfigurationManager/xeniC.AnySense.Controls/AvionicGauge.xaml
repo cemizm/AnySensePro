@@ -47,12 +47,13 @@
             <Grid  VerticalAlignment="Center" HorizontalAlignment="Center" Height="1120" Width="350" Background="#FF2D486A">
                 <Grid.Resources>
                     <c:PitchConverter x:Key="pitchCon" />
+                    <c:RollConverter x:Key="rollCon" />
                 </Grid.Resources>
                 <Image Source="Images/horizon.bmp" RenderTransformOrigin="0.5,0.5" >
                     <Image.RenderTransform>
                         <TransformGroup>
                             <TranslateTransform Y="{Binding Pitch, Converter={StaticResource pitchCon}, ElementName=avionic}" />
-                            <RotateTransform Angle="{Binding Roll, ElementName=avionic}"/>
+                            <RotateTransform Angle="{Binding Roll, Converter={StaticResource rollCon},ElementName=avionic}"/>
                         </TransformGroup>
                     </Image.RenderTransform>
                 </Image>

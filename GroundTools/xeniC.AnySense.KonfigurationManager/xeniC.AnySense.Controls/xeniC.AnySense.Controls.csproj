@@ -85,6 +85,7 @@
     <Compile Include="Converter\PercentageConverter.cs" />
     <Compile Include="Converter\PitchConverter.cs" />
     <Compile Include="Converter\PositionConverter.cs" />
+    <Compile Include="Converter\RollConverter.cs" />
     <Compile Include="Converter\VisibilityConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
