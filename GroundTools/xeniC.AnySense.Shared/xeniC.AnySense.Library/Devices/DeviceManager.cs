@@ -34,13 +34,19 @@ namespace xeniC.AnySense.Library.Devices
 
         public void StartPolling()
         {
-            isPolling = true;
-            portManager.Ports.ForEach(m => StartPollDevice(m));
+            Task.Run(() =>
+            {
+                isPolling = true;
+                portManager.Ports.ForEach(m => StartPollDevice(m));
+            });
         }
         public void StopPolling()
         {
-            isPolling = false;
-            tasks.Keys.ToList().ForEach(m => StopPollDevice(m));
+            Task.Run(() =>
+            {
+                isPolling = false;
+                tasks.Keys.ToList().ForEach(m => StopPollDevice(m));
+            });
         }
 
         private async void StartPollDevice(SerialPortManager.SerialPortInfo port)
@@ -84,7 +90,7 @@ namespace xeniC.AnySense.Library.Devices
             Msg_configuration_control configCMD = new Msg_configuration_control();
             configCMD.command = (byte)CONFIG_COMMAND.CONFIG_COMMAND_GET_VERSION;
             Msg_data_transmission_handshake handshake = new Msg_data_transmission_handshake();
-            
+
             PacketReceivedEventHandler pr = (o, e) =>
             {
                 if (e.Message.GetType() == typeof(Msg_configuration_version2))
