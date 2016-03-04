@@ -406,6 +406,14 @@ public:
 	{
 		m_VerticalSpeed = verticalSpeed;
 	}
+
+	void SetCell(uint8_t cell, uint16_t voltage)
+	{
+		if (cell > MAXCELLS)
+			return;
+
+		m_Cells[cell] = voltage;
+	}
 };
 
 extern SensorStore SensorData;
