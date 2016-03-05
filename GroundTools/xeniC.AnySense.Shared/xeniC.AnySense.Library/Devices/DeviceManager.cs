@@ -19,9 +19,20 @@ namespace xeniC.AnySense.Library.Devices
 
         private Dictionary<SerialPortManager.SerialPortInfo, DeviceModelBase> connected;
 
+        private List<String> filters;
+
+
         public DeviceManager()
+            : this(new string[0])
+        {
+
+        }
+
+        public DeviceManager(IEnumerable<string> filter)
         {
             isPolling = false;
+
+            filters = new List<string>(filter);
 
             tasks = new Dictionary<SerialPortManager.SerialPortInfo, CancellationTokenSource>();
             connected = new Dictionary<SerialPortManager.SerialPortInfo, DeviceModelBase>();
@@ -56,6 +67,22 @@ namespace xeniC.AnySense.Library.Devices
 
             if (tasks.ContainsKey(port))
                 return;
+
+            if (filters.Count > 0)
+            {
+                bool match = false;
+                foreach (string filter in filters)
+                {
+                    if (port.Description.ToLower().Contains(filter.ToLower()))
+                    {
+                        match = true;
+                        break;
+                    }
+                }
+                if (!match)
+                    return;
+            }
+
 
             tasks.Add(port, new CancellationTokenSource());
 
