@@ -18,7 +18,6 @@ namespace App
 class TelemetryController
 {
 private:
-	Configuration& m_configuration;
 	TelemetryMAVLink m_MAVLinkAdapter;
 	//TelemetryAdapter* adapters[] = { NULL, NULL, &m_MAVLinkAdapter };
 	TelemetryAdapter* m_active;
@@ -26,7 +25,11 @@ private:
 
 	TelemetryAdapter* GetAdapter(TelemetryProtocol protocol);
 public:
-	TelemetryController(Configuration& configuration);
+	TelemetryController() :
+			m_active(NULL), m_workspace()
+	{
+
+	}
 	void Run();
 };
 

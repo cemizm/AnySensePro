@@ -9,7 +9,6 @@
 #define APPLICATION_INCLUDE_CONFIGURATION_H_
 
 #include <stdint.h>
-#include <ff.h>
 
 namespace App
 {
@@ -30,17 +29,14 @@ struct ConfigurationData
 class Configuration
 {
 private:
-	const char* m_path;
+	const char* cfgname = "system.cfg";
+
 	ConfigurationData m_data;
-	uint8_t m_initialized;
-	FIL m_file;
-
-	void checkConfiguration();
-	void Init();
 public:
-	Configuration(const char* path);
+	void Init();
 
-	void Save();
+	uint8_t Load();
+	uint8_t Save();
 
 	ConfigurationData* GetConfiguration();
 	void SetConfiguration(ConfigurationData* data);
@@ -51,6 +47,8 @@ public:
 	TelemetryProtocol GetProtocol();
 	void SetProtocol(TelemetryProtocol protocol);
 };
+
+extern Configuration Config;
 
 } /* namespace Application */
 

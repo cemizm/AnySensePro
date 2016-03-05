@@ -5,105 +5,90 @@
  *      Author: cem
  */
 
-#include <string.h>
-
 #include <Configuration.h>
+#include <StorageFlashSPI.h>
 
 namespace App
 {
 
-Configuration::Configuration(const char* path) :
-		m_path(path), m_initialized(0), m_file()
-{
-	m_data.Protocol = TelemetryProtocol::Jeti;
-	m_data.Version = 0x01;
-}
-
-void Configuration::checkConfiguration()
-{
-	if (m_initialized)
-		return;
-
-	Init();
-}
+Configuration Config;
 
 void Configuration::Init()
 {
-	FRESULT result = FR_OK;
-	uint8_t tmp[sizeof(ConfigurationData)] = { 0x00 };
-	uint32_t read;
-
-	result = f_open(&m_file, m_path, FA_READ);
-
-	if (result == FR_NO_FILESYSTEM)
-	{
-		result = f_mkfs(m_path, 0, 0);
-
-		if (result != FR_OK)
-			return;
-
-		result = f_open(&m_file, m_path, FA_READ);
-	}
-
-	if (result != FR_OK)
-		return;
-
-	result = f_read(&m_file, tmp, (UINT) sizeof(ConfigurationData), (UINT*) &read);
-	if (result == FR_OK && read == sizeof(ConfigurationData))
-		memcpy(&m_data, tmp, sizeof(ConfigurationData));
-
-	f_close(&m_file);
+	if (Load() != 1)
+		Save();
 }
 
-void Configuration::Save()
+uint8_t Configuration::Load()
 {
-	FRESULT result = FR_OK;
-	uint32_t written = 0;
+	spiffs_file fd = Storage::StorageFlashSPI::Open(cfgname, SPIFFS_RDONLY, 0);
 
-	result = f_open(&m_file, m_path, FA_READ | FA_WRITE | FA_CREATE_ALWAYS);
-	if (result != FR_OK)
-		return;
+	if (fd < 0)
+		return 0;
 
-	result = f_write(&m_file, (void*) &m_data, sizeof(ConfigurationData), (UINT*) &written);
+	Storage::StorageFlashSPI::FileAutoRelease far(fd);
 
-	f_close(&m_file);
+	spiffs_stat st;
+
+	if (Storage::StorageFlashSPI::FileStat(fd, &st) < 0)
+		return 0;
+
+	if (Storage::StorageFlashSPI::Read(fd, &m_data, sizeof(ConfigurationData)) < 0)
+		return 0;
+
+	return 1;
+}
+
+uint8_t Configuration::Save()
+{
+	spiffs_file fd = Storage::StorageFlashSPI::Open(cfgname, SPIFFS_CREAT | SPIFFS_TRUNC | SPIFFS_RDWR, 0);
+	if (fd < 0)
+		return 0;
+
+	if (Storage::StorageFlashSPI::Write(fd, &m_data, sizeof(ConfigurationData)) < 0)
+		return 0;
+
+	if (Storage::StorageFlashSPI::Close(fd) < 0)
+		return 0;
+
+	return 1;
 }
 
 ConfigurationData* Configuration::GetConfiguration()
 {
-	checkConfiguration();
 	return &m_data;
 }
 
 void Configuration::SetConfiguration(ConfigurationData* data)
 {
-	checkConfiguration();
 	memcpy(&m_data, data, sizeof(ConfigurationData));
 	Save();
 }
 
 uint8_t Configuration::GetVersion()
 {
-	checkConfiguration();
 	return m_data.Version;
 }
 
 void Configuration::SetVersion(uint8_t version)
 {
-	checkConfiguration();
+	if (m_data.Version == version)
+		return;
+
 	m_data.Version = version;
 	Save();
 }
 
 TelemetryProtocol Configuration::GetProtocol()
 {
-	checkConfiguration();
 	return m_data.Protocol;
 }
 
 void Configuration::SetProtocol(TelemetryProtocol protocol)
 {
-	checkConfiguration();
+	if (m_data.Protocol == protocol)
+		return;
+
 	m_data.Protocol = protocol;
 	Save();
 }
