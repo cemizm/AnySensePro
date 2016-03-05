@@ -683,6 +683,15 @@ namespace xeniC.AnySense.Library.Devices
 
         #endregion
 
+        #region Logging
+
+        private void Process(Msg_log_data msg)
+        {
+            System.Diagnostics.Trace.WriteLine(ASCIIEncoding.UTF8.GetString(msg.data));
+        }
+
+        #endregion
+
         #region Message Process
 
         protected void ProcessMessage(MavlinkMessage msg)
@@ -701,6 +710,11 @@ namespace xeniC.AnySense.Library.Devices
                 Process(msg as Msg_rc_channels_raw);
             else if (msg.GetType() == typeof(Msg_battery_status))
                 Process(msg as Msg_battery_status);
+            else if (msg.GetType() == typeof(Msg_log_data))
+                Process(msg as Msg_log_data);
+            else
+            {
+            }
         }
 
         #endregion
