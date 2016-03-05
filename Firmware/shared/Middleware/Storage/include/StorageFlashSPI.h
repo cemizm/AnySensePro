@@ -105,6 +105,7 @@ public:
 	static int32_t Rename(const char* oldPath, const char* newPath);
 	static int32_t Remove(const char* path);
 	static int32_t FileStat(spiffs_file fh, spiffs_stat* st);
+	static int32_t GC(uint32_t size);
 
 	void ISR() override;
 };

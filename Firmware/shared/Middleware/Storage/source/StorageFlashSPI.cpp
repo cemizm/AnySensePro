@@ -247,6 +247,10 @@ int32_t StorageFlashSPI::Mount()
 {
 	return flashStorage._Mount();
 }
+int32_t StorageFlashSPI::GC(uint32_t size)
+{
+	return SPIFFS_gc(&flashStorage.fs, size);
+}
 
 void StorageFlashSPI::Unmount()
 {
