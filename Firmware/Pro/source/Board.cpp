@@ -8,7 +8,7 @@
 #include "Board.h"
 
 #include <Interrupt.h>
-
+#include <System.h>
 #include <USBCDCDevice.h>
 
 #include <StorageManager.h>
@@ -49,6 +49,8 @@ HAL::Pin USB_Sense(GPIOC, RCC_GPIOC, GPIO0, EXTI0, NVIC_EXTI0_IRQ);
 
 HAL::USB USB(RCC_USB, rcc_usb_prescale_1_5, USB_DP, USB_DM, GPIO_AF14, USB_Sense, USB_Disconnect, &st_usbfs_v2_usb_driver,
 NVIC_USB_LP_IRQ, NVIC_USB_HP_IRQ, NVIC_USB_WKUP_IRQ);
+
+
 
 namespace MicroSD
 {
@@ -181,21 +183,41 @@ void InitClock()
 	rcc_osc_off(RCC_HSI);
 }
 
-void Init()
+void InitUSB()
 {
-	JumpToBootLoader();
-	InitClock();
 
 	rcc_periph_clock_enable(rcc_periph_clken::RCC_SYSCFG);
 
 	SYSCFG_MEMRM |= 1 << 5; //USB Remap
+}
 
+void InitLeds()
+{
+	LedError.PowerUp();
+	LedError.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
+	LedError.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ);
+
+	LedActivity.PowerUp();
+	LedActivity.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
+	LedActivity.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ);
+}
+
+void InitStorage()
+{
 	flashStorage.Init();
 
 	Storage::Instance.RegisterStorage(Storages::SDStorage, &MicroSD::INTERFACE);
 	f_mount(&MicroSD::FS, "SD:", 0);
+}
 
-	CDCDevice.Init();
+void Init()
+{
+	JumpToBootLoader();
+
+	InitClock();
+	InitUSB();
+	InitLeds();
+	InitStorage();
 }
 
 void InitBootLoader()

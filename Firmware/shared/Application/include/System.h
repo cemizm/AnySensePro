@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include <OSAL.h>
+#include <Pin.h>
 
 namespace App
 {
@@ -19,6 +20,7 @@ const uint8_t LogEntryMsgLen = 25;
 
 struct LogEntry
 {
+	uint8_t level;
 	uint8_t msgLen;
 	unsigned char msg[LogEntryMsgLen];
 };
@@ -26,15 +28,40 @@ struct LogEntry
 class System
 {
 private:
+	HAL::Pin& ledError;
+	HAL::Pin& ledActivity;
 	OSAL::Channel<LogEntry, LogEntries> logging;
+	OSAL::EventFlag loaded;
 	LogEntry working;
-	void pushLogEntry(const char* msg);
-	uint8_t popLogEntry(LogEntry& entry);
+
+	const uint8_t LevelWarning = 1;
+	const uint8_t LevelError = 2;
+
+	void log(uint8_t level, const char* msg);
+
 public:
+	System(HAL::Pin& error, HAL::Pin& activity) :
+			ledError(error), ledActivity(activity)
+	{
+	}
+
+	void isLoaded(timeout_t t = 0)
+	{
+		loaded.wait(t);
+	}
+	void signalLoaded()
+	{
+		loaded.signal();
+	}
+
+	void logWarning(const char* msg);
+	void logError(const char* msg);
+
+	void Run();
 };
 
-extern System SystemService;
-
 } /* namespace App */
+
+extern App::System SystemService;
 
 #endif /* APPLICATION_INCLUDE_SYSTEM_H_ */
