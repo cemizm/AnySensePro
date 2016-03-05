@@ -74,6 +74,21 @@ public:
 
 	}
 
+	class FileAutoRelease
+	{
+	private:
+		spiffs_file fh;
+	public:
+		FileAutoRelease(spiffs_file fd) :
+				fh(fd)
+		{
+		}
+		~FileAutoRelease()
+		{
+			Close(fh);
+		}
+	};
+
 	int32_t Init();
 
 	int32_t Read(uint32_t addr, uint32_t size, uint8_t* buff);
@@ -85,9 +100,11 @@ public:
 	static int32_t Format();
 	static spiffs_file Open(const char *path, spiffs_flags flags, spiffs_mode mode);
 	static int32_t Write(spiffs_file fh, void *buf, int32_t len);
+	static int32_t Read(spiffs_file fh, void* buf, int32_t len);
 	static int32_t Close(spiffs_file fh);
 	static int32_t Rename(const char* oldPath, const char* newPath);
 	static int32_t Remove(const char* path);
+	static int32_t FileStat(spiffs_file fh, spiffs_stat* st);
 
 	void ISR() override;
 };

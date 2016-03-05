@@ -248,11 +248,13 @@ int32_t StorageFlashSPI::Mount()
 	return flashStorage._Mount();
 }
 
-void StorageFlashSPI::Unmount(){
-	 SPIFFS_unmount(&flashStorage.fs);
+void StorageFlashSPI::Unmount()
+{
+	SPIFFS_unmount(&flashStorage.fs);
 }
 
-int32_t StorageFlashSPI::Format(){
+int32_t StorageFlashSPI::Format()
+{
 	return SPIFFS_format(&flashStorage.fs);
 }
 
@@ -266,18 +268,29 @@ int32_t StorageFlashSPI::Write(spiffs_file fh, void *buf, int32_t len)
 	return SPIFFS_write(&flashStorage.fs, fh, buf, len);
 }
 
+int32_t StorageFlashSPI::Read(spiffs_file fh, void* buf, int32_t len)
+{
+	return SPIFFS_read(&flashStorage.fs, fh, buf, len);
+}
+
 int32_t StorageFlashSPI::Close(spiffs_file fh)
 {
 	return SPIFFS_close(&flashStorage.fs, fh);
 }
 
-int32_t StorageFlashSPI::Rename(const char* oldPath, const char* newPath){
+int32_t StorageFlashSPI::Rename(const char* oldPath, const char* newPath)
+{
 	return SPIFFS_rename(&flashStorage.fs, oldPath, newPath);
 }
 
 int32_t StorageFlashSPI::Remove(const char* path)
 {
 	return SPIFFS_remove(&flashStorage.fs, path);
+}
+
+int32_t StorageFlashSPI::FileStat(spiffs_file fh, spiffs_stat* st)
+{
+	return SPIFFS_fstat(&flashStorage.fs, fh, st);
 }
 
 }
