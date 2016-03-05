@@ -6,7 +6,7 @@
  */
 
 #include "DJIController.h"
-
+#include "System.h"
 #include "CRC.h"
 
 namespace App
@@ -32,6 +32,10 @@ void DJIController::Run()
 	DJIParser* parser = NULL;
 	DJIChannel* channel = NULL;
 	uint_fast32_t time = 0;
+
+	uint8_t dataReceived = 0;
+	uint8_t errorLogged = 0;
+
 	uint8_t newData = 0;
 
 	HAL::CANTxMessage txMessage1 = { 0x108, 0, 0, 8, { 0x55, 0xAA, 0x55, 0xAA, 0x07, 0x10, 0x00, 0x00 } };
@@ -39,7 +43,7 @@ void DJIController::Run()
 	HAL::CANRxMessage msg;
 
 	m_nextHeartbeat = OSAL::Timer::GetTime() + delay_sec(2);
-	m_nextTimeout = OSAL::Timer::GetTime() + delay_sec(3); //first collect some other messages to avoid osd heartbeat if present
+	m_nextTimeout = OSAL::Timer::GetTime() + delay_sec(3);
 
 	for (;;)
 	{
@@ -49,6 +53,7 @@ void DJIController::Run()
 
 		if (newData)
 		{
+			dataReceived = 1;
 			m_nextTimeout = time + delay_sec(3);
 
 			//Process CAN Bus Messages
@@ -92,7 +97,8 @@ void DJIController::Run()
 
 		if (m_nextTimeout > time)
 		{
-			if (SensorData.GetFCType() != FCType::A2)
+			if (SensorData.GetFCType() == FCType::Naza || SensorData.GetFCType() == FCType::Phantom
+					|| SensorData.GetFCType() == FCType::Wookong || SensorData.GetFCType() == FCType::Unknown)
 			{
 				if (m_nextHeartbeat < time)
 				{
@@ -101,6 +107,11 @@ void DJIController::Run()
 					m_nextHeartbeat = time + delay_sec(2);
 				}
 			}
+		}
+		else if(dataReceived && !errorLogged)
+		{
+			SystemService.logError("No response from Controller!");
+			errorLogged = 1;
 		}
 	}
 }
