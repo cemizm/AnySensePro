@@ -11,6 +11,7 @@
 #include <MAVLinkLayer.h>
 #include <OSAL.h>
 #include <USBCDCDevice.h>
+#include <System.h>
 
 #include <Pool.h>
 #include <Queue.h>
@@ -34,6 +35,7 @@ private:
 	uint8_t m_buffer[MAVLINK_MAX_PACKET_LEN];
 	uint8_t m_data_buffer[MAVLINK_MAX_PACKET_LEN];
 	uint8_t established;
+	LogEntry logEntry;
 
 	void ReceiveUpdate(uint32_t size);
 

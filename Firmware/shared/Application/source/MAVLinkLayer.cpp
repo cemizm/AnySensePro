@@ -88,8 +88,14 @@ uint16_t MAVLinkLayer::PackCommandAck(mavlink_message_t* msg, MAV_CMD_ACK ack)
 	return mavlink_msg_command_ack_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, ack, 0);
 }
 
-uint16_t MAVLinkLayer::PackConfigurationVersion3(mavlink_message_t* msg, uint32_t firmware, uint8_t hardware) {
+uint16_t MAVLinkLayer::PackConfigurationVersion3(mavlink_message_t* msg, uint32_t firmware, uint8_t hardware)
+{
 	return mavlink_msg_configuration_version3_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, firmware, hardware);
+}
+
+uint16_t MAVLinkLayer::PackLogData(mavlink_message_t* msg, uint8_t count, const uint8_t* data)
+{
+	return mavlink_msg_log_data_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 0, 0, count, data);
 }
 
 } /* namespace App */
