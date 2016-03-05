@@ -30,7 +30,11 @@ volatile uint32_t* bootSwitch = (uint32_t *) BOOTLOADER_SWITCH_MEM;
 USB::USBCDCDevice CDCDevice(Board::USB);
 Storage::StorageFlashSPI flashStorage(Board::Flash::SPI, Board::Flash::CSN);
 
-
+uint32_t get_fattime(void)
+{
+	uint32_t time = 0;
+	return time;
+}
 
 namespace Board
 {

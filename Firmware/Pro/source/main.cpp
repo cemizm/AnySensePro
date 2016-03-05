@@ -6,16 +6,14 @@
  */
 
 #include <DJIController.h>
-
 #include <MAVLinkComm.h>
+#include <USBWorker.h>
 
-#include <Stopwatch.h>
 #include <scmRTOS.h>
 #include <OSAL.h>
 
 #include <Configuration.h>
 #include <SensorStore.h>
-#include <USBWorker.h>
 
 #include "Board.h"
 
@@ -39,22 +37,22 @@ TProc2 Proc2;
 TProc3 Proc3;
 TProc4 Proc4;
 
-#define BUFFER		2048
-#define F10MB		10485760/BUFFER
-#define F100MB		104857600/BUFFER
-
-spiffs fs;
-FIL file;
-char content[BUFFER] = { 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd' };
-
-uint32_t get_fattime(void)
-{
-	uint32_t time = 0;
-	return time;
-}
-
 int main()
 {
+	/*
+	 uint8_t test[] = { 0x00, 0x55, 0x80, 0x00, 0xF4, 0x02, 0x10, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+	 0x99, 0x99, 0x99, 0x99, 0x99, 0x35, 0xD1, 0xD7, 0xDA, 0x97, 0x62, 0x83, 0x22, 0xCE, 0x75, 0xDF, 0xA5, 0xFA, 0x9A,
+	 0x18, 0x26, 0x45, 0xF2, 0x00, 0xA2, 0x17, 0xF2, 0xD2, 0x22, 0xE3, 0xB4, 0x75, 0xA2, 0x04, 0x13, 0x55, 0xA4, 0x17,
+	 0x55, 0xE7, 0xA6, 0x0D, 0xFC, 0x5A, 0x22, 0x9B, 0x63, 0xAD, 0x22, 0x2C, 0x36, 0x5C, 0xA4, 0x23, 0xAE, 0x3D, 0xA5,
+	 0x99, 0x48, 0x3E, 0xA0, 0xC1, 0x29, 0xC0, 0xA4, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x45, 0x4F, 0x66,
+	 0xA5, 0x50, 0x30, 0x11, 0xA3, 0x2B, 0xD6, 0x2E, 0x23, 0xF5, 0x9F, 0xFB, 0xA2, 0xA7, 0x9B, 0xE4, 0x66, 0xBA, 0x9D,
+	 0x82, 0x99, 0x83, 0x99, 0x82, 0x99, 0x95, 0x99, 0x19, 0x99, 0x99, 0x99, 0xF5, 0x11, 0xA0, 0x91 };
+
+	 HAL::CRC::PowerUp();
+
+	 volatile uint32_t crc = HAL::CRC::Calculate16(0x1021, 0x496c, 126, test + 1);
+	 */
+
 	Board::Init();
 
 	OS::run();
@@ -69,6 +67,10 @@ OS_PROCESS void TProc0::exec()
 
 	djiController.Init();
 	djiController.Run();
+
+	//supress compiler warnings
+	for (;;)
+		;
 }
 
 template<>
@@ -76,94 +78,27 @@ OS_PROCESS void TProc1::exec()
 {
 	mavLinkComm.Init();
 	mavLinkComm.Run();
+
+	//supress compiler warnings
+	for (;;)
+		;
 }
 
 template<>
 OS_PROCESS void TProc2::exec()
 {
-
-	//Utils::Stopwatch sp;
-	uint32_t read = 0;
-	uint32_t written = 0;
-
-	volatile uint32_t stop[5] = { 0 };
-
-	FRESULT fr = FR_TIMEOUT;
 	for (;;)
-	{
-		//Write 10.485.760 Bytes
-		//sp.Reset();
-		fr = f_open(&file, "SD:10.bin", FA_READ | FA_WRITE | FA_CREATE_ALWAYS);
-		if (fr == FR_OK)
-		{
-			for (uint32_t i = 0; (i < F10MB && fr == FR_OK); i++)
-			{
-				fr = f_write(&file, content, BUFFER, (UINT*) &written);
-			}
-
-			f_close(&file);
-		}
-
-		//if (stop[1] == 0)
-		//	stop[1] = sp.ElapsedTime();
-		//stop[1] = (sp.ElapsedTime() + stop[1]) / 2;
-
-		//Write 104.857.600 Bytes
-		//sp.Reset();
-		fr = f_open(&file, "SD:100.bin", FA_READ | FA_WRITE | FA_CREATE_ALWAYS);
-		if (fr == FR_OK)
-		{
-			for (uint32_t i = 0; (i < F100MB && fr == FR_OK); i++)
-			{
-				fr = f_write(&file, content, BUFFER, (UINT*) &written);
-			}
-
-			f_close(&file);
-		}
-		//if (stop[2] == 0)
-		//	stop[2] = sp.ElapsedTime();
-		//stop[2] = (sp.ElapsedTime() + stop[2]) / 2;
-
-		//Read 10.485.760 Bytes
-		//sp.Reset();
-		fr = f_open(&file, "SD:10.bin", FA_READ | FA_OPEN_EXISTING);
-		if (fr == FR_OK)
-		{
-			do
-			{
-				fr = f_read(&file, content, BUFFER, (UINT*) &read);
-			} while (fr == FR_OK && read == BUFFER);
-
-			f_close(&file);
-		}
-		//if (stop[3] == 0)
-		//	stop[3] = sp.ElapsedTime();
-		//stop[3] = (sp.ElapsedTime() + stop[3]) / 2;
-
-		//Read 104.857.600 Bytes
-		//sp.Reset();
-		fr = f_open(&file, "SD:100.bin", FA_READ | FA_OPEN_EXISTING);
-		if (fr == FR_OK)
-		{
-			do
-			{
-				fr = f_read(&file, content, BUFFER, (UINT*) &read);
-			} while (fr == FR_OK && read == BUFFER);
-
-			f_close(&file);
-		}
-		//if (stop[4] == 0)
-		//	stop[4] = sp.ElapsedTime();
-		//stop[4] = (sp.ElapsedTime() + stop[4]) / 2;
-
-		sleep(delay_ms(500));
-	}
+		;
 }
 
 template<>
 OS_PROCESS void TProc3::exec()
 {
 	usb_worker.Run();
+
+	//supress compiler warnings
+	for (;;)
+		;
 }
 
 template<>
@@ -179,9 +114,6 @@ OS_PROCESS void TProc4::exec()
 
 	for (;;)
 	{
-		if (djiController.err)
-			Board::LedError.On();
-
 		Board::LedActivity.Toggle();
 		OSAL::Timer::SleepMS(20);
 	}
