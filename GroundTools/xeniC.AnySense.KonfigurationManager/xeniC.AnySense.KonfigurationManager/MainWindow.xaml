@@ -14,7 +14,8 @@
         ContentRendered="MetroWindow_ContentRendered"
         BorderThickness="0"
         Title="AnySense - Studio" MinHeight="600" MinWidth="800"
-        GlowBrush="{DynamicResource AccentColorBrush}" Icon="Logo_Quadratisch_32_transparent.ico" WindowStartupLocation="CenterScreen" ShowIconOnTitleBar="False">
+        GlowBrush="{DynamicResource AccentColorBrush}" 
+        Icon="Logo_Quadratisch_32_transparent.ico" WindowStartupLocation="CenterScreen" ShowIconOnTitleBar="False">
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
             <Controls:Flyout x:Name="fTest" Header="Settings" Position="Right" Width="450" IsModal="True" Theme="Accent">
@@ -36,6 +37,9 @@
         <c:PercentageConverter x:Key="percentageConverter" />
         <m:Location x:Key="defaultPosition" Latitude="53.581418" Longitude="10.010357"/>
     </Controls:MetroWindow.Resources>
+    <Controls:MetroWindow.InputBindings>
+        <KeyBinding Command="{Binding Device.ExecUpdate}" Modifiers="Control" Key="F"/>
+    </Controls:MetroWindow.InputBindings>
     <Grid Background="{StaticResource BackgroundColorBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="400" />

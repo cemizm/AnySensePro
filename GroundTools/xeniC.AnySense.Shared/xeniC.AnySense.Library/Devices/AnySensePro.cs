@@ -23,6 +23,22 @@ namespace xeniC.AnySense.Library.Devices
             CheckForUpdate();
         }
 
+        private RelayCommand _execUpdate;
+        public RelayCommand ExecUpdate
+        {
+            get
+            {
+                if (_execUpdate == null)
+                {
+                    _execUpdate = new RelayCommand(() =>
+                    {
+                        Task.Run(() => DoUpdate());
+                    });
+                }
+                return _execUpdate;
+            }
+        }
+
         private void CheckForUpdate()
         {
             if (Version >= LatestVersion)
