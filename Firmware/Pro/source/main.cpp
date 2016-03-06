@@ -29,13 +29,13 @@ System SystemService(Board::LedError, Board::LedActivity);
 USBWorker usb_worker(Board::CDCDevice);
 
 // Process types
-typedef OS::process<OS::pr0, 1024> TProc0;
-typedef OS::process<OS::pr1, 1024> TProc1;
-typedef OS::process<OS::pr2, 2048> TProc2;
-typedef OS::process<OS::pr3, 1024> TProc3;
-typedef OS::process<OS::pr4, 512> TProc4;
-typedef OS::process<OS::pr5, 512> TProc5;
-typedef OS::process<OS::pr6, 512> TProc6;
+typedef OS::process<OS::pr0, 1024> TProc0; //Telemetry Controller
+typedef OS::process<OS::pr1, 1024> TProc1; //DJI Controller
+typedef OS::process<OS::pr2, 1024> TProc2; //MAVLink Out Controller
+typedef OS::process<OS::pr3, 1024> TProc3; //FrSky Controller
+typedef OS::process<OS::pr4, 1024> TProc4; //USB Controller
+typedef OS::process<OS::pr5, 1024> TProc5; //System Service
+typedef OS::process<OS::pr6, 1024> TProc6; //Logger
 
 // Process objects
 TProc0 Proc0;
