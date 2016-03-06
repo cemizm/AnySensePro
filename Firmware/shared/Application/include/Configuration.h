@@ -13,11 +13,9 @@
 namespace App
 {
 
-const uint8_t ConfigurationVersion = 0;
-
 enum TelemetryProtocol
 {
-	None = 0, FrSky = 1, MAVLink = 2, HoTT = 3, Jeti = 4, Futaba = 5, Spektrum = 6, Multiplex = 7,
+	None = 0, FrSky = 1, MAVLink = 2, HoTT = 3, Jeti = 4, Futaba = 5, Spektrum = 6, Multiplex = 7, Last = 8
 };
 
 struct ConfigurationData
@@ -26,20 +24,43 @@ struct ConfigurationData
 	TelemetryProtocol Protocol;
 }__attribute__((packed));
 
+class ConfigurationChanged
+{
+public:
+
+	virtual void UpdateConfiguration()
+	{
+
+	}
+
+	virtual ~ConfigurationChanged()
+	{
+
+	}
+};
+
 class Configuration
 {
 private:
 	const char* cfgname = "system.cfg";
+	const uint8_t ConfigurationVersion = 0;
+	static const uint8_t MaxHandlers = 5;
 
 	ConfigurationData m_data;
+
+	ConfigurationChanged* m_handlers[MaxHandlers];
+
 public:
 	void Init();
 
 	uint8_t Load();
 	uint8_t Save();
 
-	ConfigurationData* GetConfiguration();
-	void SetConfiguration(ConfigurationData* data);
+	void AddUpdateHandler(ConfigurationChanged& handler);
+	void RemoveUpdateHandler(ConfigurationChanged& handler);
+
+	ConfigurationData& GetConfiguration();
+	void SetConfiguration(ConfigurationData& data);
 
 	uint8_t GetVersion();
 	void SetVersion(uint8_t version);

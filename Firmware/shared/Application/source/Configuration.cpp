@@ -54,14 +54,38 @@ uint8_t Configuration::Save()
 	return 1;
 }
 
-ConfigurationData* Configuration::GetConfiguration()
+void Configuration::AddUpdateHandler(ConfigurationChanged& handler)
 {
-	return &m_data;
+	for (uint8_t i = 0; i < MaxHandlers; i++)
+	{
+		if (m_handlers[i] == nullptr)
+		{
+			m_handlers[i] = &handler;
+			return;
+		}
+	}
 }
 
-void Configuration::SetConfiguration(ConfigurationData* data)
+void Configuration::RemoveUpdateHandler(ConfigurationChanged& handler)
 {
-	memcpy(&m_data, data, sizeof(ConfigurationData));
+	for (uint8_t i = 0; i < MaxHandlers; i++)
+	{
+		if (m_handlers[i] == &handler)
+		{
+			m_handlers[i] = nullptr;
+			return;
+		}
+	}
+}
+
+ConfigurationData& Configuration::GetConfiguration()
+{
+	return m_data;
+}
+
+void Configuration::SetConfiguration(ConfigurationData& data)
+{
+	memcpy(&m_data, &data, sizeof(ConfigurationData));
 	Save();
 }
 
