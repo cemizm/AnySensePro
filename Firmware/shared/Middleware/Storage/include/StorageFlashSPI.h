@@ -59,6 +59,10 @@ private:
 	void InitHW();
 	int32_t _Mount();
 
+	int32_t Read(uint32_t addr, uint32_t size, uint8_t* buff);
+	int32_t Write(uint32_t addr, uint32_t size, const uint8_t* buff);
+	int32_t Erase(uint32_t addr, uint32_t size);
+
 	static s32_t spiffs_read(u32_t addr, u32_t size, u8_t *dst);
 	static s32_t spiffs_write(u32_t addr, u32_t size, u8_t *src);
 	static s32_t spiffs_erase(u32_t addr, u32_t size);
@@ -91,10 +95,6 @@ public:
 
 	int32_t Init();
 
-	int32_t Read(uint32_t addr, uint32_t size, uint8_t* buff);
-	int32_t Write(uint32_t addr, uint32_t size, const uint8_t* buff);
-	int32_t Erase(uint32_t addr, uint32_t size);
-
 	static int32_t Mount();
 	static void Unmount();
 	static int32_t Format();
@@ -111,8 +111,6 @@ public:
 };
 
 }
-
-extern Storage::StorageFlashSPI flashStorage;
 
 /* namespace Storage */
 

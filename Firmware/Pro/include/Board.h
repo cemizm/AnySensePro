@@ -16,7 +16,6 @@
 #include <USART.h>
 #include <USBCDCDevice.h>
 
-
 #define FIRMWARE_VERSION		0x01000103
 #define HARDWARE_VERSION		0x01
 
@@ -49,11 +48,8 @@ extern HAL::SPI SPI;
 namespace Flash
 {
 
-extern HAL::Pin CSN;
-extern HAL::SPI SPI;
 
 }
-
 
 namespace FC
 {
@@ -76,8 +72,6 @@ namespace OSD
 {
 extern HAL::USART USART;
 }
-
-
 
 }
 

@@ -26,8 +26,6 @@
 
 volatile uint32_t* bootSwitch = (uint32_t *) BOOTLOADER_SWITCH_MEM;
 
-Storage::StorageFlashSPI flashStorage(Board::Flash::SPI, Board::Flash::CSN);
-
 uint32_t get_fattime(void)
 {
 	uint32_t time = 0;
@@ -83,6 +81,8 @@ HAL::DMA RX(DMA2, DMA_CHANNEL1, NVIC_DMA2_CHANNEL1_IRQ, rcc_periph_clken::RCC_DM
 HAL::DMA TX(DMA2, DMA_CHANNEL2, NVIC_DMA2_CHANNEL2_IRQ, rcc_periph_clken::RCC_DMA2);
 
 HAL::SPI SPI(SPI3, rcc_periph_clken::RCC_SPI3, MOSI, MISO, SCK, GPIO_AF6, RX, TX);
+
+Storage::StorageFlashSPI FlashStorage(Board::Flash::SPI, Board::Flash::CSN);
 
 }
 
@@ -183,7 +183,6 @@ void InitClock()
 
 void InitUSB()
 {
-
 	rcc_periph_clock_enable(rcc_periph_clken::RCC_SYSCFG);
 
 	SYSCFG_MEMRM |= 1 << 5; //USB Remap
@@ -202,7 +201,7 @@ void InitLeds()
 
 void InitStorage()
 {
-	flashStorage.Init();
+	Flash::FlashStorage.Init();
 
 	Storage::Instance.RegisterStorage(Storages::SDStorage, &MicroSD::INTERFACE);
 	f_mount(&MicroSD::FS, "SD:", 0);
