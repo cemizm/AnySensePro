@@ -53,6 +53,7 @@ public:
 		m_CDC.RegisterHandler(this);
 	}
 
+	void Init();
 	void Run();
 
 	void DeviceConnected() override;

@@ -7,7 +7,6 @@
 
 #include <USBCDCDevice.h>
 
-
 namespace USB
 {
 
@@ -17,9 +16,11 @@ namespace USB
 #define ENDPOINT_IN(num)				_ENDPOINT(num, _ENDPOINT_DIRECT_IN)
 #define ENDPOINT_OUT(num)				_ENDPOINT(num, _ENDPOINT_DIRECT_OUT)
 
+USBCDCDevice* singleton;
+
 USBCDCDevice::USBCDCDevice(HAL::USB& usb) :
 		m_usb(usb), m_dev(), m_usbd_dev(NULL), m_config(), m_interfaces(), m_FunctionDescriptors(), m_DataEPs(), m_CommEP(), m_handler(
-				NULL)
+		NULL)
 {
 
 	m_dev.bLength = USB_DT_DEVICE_SIZE;
@@ -124,7 +125,9 @@ USBCDCDevice::USBCDCDevice(HAL::USB& usb) :
 
 void USBCDCDevice::Init()
 {
-	HAL::InterruptRegistry.Enable(m_usb.IRQN_USB_LP, 15, this);
+	singleton = this;
+
+	HAL::InterruptRegistry.Enable(m_usb.IRQN_USB_LP, 2, this);
 
 	m_usb.Init();
 	m_usbd_dev = usbd_init(m_usb.Driver, &m_dev, &m_config, m_usb_strings, 3, m_usbd_control_buffer,
@@ -208,22 +211,31 @@ void USBCDCDevice::DataRX()
 
 void USBCDCDevice::usb_set_config(usbd_device *usbd_dev, uint16_t wValue)
 {
-	(void)usbd_dev;
-	CDCDevice.SetConfig(wValue);
+	if (singleton == nullptr)
+		return;
+
+	(void) usbd_dev;
+	singleton->SetConfig(wValue);
 }
 
 int USBCDCDevice::usb_control_request(usbd_device *usbd_dev, struct usb_setup_data *req, uint8_t **buf, uint16_t *len,
 		usbd_control_complete_callback *complete)
 {
-	(void)usbd_dev;
-	return CDCDevice.ControlRequest(req, buf, len, complete);
+	if (singleton == nullptr)
+		return 0;
+
+	(void) usbd_dev;
+	return singleton->ControlRequest(req, buf, len, complete);
 }
 
 void USBCDCDevice::cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 {
-	(void)usbd_dev;
-	(void)ep;
-	CDCDevice.DataRX();
+	if (singleton == nullptr)
+		return;
+
+	(void) usbd_dev;
+	(void) ep;
+	singleton->DataRX();
 }
 
 } /* namespace tests */

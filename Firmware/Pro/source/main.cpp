@@ -7,6 +7,7 @@
 
 #include "Board.h"
 
+#include <StorageFlashSPI.h>
 #include <System.h>
 #include <DJIController.h>
 #include <MAVLinkComm.h>
@@ -20,9 +21,9 @@
 using namespace App;
 
 System SystemService(Board::LedError, Board::LedActivity);
-USBWorker usb_worker(CDCDevice);
 DJIController djiController(Board::FC::CAN);
 MAVLinkComm mavLinkComm(Board::OSD::USART);
+USBWorker usb_worker(Board::CDCDevice);
 
 // Process types
 typedef OS::process<OS::pr0, 1024> TProc0;
@@ -53,7 +54,6 @@ OS_PROCESS void TProc0::exec()
 	Storage::StorageFlashSPI::Mount();
 	Storage::StorageFlashSPI::GC(512 * 1024);
 
-	CDCDevice.Init();
 
 	SystemService.signalLoaded();
 
@@ -92,6 +92,7 @@ OS_PROCESS void TProc3::exec()
 {
 	SystemService.isLoaded();
 
+	usb_worker.Init();
 	usb_worker.Run();
 
 	//supress compiler warnings

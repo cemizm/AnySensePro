@@ -17,6 +17,11 @@
 namespace App
 {
 
+void USBWorker::Init()
+{
+	m_CDC.Init();
+}
+
 void USBWorker::Run()
 {
 	uint16_t dataLen = 0;

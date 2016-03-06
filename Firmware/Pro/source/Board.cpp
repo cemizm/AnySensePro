@@ -8,11 +8,10 @@
 #include "Board.h"
 
 #include <Interrupt.h>
-#include <System.h>
-#include <USBCDCDevice.h>
 
 #include <StorageManager.h>
 #include <StorageSDSPI.h>
+#include <StorageFlashSPI.h>
 
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/flash.h>
@@ -27,7 +26,6 @@
 
 volatile uint32_t* bootSwitch = (uint32_t *) BOOTLOADER_SWITCH_MEM;
 
-USB::USBCDCDevice CDCDevice(Board::USB);
 Storage::StorageFlashSPI flashStorage(Board::Flash::SPI, Board::Flash::CSN);
 
 uint32_t get_fattime(void)
@@ -50,7 +48,7 @@ HAL::Pin USB_Sense(GPIOC, RCC_GPIOC, GPIO0, EXTI0, NVIC_EXTI0_IRQ);
 HAL::USB USB(RCC_USB, rcc_usb_prescale_1_5, USB_DP, USB_DM, GPIO_AF14, USB_Sense, USB_Disconnect, &st_usbfs_v2_usb_driver,
 NVIC_USB_LP_IRQ, NVIC_USB_HP_IRQ, NVIC_USB_WKUP_IRQ);
 
-
+USB::USBCDCDevice CDCDevice(USB);
 
 namespace MicroSD
 {

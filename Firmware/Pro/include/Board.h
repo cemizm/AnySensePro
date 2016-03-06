@@ -14,9 +14,7 @@
 #include <CAN.h>
 #include <USB.h>
 #include <USART.h>
-#include <BLEDevice.h>
-
-#include <StorageFlashSPI.h>
+#include <USBCDCDevice.h>
 
 
 #define FIRMWARE_VERSION		0x01000103
@@ -37,7 +35,7 @@ void JumpToBootLoader();
 extern HAL::Pin LedActivity;
 extern HAL::Pin LedError;
 
-extern HAL::USB USB;
+extern USB::USBCDCDevice CDCDevice;
 
 namespace MicroSD
 {
