@@ -56,7 +56,7 @@ USBCDCDevice::USBCDCDevice(HAL::USB& usb) :
 	m_DataEPs.TX.bDescriptorType = USB_DT_ENDPOINT;
 	m_DataEPs.TX.bEndpointAddress = ENDPOINT_IN(2);
 	m_DataEPs.TX.bmAttributes = USB_ENDPOINT_ATTR_BULK;
-	m_DataEPs.TX.wMaxPacketSize = 64;
+	m_DataEPs.TX.wMaxPacketSize = MaxTXSize;
 	m_DataEPs.TX.bInterval = 1;
 
 	m_FunctionDescriptors.header.bFunctionLength = sizeof(struct usb_cdc_header_descriptor);
@@ -136,9 +136,21 @@ void USBCDCDevice::Init()
 	usbd_register_set_config_callback(m_usbd_dev, usb_set_config);
 }
 
-void USBCDCDevice::SendData(uint8_t* data, uint8_t len)
+void USBCDCDevice::SendData(uint8_t* data, uint16_t len)
 {
-	usbd_ep_write_packet(m_usbd_dev, m_DataEPs.TX.bEndpointAddress, data, len);
+	uint8_t toSend = 0;
+
+	do
+	{
+		toSend = len > MaxTXSize ? MaxTXSize : len;
+		toSend = usbd_ep_write_packet(m_usbd_dev, m_DataEPs.TX.bEndpointAddress, data, toSend);
+		if(toSend > 0)
+		{
+			data = &data[toSend];
+			len -= toSend;
+		}
+	} while (len > 0);
+
 }
 
 void USBCDCDevice::SetConfig(uint16_t wValue)
@@ -146,7 +158,7 @@ void USBCDCDevice::SetConfig(uint16_t wValue)
 	(void) wValue;
 
 	usbd_ep_setup(m_usbd_dev, m_DataEPs.RX.bEndpointAddress, USB_ENDPOINT_ATTR_BULK, 64, cdcacm_data_rx_cb);
-	usbd_ep_setup(m_usbd_dev, m_DataEPs.TX.bEndpointAddress, USB_ENDPOINT_ATTR_BULK, 64, NULL);
+	usbd_ep_setup(m_usbd_dev, m_DataEPs.TX.bEndpointAddress, USB_ENDPOINT_ATTR_BULK, MaxTXSize, NULL);
 	usbd_ep_setup(m_usbd_dev, m_CommEP.bEndpointAddress, USB_ENDPOINT_ATTR_INTERRUPT, 8, NULL);
 
 	usbd_register_control_callback(m_usbd_dev, USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,

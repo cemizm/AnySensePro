@@ -51,7 +51,6 @@ private:
 	usbd_device *m_usbd_dev;
 	uint8_t m_usbd_control_buffer[255];
 	usb_config_descriptor m_config;
-	const char *m_usb_strings[3] = { "xeniC UG", "AnySense Pro", "1.0" };
 
 	usb_interface_descriptor m_DataInterface;
 	usb_interface_descriptor m_CommInterface;
@@ -63,6 +62,9 @@ private:
 
 	USBSerialHandler* m_handler;
 
+	const char *m_usb_strings[3] = { "xeniC UG", "AnySense Pro", "1.0" };
+	const uint8_t MaxTXSize = 64;
+
 	void SetConfig(uint16_t wValue);
 	int ControlRequest(usb_setup_data *req, uint8_t **buf, uint16_t *len, usbd_control_complete_callback *complete);
 	void Poll();
@@ -72,7 +74,7 @@ public:
 
 	void Init();
 
-	void SendData(uint8_t* data, uint8_t len);
+	void SendData(uint8_t* data, uint16_t len);
 
 	void RegisterHandler(USBSerialHandler* handler)
 	{
@@ -94,7 +96,6 @@ public:
 
 	static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep);
 };
-
 
 }
 
