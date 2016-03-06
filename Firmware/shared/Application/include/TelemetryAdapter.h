@@ -9,45 +9,46 @@
 #define APPLICATION_INCLUDE_TELEMETRYADAPTER_H_
 
 #include <stdint.h>
-#include <stddef.h>
+#include <USART.h>
 
 #define TELEMETRY_WORKSPACE		512
+
+struct TelemetryPort
+{
+	TelemetryPort(HAL::USART& usart) :
+			USART(usart)
+	{
+	}
+
+	HAL::USART& USART;
+};
 
 namespace App
 {
 
 class TelemetryAdapter
 {
-private:
 public:
-	void Init(uint8_t* workspace)
+	virtual void Init(uint8_t* workspace, TelemetryPort& port)
 	{
-		m_workspace = workspace;
-		AdapterInit();
+		(void) workspace;
+		(void) port;
 	}
 
 	virtual void Run(void)
 	{
 	}
 
-	void DeInit()
+	virtual void DeInit()
 	{
-		m_workspace = NULL;
-		AdapterDeInit();
+	}
+
+	virtual void UpdateConfiguration(void)
+	{
+
 	}
 
 	virtual ~TelemetryAdapter(void)
-	{
-	}
-protected:
-	uint8_t* m_workspace;
-
-	virtual void AdapterInit(void)
-	{
-
-	}
-
-	virtual void AdapterDeInit(void)
 	{
 	}
 };

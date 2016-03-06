@@ -22,7 +22,7 @@
 
 using namespace App;
 
-TelemetryController telemetryController;
+TelemetryController telemetryController(Board::Telemetry::USART);
 DJIController djiController(Board::FC::CAN);
 MAVLinkComm mavLinkComm(Board::OSD::USART);
 System SystemService(Board::LedError, Board::LedActivity);

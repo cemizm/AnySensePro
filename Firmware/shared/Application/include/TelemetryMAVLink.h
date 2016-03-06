@@ -20,12 +20,18 @@ namespace App
 class TelemetryMAVLink: public TelemetryAdapter
 {
 private:
+	union
+	{
+		uint8_t* workspace;
 
-
+	} WorkData;
+	TelemetryPort* port;
 protected:
-	virtual void AdapterInit(void) override;
-	virtual void AdapterDeInit(void) override;
+	virtual void Init(uint8_t* workspace, TelemetryPort& port) override;
 	virtual void Run(void) override;
+	virtual void DeInit() override;
+	virtual void UpdateConfiguration(void) override;
+
 };
 
 } /* namespace Application*/
