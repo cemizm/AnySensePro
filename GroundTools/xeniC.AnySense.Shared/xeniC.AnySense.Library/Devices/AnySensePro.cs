@@ -371,17 +371,17 @@ namespace xeniC.AnySense.Library.Devices
                     case TelemetryProtocol.FrSky:
                         return new SettingsFrSkyModel();
                     case TelemetryProtocol.MAVLink:
-                        break;
+                        return new SettingsMAVLinkModel();
                     case TelemetryProtocol.HoTT:
-                        break;
+                        return new SettingsHoTTModel();
                     case TelemetryProtocol.Jeti:
-                        break;
+                        return new SettingsJetiModel();
                     case TelemetryProtocol.Futaba:
-                        break;
+                        return new SettingsFutabaModel();
                     case TelemetryProtocol.Spektrum:
-                        break;
+                        return new SettingsSpektrumModel();
                     case TelemetryProtocol.Multiplex:
-                        break;
+                        return new SettingsMultiplexModel();
                 }
 
                 return null;
@@ -436,7 +436,67 @@ namespace xeniC.AnySense.Library.Devices
             {
             }
         }
+        public class SettingsMAVLinkModel : ProtocolSettingsModel
+        {
+            public override void DeSerialize(byte[] data, int offset)
+            {
+            }
 
+            public override void Serialize(byte[] data, int offset)
+            {
+            }
+        }
+        public class SettingsHoTTModel : ProtocolSettingsModel
+        {
+            public override void DeSerialize(byte[] data, int offset)
+            {
+            }
+
+            public override void Serialize(byte[] data, int offset)
+            {
+            }
+        }
+        public class SettingsJetiModel : ProtocolSettingsModel
+        {
+            public override void DeSerialize(byte[] data, int offset)
+            {
+            }
+
+            public override void Serialize(byte[] data, int offset)
+            {
+            }
+        }
+        public class SettingsFutabaModel : ProtocolSettingsModel
+        {
+            public override void DeSerialize(byte[] data, int offset)
+            {
+            }
+
+            public override void Serialize(byte[] data, int offset)
+            {
+            }
+        }
+        public class SettingsSpektrumModel : ProtocolSettingsModel
+        {
+            public override void DeSerialize(byte[] data, int offset)
+            {
+            }
+
+            public override void Serialize(byte[] data, int offset)
+            {
+            }
+        }
+        public class SettingsMultiplexModel : ProtocolSettingsModel
+        {
+            public override void DeSerialize(byte[] data, int offset)
+            {
+            }
+
+            public override void Serialize(byte[] data, int offset)
+            {
+            }
+        }
+     
         #endregion
     }
 }

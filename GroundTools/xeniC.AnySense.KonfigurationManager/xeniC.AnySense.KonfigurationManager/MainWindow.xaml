@@ -15,6 +15,7 @@
         BorderThickness="0"
         Title="AnySense - Studio" MinHeight="600" MinWidth="800"
         RightWindowCommandsOverlayBehavior="Never"
+        GlowBrush="{DynamicResource AccentColorBrush}"
         Icon="Logo_Quadratisch_32_transparent.ico" WindowStartupLocation="CenterScreen" ShowIconOnTitleBar="False">
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
@@ -50,6 +51,29 @@
         <c:PercentageConverter x:Key="percentageConverter" />
         <m:Location x:Key="defaultPosition" Latitude="53.581418" Longitude="10.010357"/>
         <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsModel}">
+            <DataTemplate.Resources>
+                <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsFrSkyModel}">
+
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsMAVLinkModel}">
+
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsHoTTModel}">
+
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsFutabaModel}">
+
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsJetiModel}">
+
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsSpektrumModel}">
+
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsMultiplexModel}">
+
+                </DataTemplate>
+            </DataTemplate.Resources>
             <Grid Margin="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="80" />
@@ -69,7 +93,7 @@
                               ItemsSource="{Binding ProtocolSource}" 
                               SelectedValue="{Binding Protocol}" SelectedValuePath="Value"
                               Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource IdealForegroundColorBrush}" BorderBrush="{DynamicResource IdealForegroundColorBrush}"/>
-                    <ContentControl Grid.Row="1" Content="{Binding Settings}" />
+                    <ContentControl Grid.Row="1" Content="{Binding Settings}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
                 </Grid>
                 <Controls:ProgressRing Grid.Row="1" IsActive="{Binding IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource IdealForegroundColorBrush}" />
             </Grid>
