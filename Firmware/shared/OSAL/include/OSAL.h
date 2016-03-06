@@ -16,6 +16,7 @@ namespace OSAL
 using Priority = OS::TPriority;
 using ISRSupport = OS::TISRW;
 using EventFlag = OS::TEventFlag;
+using Mutex = OS::TMutex;
 
 template<typename T, uint16_t Size, typename S = uint8_t>
 using Channel = OS::channel<T,Size,S>;

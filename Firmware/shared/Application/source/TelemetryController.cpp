@@ -12,9 +12,7 @@
 namespace App
 {
 
-TelemetryController::TelemetryController(Configuration& configuration) :
-		m_configuration(configuration), m_active(NULL), m_workspace()
-{
+void TelemetryController::Init(){
 
 }
 
@@ -22,8 +20,9 @@ void TelemetryController::Run()
 {
 	for (;;)
 	{
-
+		OSAL::Timer::SleepSeconds(5);
 	}
 }
+
 
 } /* namespace Application */
