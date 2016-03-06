@@ -51,6 +51,8 @@ private:
 
 	ConfigurationChanged* m_handlers[MaxHandlers];
 
+	void NotifyHandler();
+
 public:
 	void Init();
 

@@ -78,6 +78,15 @@ void Configuration::RemoveUpdateHandler(ConfigurationChanged& handler)
 	}
 }
 
+void Configuration::NotifyHandler()
+{
+	for (uint8_t i = 0; i < MaxHandlers; i++)
+	{
+		if (m_handlers[i] != nullptr)
+			m_handlers[i]->UpdateConfiguration();
+	}
+}
+
 ConfigurationData& Configuration::GetConfiguration()
 {
 	return m_data;
@@ -87,6 +96,7 @@ void Configuration::SetConfiguration(ConfigurationData& data)
 {
 	memcpy(&m_data, &data, sizeof(ConfigurationData));
 	Save();
+	NotifyHandler();
 }
 
 uint8_t Configuration::GetVersion()
