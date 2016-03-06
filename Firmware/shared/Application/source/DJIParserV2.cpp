@@ -77,12 +77,10 @@ void DJIParserV2::process(DJIMessage* msg)
 			process(&msg->RAW);
 			break;
 		default:
-			volatile int i2 = 0;
 			break;
 		}
 		break;
 	default:
-		volatile int i = 0;
 		break; //discard...
 	}
 }

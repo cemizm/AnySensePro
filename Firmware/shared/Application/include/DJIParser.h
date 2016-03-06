@@ -146,6 +146,12 @@ protected:
 				data[i] ^= msg->Mask;
 		}
 
+		SensorData.SetSensorPresent(Sensors::SGPS, 1);
+		SensorData.SetSensorPresent(Sensors::Vario, 1);
+		SensorData.SetSensorPresent(Sensors::GForce, 1);
+		SensorData.SetSensorPresent(Sensors::Voltage, 1);
+		SensorData.SetSensorPresent(Sensors::Arming, 1);
+
 		SensorData.SetPositionCurrent(msg->Position.Latitude / M_PI * 180.0, msg->Position.Longitude / M_PI * 180.0);
 		SensorData.SetAltitude(msg->AltitudeBaro);
 

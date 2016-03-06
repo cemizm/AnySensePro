@@ -33,6 +33,21 @@ enum FlightMode
 	Manual = 0, GPS = 1, Failsafe = 2, Attitude = 3
 };
 
+enum Sensors
+{
+	SGPS = 0,
+	Vario = 1,
+	Voltage = 2,
+	GForce = 3,
+	Current = 4,
+	Consumption = 5,
+	Cells = 6,
+	Charge = 7,
+	Homeing = 8,
+	Arming = 9,
+	RPM = 10,
+};
+
 struct GPSPosition
 {
 	double Latitude;
@@ -65,7 +80,7 @@ private:
 	GPSTime m_dateTime;
 
 	float m_Altitude = 0; //altitude in m (from barometric sensor)
-	float m_HomeAltitude = 0; // home altitude from barometric sensor plus 20m (meters)
+	float m_HomeAltitude = 0; // home altitude from barometric sensor
 	float m_VerticalSpeed = 0; //vertical speed (barometric) in m/s (a.k.a. climb speed)
 
 	float m_Heading = 0; //heading in degree
@@ -88,9 +103,14 @@ private:
 	uint8_t m_Charge = 0; // percentage of charge (62%)
 	uint32_t m_Flightime = 0; //flightime in seconds
 
+	float m_HomeDirection = 0; //home direction in degree
+	uint16_t m_HomeDistance = 0; //Home distance in meters
+
 	float m_Temperatur1 = 0;
 	float m_Temperatur2 = 0;
 	uint32_t m_RPM = 0;
+
+	uint32_t m_Sensors = 0;
 
 public:
 	float GetAltitude() const
@@ -146,6 +166,17 @@ public:
 	const uint16_t* GetCells() const
 	{
 		return m_Cells;
+	}
+
+	uint16_t GetCellLowest()
+	{
+		uint16_t cell = m_Cells[0];
+		for (uint8_t i = 1; i < m_CellCount; i++)
+		{
+			if (m_Cells[i] < cell)
+				cell = m_Cells[i];
+		}
+		return cell;
 	}
 
 	uint8_t GetCharge() const
@@ -299,6 +330,20 @@ public:
 		m_PositionHome.Latitude = latitude;
 		m_PositionHome.Longitude = longitude;
 	}
+	void SetPositionHome()
+	{
+		m_PositionHome.Latitude = m_PositionCurrent.Latitude;
+		m_PositionHome.Longitude = m_PositionCurrent.Longitude;
+	}
+	void SetPositionHomeClear()
+	{
+		m_PositionHome.Latitude = 0;
+		m_PositionHome.Longitude = 0;
+	}
+	uint8_t IsPositionHomeSet()
+	{
+		return m_PositionHome.Latitude != 0 && m_PositionHome.Longitude != 0;
+	}
 
 	void SetRCChannels(int16_t* value, uint8_t count)
 	{
@@ -413,6 +458,45 @@ public:
 			return;
 
 		m_Cells[cell] = voltage;
+	}
+
+	uint8_t GetSensorPresent(Sensors sensor)
+	{
+		uint8_t s = (uint8_t) sensor;
+		uint32_t flag = (1 << s);
+
+		return (m_Sensors & flag) == flag;
+	}
+
+	void SetSensorPresent(Sensors sensor, uint8_t present)
+	{
+		uint8_t s = (uint8_t) sensor;
+		uint32_t flag = (1 << s);
+
+		if (present)
+			m_Sensors |= flag;
+		else
+			m_Sensors &= ~flag;
+	}
+
+	void SetHomeDirection(float degree)
+	{
+		m_HomeDirection = degree;
+	}
+
+	void SetHomeDistance(uint16_t distance)
+	{
+		m_HomeDistance = distance;
+	}
+
+	uint16_t GetHomeDistance()
+	{
+		return m_HomeDistance;
+	}
+
+	float GetHomeDirection()
+	{
+		return m_HomeDirection;
 	}
 };
 

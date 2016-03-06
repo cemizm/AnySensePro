@@ -14,7 +14,6 @@
 namespace App
 {
 
-
 void DJIParserV1::Parse(DJIChannel* channel, HAL::CANRxMessage* msg)
 {
 	memcpy(&channel->Data[channel->Count], msg->data, msg->DataLength);
@@ -104,16 +103,17 @@ void DJIParserV1::process(DJIMessageRAW* msg)
 	if (SensorData.GetFCType() != FCType::Phantom)
 		SensorData.SetBattery(msg->Voltage.Battery);
 
-	if(SensorData.GetFCType() == FCType::Wookong)
+	if (SensorData.GetFCType() == FCType::Wookong)
 	{
 	}
 	else
 	{
+		SensorData.SetSensorPresent(Sensors::Homeing, 1);
+
 		SensorData.SetPositionHome(msg->HomePosition.Latitude / M_PI * 180, msg->HomePosition.Longitude / M_PI * 180);
 		SensorData.SetHomeAltitude(msg->HomeAltitude - 20);
 		SensorData.SetFlightMode((FlightMode) msg->FlightMode);
 	}
-
 
 	SensorData.SetArmed(msg->Armed);
 	SensorData.SetThrottle(msg->ActualInput.Throttle);
@@ -124,6 +124,11 @@ void DJIParserV1::process(DJIMessageRAW* msg)
 void DJIParserV1::process(DJIMessageBAT* msg)
 {
 	SensorData.SetFCType(FCType::Phantom);
+
+	SensorData.SetSensorPresent(Sensors::Consumption, 1);
+	SensorData.SetSensorPresent(Sensors::Current, 1);
+	SensorData.SetSensorPresent(Sensors::Cells, 1);
+	SensorData.SetSensorPresent(Sensors::Charge, 1);
 
 	SensorData.SetBattery(msg->voltage);
 	SensorData.SetCharge(msg->percentage_charge);
