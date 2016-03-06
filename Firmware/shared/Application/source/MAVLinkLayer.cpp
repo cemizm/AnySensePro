@@ -98,4 +98,9 @@ uint16_t MAVLinkLayer::PackLogData(mavlink_message_t* msg, uint8_t count, const 
 	return mavlink_msg_log_data_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 0, 0, count, data);
 }
 
+uint16_t MAVLinkLayer::PackConfigurationData(mavlink_message_t* msg, const uint8_t* data)
+{
+	return mavlink_msg_configuration_data_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, data);
+}
+
 } /* namespace App */

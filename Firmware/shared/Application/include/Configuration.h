@@ -18,8 +18,9 @@ enum TelemetryProtocol
 	None = 0, FrSky = 1, MAVLink = 2, HoTT = 3, Jeti = 4, Futaba = 5, Spektrum = 6, Multiplex = 7, Last = 8
 };
 
-struct ConfigurationData
+union ConfigurationData
 {
+	uint8_t Data[240];
 	uint8_t Version;
 	TelemetryProtocol Protocol;
 }__attribute__((packed));

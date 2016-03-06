@@ -14,17 +14,29 @@
         ContentRendered="MetroWindow_ContentRendered"
         BorderThickness="0"
         Title="AnySense - Studio" MinHeight="600" MinWidth="800"
-        GlowBrush="{DynamicResource AccentColorBrush}" 
+        RightWindowCommandsOverlayBehavior="Never"
         Icon="Logo_Quadratisch_32_transparent.ico" WindowStartupLocation="CenterScreen" ShowIconOnTitleBar="False">
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
-            <Controls:Flyout x:Name="fTest" Header="Settings" Position="Right" Width="450" IsModal="True" Theme="Accent">
+            <Controls:Flyout IsOpen="{Binding Device.FlyoutVisible, Mode=OneWay}" Position="Right" Width="550" IsModal="True" Theme="Accent" CloseButtonVisibility="Collapsed">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Image Source="Images/AnySense.png" Grid.Row="1" Width="200" Height="80" Margin="15,0,0,10" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                    <Grid Grid.Row="0" Height="50">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Padding="5,0" Width="50" Command="{Binding Device.Flyout.CloseCommand}" Height="50" Style="{DynamicResource MetroCircleButtonStyle}"  Foreground="{DynamicResource IdealForegroundColorBrush}">
+                            <fa:ImageAwesome Icon="ArrowLeft" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="{DynamicResource IdealForegroundColorBrush}"/>
+                        </Button>
+                        <Label Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding Device.Flyout.Title, Mode=OneWay}" Foreground="{DynamicResource IdealForegroundColorBrush}" FontSize="30" FontWeight="Bold" />
+                    </Grid>
+                    <ContentControl Grid.Row="1" Content="{Binding Device.Flyout}" />
+                    <Image Source="Images/AnySense.png" Grid.Row="2" Width="200" Height="80" Margin="15,0,0,10" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
                 </Grid>
             </Controls:Flyout>
         </Controls:FlyoutsControl>
@@ -32,10 +44,36 @@
     <Controls:MetroWindow.Resources>
         <c:DoubleIntegerConverter x:Key="doubleIntegerConverter" />
         <c:PositionConverter x:Key="positionConverter" />
+        <c:VisibilityConverter x:Key="visibleConverter" FalseValue="Collapsed" TrueValue="Visible" />
         <c:VisibilityConverter x:Key="invertedVisibiltyConverter" FalseValue="Visible" TrueValue="Collapsed" />
         <c:EnumConverter x:Key="enumConverter" />
         <c:PercentageConverter x:Key="percentageConverter" />
         <m:Location x:Key="defaultPosition" Latitude="53.581418" Longitude="10.010357"/>
+        <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsModel}">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="80" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1" Visibility="{Binding IsLoading, Converter={StaticResource invertedVisibiltyConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"  />
+                        <RowDefinition  />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Protocol" FontSize="16" VerticalAlignment="Center" />
+                    <ComboBox Grid.Row="0" Grid.Column="1" FontSize="16" Height="30"
+                              ItemsSource="{Binding ProtocolSource}" 
+                              SelectedValue="{Binding Protocol}" SelectedValuePath="Value"
+                              Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource IdealForegroundColorBrush}" BorderBrush="{DynamicResource IdealForegroundColorBrush}"/>
+                    <ContentControl Grid.Row="1" Content="{Binding Settings}" />
+                </Grid>
+                <Controls:ProgressRing Grid.Row="1" IsActive="{Binding IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource IdealForegroundColorBrush}" />
+            </Grid>
+        </DataTemplate>
     </Controls:MetroWindow.Resources>
     <Controls:MetroWindow.InputBindings>
         <KeyBinding Command="{Binding Device.ExecUpdate}" Modifiers="Control" Key="F"/>
@@ -278,10 +316,10 @@
                     Minimum="0" Maximum="25" Value="16"  />
             <StackPanel Grid.Row="2" Orientation="Vertical" VerticalAlignment="Bottom" IsEnabled="{Binding Connected}">
                 <Button Padding="1"
-				Width="50" Click="Button_Click"
+				Width="50" Command="{Binding Device.ShowConfiguration}"
 				Height="50"
 				Style="{DynamicResource MetroCircleButtonStyle}">
-                    <fa:ImageAwesome Icon="Cogs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
+                    <fa:ImageAwesome Icon="Cogs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="{DynamicResource IdealForegroundColorBrush}" />
                 </Button>
 
             </StackPanel>

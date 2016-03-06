@@ -82,5 +82,8 @@
           <field type="uint32_t" name="fw_version">Firmware Version</field>
           <field type="uint8_t" name="hw_version">Hardware Version</field>
         </message>
+        <message id="186" name="CONFIGURATION_DATA">
+          <field type="uint8_t[240]" name="data">Serialized Protocol configuration</field>
+        </message>
 			</messages>
 		</mavlink>

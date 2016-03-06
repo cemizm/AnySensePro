@@ -11,6 +11,7 @@ namespace xeniC.AnySense.Library
         Task<string> ShowInput(string title, string message);
         Task<DialogResult> ShowMessage(string title, string message, DialogStyle style = DialogStyle.Affirmative, DialogSettings settings = null);
         Task<IProgressController> ShowProgress(string title, string message, bool isCancelable = false, DialogSettings settings = null);
+        
     }
 
     public enum DialogResult

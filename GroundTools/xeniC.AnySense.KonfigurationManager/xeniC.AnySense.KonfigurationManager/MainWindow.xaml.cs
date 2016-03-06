@@ -32,14 +32,6 @@ namespace xeniC.AnySense.Studio
             SimpleIoc.Default.Register<IDialogController>(() => { return this; });
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var flyout = this.Flyouts.Items[0] as Flyout;
-            if (flyout == null)
-                return;
-            flyout.IsOpen = !flyout.IsOpen;
-        }
-
         private async void MetroWindow_ContentRendered(object sender, EventArgs e)
         {
             if (ApplicationDeployment.IsNetworkDeployed)

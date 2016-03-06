@@ -55,6 +55,7 @@ namespace MavLink
 			{183, new MavPacketInfo(Deserialize_CONFIGURATION_PORT, 186)},
 			{184, new MavPacketInfo(Deserialize_CONFIGURATION_VERSION2, 175)},
 			{185, new MavPacketInfo(Deserialize_CONFIGURATION_VERSION3, 180)},
+			{186, new MavPacketInfo(Deserialize_CONFIGURATION_DATA, 108)},
 			{0, new MavPacketInfo(Deserialize_HEARTBEAT, 50)},
 			{1, new MavPacketInfo(Deserialize_SYS_STATUS, 124)},
 			{2, new MavPacketInfo(Deserialize_SYSTEM_TIME, 137)},
@@ -237,6 +238,14 @@ namespace MavLink
 			{
 				fw_version = bitconverter.ToUInt32(bytes, offset + 0),
 				hw_version = bytes[offset + 4],
+			};
+		}
+
+		internal static MavlinkMessage Deserialize_CONFIGURATION_DATA(byte[] bytes, int offset)
+		{
+			return new Msg_configuration_data
+			{
+				data =  ByteArrayUtil.ToUInt8(bytes, offset + 0, 240),
 			};
 		}
 
@@ -2077,6 +2086,13 @@ namespace MavLink
 			bytes[offset + 4] = msg.hw_version;
 			offset += 5;
 			return 185;
+		}
+
+		internal static int Serialize_CONFIGURATION_DATA(this Msg_configuration_data msg, byte[] bytes, ref int offset)
+		{
+			ByteArrayUtil.ToByteArray(msg.data, bytes, offset + 0, 240);
+			offset += 240;
+			return 186;
 		}
 
 		internal static int Serialize_HEARTBEAT(this Msg_heartbeat msg, byte[] bytes, ref int offset)

@@ -11,7 +11,6 @@ namespace xeniC.AnySense.Library.IO
     public class SerialPortManager : IDisposable
     {
         private ManagementEventWatcher eventWatcher;
-
         
         public SerialPortManager()
         {
@@ -133,7 +132,26 @@ namespace xeniC.AnySense.Library.IO
             public string Device { get; set; }
 
             public string Description { get; set; }
+            /*
+            public override int GetHashCode()
+            {
+                return Device.GetHashCode();
+            }
 
+            public override bool Equals(object obj)
+            {
+                return GetHashCode() == obj.GetHashCode();
+            }
+
+            public bool Equals(SerialPortInfo x, SerialPortInfo y)
+            {
+                return x.Equals(y);
+            }
+
+            public int GetHashCode(SerialPortInfo obj)
+            {
+                return obj.GetHashCode();
+            }*/
         }
 
         #endregion

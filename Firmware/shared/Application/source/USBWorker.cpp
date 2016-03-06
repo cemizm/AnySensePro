@@ -9,7 +9,7 @@
 #include <stddef.h>
 #include "Board.h"
 #include "MAVLinkLayer.h"
-
+#include <Configuration.h>
 #include <StorageFlashSPI.h>
 
 #include "libopencm3/cm3/scb.h"
@@ -26,7 +26,8 @@ void USBWorker::Run()
 {
 	uint16_t dataLen = 0;
 	uint8_t currentItem = 0;
-
+	CONFIG_COMMAND cmd = CONFIG_COMMAND_NACK;
+	TransferType type = TransferType::FW_Update;
 	for (;;)
 	{
 		if (m_channels.pop(m_msg, delay_ms(m_delay_ms)))
@@ -37,10 +38,23 @@ void USBWorker::Run()
 			switch (m_msg.msgid)
 			{
 			case MAVLINK_MSG_ID_CONFIGURATION_CONTROL:
-				dataLen = m_mavlink.PackConfigurationVersion3(&m_msg, FIRMWARE_VERSION, HARDWARE_VERSION);
+				cmd = (CONFIG_COMMAND) mavlink_msg_configuration_control_get_command(&m_msg);
+
+				switch (cmd)
+				{
+				case CONFIG_COMMAND_GET_VERSION:
+					dataLen = m_mavlink.PackConfigurationVersion3(&m_msg, FIRMWARE_VERSION, HARDWARE_VERSION);
+					break;
+				case CONFIG_COMMAND_GET_CONFIGURATION:
+					dataLen = m_mavlink.PackConfigurationData(&m_msg, Config.GetConfiguration().Data);
+					break;
+				default:
+					break;
+				}
+
 				break;
 			case MAVLINK_MSG_ID_DATA_TRANSMISSION_HANDSHAKE:
-				TransferType type = (TransferType) mavlink_msg_data_transmission_handshake_get_type(&m_msg);
+				type = (TransferType) mavlink_msg_data_transmission_handshake_get_type(&m_msg);
 
 				switch (type)
 				{
@@ -50,6 +64,13 @@ void USBWorker::Run()
 					break;
 				}
 
+				break;
+			case MAVLINK_MSG_ID_CONFIGURATION_DATA:
+				ConfigurationData& cfg = Config.GetConfiguration();
+				mavlink_msg_configuration_data_get_data(&m_msg, cfg.Data);
+				Config.SetConfiguration(cfg);
+
+				dataLen = m_mavlink.PackCommandAck(&m_msg, MAV_CMD_ACK_OK);
 				break;
 			}
 		}

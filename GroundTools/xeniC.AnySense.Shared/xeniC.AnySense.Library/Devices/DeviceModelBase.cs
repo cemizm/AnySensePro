@@ -34,6 +34,35 @@ namespace xeniC.AnySense.Library.Devices
 
         public string Firmware { get; protected set; }
 
+        private FlyoutViewModel flyout;
+        public FlyoutViewModel Flyout
+        {
+            get { return flyout; }
+            private set
+            {
+                if (flyout == value)
+                    return;
+                flyout = value;
+                RaisePropertyChanged(() => Flyout);
+                RaisePropertyChanged(() => FlyoutVisible);
+            }
+        }
+
+        public bool FlyoutVisible
+        {
+            get { return Flyout != null; }
+        }
+
+        protected void ShowFlyout(FlyoutViewModel model)
+        {
+            Flyout = model;
+        }
+
+        protected void CloseFlyout()
+        {
+            Flyout = null;
+        }
+
         #endregion
 
         #region Heartbeat

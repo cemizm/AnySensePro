@@ -6,28 +6,17 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using xeniC.AnySense.Library.Extensions;
 
 namespace xeniC.AnySense.Controls.Converter
 {
-    public class EnumConverter: IValueConverter
+    public class EnumConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value is Enum)
             {
-                string description = value.ToString();
-                FieldInfo fieldInfo = value.GetType().GetField(description);
-                if (fieldInfo == null)
-                    return description;
-
-                DescriptionAttribute[] attributes =
-                   (DescriptionAttribute[])
-                 fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-                if (attributes != null && attributes.Length > 0)
-                    description = attributes[0].Description;
-
-                return description;
+                return (value as Enum).GetDescription();
             }
 
             return value;

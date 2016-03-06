@@ -68,6 +68,8 @@
     <Compile Include="Devices\AnySensePro.cs" />
     <Compile Include="Devices\DeviceManager.cs" />
     <Compile Include="Devices\DeviceModelBase.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="FlyoutViewModel.cs" />
     <Compile Include="IDialogController.cs" />
     <Compile Include="IO\SerialPortManager.cs" />
     <Compile Include="MainViewModel.cs" />

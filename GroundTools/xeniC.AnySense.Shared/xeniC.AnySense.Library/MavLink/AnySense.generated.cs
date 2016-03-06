@@ -2473,6 +2473,20 @@ namespace MavLink
             }        
 	}
 
+	public class Msg_configuration_data : MavlinkMessage
+    {
+
+		/// <summary>
+		/// Serialized Protocol configuration
+		/// </summary>
+		public byte[] data; // Array size 240
+
+        public override int Serialize(byte[] bytes, ref int offset)
+            {
+                return MavLinkSerializer.Serialize_CONFIGURATION_DATA(this, bytes, ref offset);
+            }        
+	}
+
 
 	/// <summary>
 	/// The heartbeat message shows that a system is present and responding. The type of the MAV and Autopilot hardware allow the receiving system to treat further messages from this system appropriate (e.g. by laying out the user interface based on the autopilot).
