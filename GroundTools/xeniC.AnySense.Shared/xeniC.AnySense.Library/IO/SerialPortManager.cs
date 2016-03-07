@@ -11,7 +11,7 @@ namespace xeniC.AnySense.Library.IO
     public class SerialPortManager : IDisposable
     {
         private ManagementEventWatcher eventWatcher;
-        
+
         public SerialPortManager()
         {
             Ports = new List<SerialPortInfo>(GetPortInformations());
@@ -51,15 +51,20 @@ namespace xeniC.AnySense.Library.IO
 
             try
             {
-                using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE ConfigManagerUserConfig=0"))
+                using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE Name LIKE '%(COM[0-9]%'"))
                 using (var erg = searcher.Get())
                 {
-                    var ports = erg.Cast<ManagementBaseObject>().ToList();
+                    var ports = erg.Cast<ManagementBaseObject>().Select((p) => p.GetPropertyValue("name") != null ? p.GetPropertyValue("name").ToString() : "").ToList();
+                    
+                    ports.ForEach((p) =>
+                    {
+                        System.Diagnostics.Debug.WriteLine(string.Format("Device: {0}", p));
+                    });
 
                     var tList = (from n in portnames
                                  from p in ports
-                                 where p["Caption"].ToString().Contains("(" + n + ")")
-                                 select new SerialPortInfo { Device = n, Description = (p != null ? p["Caption"].ToString() : n) }).Distinct().ToList();
+                                 where p != null && p.ToLower().Contains("(" + n.ToLower() + ")")
+                                 select new SerialPortInfo { Device = n, Description = (p != null ? p : n) }).Distinct().ToList();
 
 
                     return tList;
