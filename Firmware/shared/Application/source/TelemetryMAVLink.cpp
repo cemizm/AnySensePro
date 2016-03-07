@@ -10,22 +10,29 @@
 namespace App
 {
 
-void TelemetryMAVLink::Init(uint8_t* workspace, TelemetryPort& port)
+static_assert (sizeof(TelemetryMAVLink) <= TELEMETRY_WORKSPACE, "TelemetryMAVLink Telemetry will not fit!");
+
+void TelemetryMAVLink::Init()
 {
-	WorkData.workspace = workspace;
-	this->port = &port;
+	mav.Init();
+	eventFlag.clear();
 }
 
 void TelemetryMAVLink::Run(void)
 {
-}
+	uint8_t run = 1;
 
-void TelemetryMAVLink::DeInit(void)
-{
-}
+	while (run)
+	{
+		if (!eventFlag.wait(delay_ms(MAVLINK_COMM_DELAY_MS)))
+		{
+			mav.loop();
+		}
+		else
+			run = 0;
+	}
 
-void TelemetryMAVLink::UpdateConfiguration(void)
-{
+	mav.DeInit();
 }
 
 } /* namespace Utils */

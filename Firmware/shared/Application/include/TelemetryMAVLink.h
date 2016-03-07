@@ -13,6 +13,7 @@
 #include "TelemetryAdapter.h"
 #include "MAVLinkLayer.h"
 #include "MAVLinkComm.h"
+#include "OSAL.h"
 
 namespace App
 {
@@ -20,18 +21,20 @@ namespace App
 class TelemetryMAVLink: public TelemetryAdapter
 {
 private:
-	union
-	{
-		uint8_t* workspace;
-
-	} WorkData;
-	TelemetryPort* port;
+	MAVLinkComm mav;
 protected:
-	virtual void Init(uint8_t* workspace, TelemetryPort& port) override;
-	virtual void Run(void) override;
-	virtual void DeInit() override;
-	virtual void UpdateConfiguration(void) override;
+	void Init() override;
+	void Run(void) override;
+public:
+	TelemetryMAVLink(HAL::USART& usart) :
+			TelemetryAdapter(), mav(usart)
+	{
+	}
 
+	TelemetryProtocol Handles() override
+	{
+		return TelemetryProtocol::MAVLink;
+	}
 };
 
 } /* namespace Application*/

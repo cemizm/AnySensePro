@@ -9,13 +9,10 @@
 #define APPLICATION_INCLUDE_TELEMETRYCONTROLLER_H_
 
 #include "TelemetryAdapter.h"
-#include "TelemetryMAVLink.h"
-
-#include "OSAL.h"
-
-#include "USART.h"
 
 #include "Configuration.h"
+
+#include "USART.h"
 
 namespace App
 {
@@ -24,18 +21,14 @@ namespace App
 class TelemetryController: public ConfigurationChanged
 {
 private:
-	TelemetryMAVLink m_MAVLinkAdapter;
-	TelemetryAdapter* m_available[TelemetryProtocol::Last];
-	TelemetryAdapter* m_active;
-	TelemetryPort port;
 	uint8_t m_workspace[TELEMETRY_WORKSPACE];
+	TelemetryAdapter* m_active;
 
-	OSAL::EventFlag eventFlag;
-
+	HAL::USART& m_usart;
 
 public:
 	TelemetryController(HAL::USART& usart) :
-			m_active(NULL), port(usart), m_workspace(), eventFlag()
+			m_workspace(), m_active(NULL), m_usart(usart)
 	{
 
 	}

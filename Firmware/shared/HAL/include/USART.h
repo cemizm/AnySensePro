@@ -210,6 +210,10 @@ public:
 
 		EnableTxDma();
 	}
+
+	inline void ClearTXDma(){
+		m_tx_dma.ChannelReset();
+	}
 };
 
 } /* namespace HAL */

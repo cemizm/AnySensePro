@@ -7,48 +7,51 @@
 
 #include <TelemetryController.h>
 
+#include "TelemetryMAVLink.h"
+
+#include <new>
+
 namespace App
 {
 
 void TelemetryController::Init()
 {
-	m_available[TelemetryProtocol::MAVLink] = &m_MAVLinkAdapter;
-
 	Config.AddUpdateHandler(*this);
 }
 
 void TelemetryController::Run()
 {
-	uint8_t protocol;
+	TelemetryProtocol protocol;
 	for (;;)
 	{
-		protocol = (uint8_t) Config.GetProtocol();
-		m_active = protocol < TelemetryProtocol::Last ? m_available[protocol] : nullptr;
+		m_active = nullptr;
+		memset(m_workspace, 0, TELEMETRY_WORKSPACE);
 
-		if (m_active != nullptr)
+		protocol = Config.GetProtocol();
+
+		switch (protocol)
 		{
-			m_active->Init(m_workspace, port);
-			m_active->Run();
+		case TelemetryProtocol::MAVLink:
+			m_active = new (m_workspace) TelemetryMAVLink(m_usart);
+			break;
+		default:
+			m_active = new (m_workspace) TelemetryAdapter();
+			break;
 		}
-		else
-			eventFlag.wait();
+
+		m_active->Init();
+		m_active->Run();
 	}
 }
 
 void TelemetryController::UpdateConfiguration()
 {
-	uint8_t protocol = (uint8_t) Config.GetProtocol();
+	TelemetryProtocol protocol = Config.GetProtocol();
 
 	if (protocol >= TelemetryProtocol::Last)
 		return;
 
-	if (m_active == nullptr)
-	{
-		eventFlag.signal();
-		return;
-	}
-
-	if (m_active == m_available[protocol])
+	if (m_active->Handles() == protocol)
 		m_active->UpdateConfiguration();
 	else
 		m_active->DeInit();

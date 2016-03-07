@@ -31,57 +31,79 @@ void MAVLinkComm::Init(void)
 
 void MAVLinkComm::DeInit(void)
 {
+	m_usart.ClearTXDma();
+	m_usart.DisableRxInterrupt();
+	m_usart.Disable();
 
+	HAL::InterruptRegistry.Disable(m_usart.NVIC_IRQn);
+	HAL::InterruptRegistry.Disable(m_usart.GetTXDMA().NVIC_IRQn);
+
+	m_usart.DeInit();
 }
 
 void MAVLinkComm::Run(void)
 {
-	uint16_t dataLen = 0;
-	uint8_t currentItem = 0;
 
 	for (;;)
 	{
-		if (m_messages_in.pop(m_msg_work, delay_ms(MAVLINK_COMM_DELAY_MS)))
-		{
-		}
-		else
-		{
-			switch (currentItem)
-			{
-			case 0:
-				dataLen = m_mavlink.PackGPS(&m_msg_work);
-				break;
-			case 1:
-				dataLen = m_mavlink.PackAttitude(&m_msg_work);
-				break;
-			case 2:
-				dataLen = m_mavlink.PackBatteryPack(&m_msg_work);
-				break;
-			case 3:
-				dataLen = m_mavlink.PackHeartbeat(&m_msg_work);
-				break;
-			case 4:
-				dataLen = m_mavlink.PackRCOut(&m_msg_work);
-				break;
-			case 5:
-				dataLen = m_mavlink.PackSystemStatus(&m_msg_work);
-				break;
-			case 6:
-				dataLen = m_mavlink.PackVFRHud(&m_msg_work);
-				break;
-			}
-
-			currentItem = (currentItem + 1) % 7;
-		}
-
-		if (dataLen > 0)
-		{
-			m_messages_out.push(m_msg_work);
-			if (!m_isSending)
-				SendMessage();
-			dataLen = 0;
-		}
+		m_messages_in.pop(m_msg_work, delay_ms(MAVLINK_COMM_DELAY_MS));
+		loop();
 	}
+}
+
+void MAVLinkComm::loop()
+{
+	uint16_t dataLen = 0;
+
+	if (m_messages_in.get_count() > 0)
+	{
+		m_messages_in.pop(m_msg_work);
+		//handle message??
+	}
+	else if (m_messages_out.get_free_size() > 0)
+		dataLen = PackNextMessage();
+
+	if (dataLen > 0)
+	{
+		m_messages_out.push(m_msg_work);
+		if (!m_isSending)
+			SendMessage();
+		dataLen = 0;
+	}
+}
+
+uint16_t MAVLinkComm::PackNextMessage()
+{
+	uint16_t dataLen = 0;
+	switch (m_currentItem)
+	{
+	case 0:
+		dataLen = m_mavlink.PackGPS(&m_msg_work);
+		break;
+	case 1:
+	case 4:
+	case 8:
+		dataLen = m_mavlink.PackAttitude(&m_msg_work);
+		break;
+	case 2:
+		dataLen = m_mavlink.PackVFRHud(&m_msg_work);
+		break;
+	case 3:
+	case 7:
+		dataLen = m_mavlink.PackRCOut(&m_msg_work);
+		break;
+	case 5:
+		dataLen = m_mavlink.PackBatteryPack(&m_msg_work);
+		break;
+	case 6:
+		dataLen = m_mavlink.PackHeartbeat(&m_msg_work);
+		break;
+	case 9:
+		dataLen = m_mavlink.PackSystemStatus(&m_msg_work);
+		break;
+	}
+	m_currentItem = (m_currentItem + 1) % 10;
+	return dataLen;
 }
 
 uint8_t MAVLinkComm::SendMessage()

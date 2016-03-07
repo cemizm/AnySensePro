@@ -8,46 +8,44 @@
 #ifndef APPLICATION_INCLUDE_TELEMETRYADAPTER_H_
 #define APPLICATION_INCLUDE_TELEMETRYADAPTER_H_
 
-#include <stdint.h>
-#include <USART.h>
+#include "Configuration.h"
+#include "OSAL.h"
 
-#define TELEMETRY_WORKSPACE		512
-
-struct TelemetryPort
-{
-	TelemetryPort(HAL::USART& usart) :
-			USART(usart)
-	{
-	}
-
-	HAL::USART& USART;
-};
+#define TELEMETRY_WORKSPACE		1024*3
 
 namespace App
 {
 
 class TelemetryAdapter
 {
+protected:
+	OSAL::EventFlag eventFlag;
 public:
-	virtual void Init(uint8_t* workspace, TelemetryPort& port)
+	TelemetryAdapter() :
+			eventFlag()
 	{
-		(void) workspace;
-		(void) port;
 	}
 
+	virtual TelemetryProtocol Handles()
+	{
+		return TelemetryProtocol::None;
+	}
+	virtual void Init()
+	{
+		eventFlag.clear();
+	}
 	virtual void Run(void)
 	{
+		eventFlag.wait();
 	}
-
 	virtual void DeInit()
 	{
+		eventFlag.signal();
 	}
-
 	virtual void UpdateConfiguration(void)
 	{
 
 	}
-
 	virtual ~TelemetryAdapter(void)
 	{
 	}
