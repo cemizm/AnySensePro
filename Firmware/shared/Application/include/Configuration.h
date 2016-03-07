@@ -21,8 +21,11 @@ enum TelemetryProtocol
 union ConfigurationData
 {
 	uint8_t Data[240];
-	uint8_t Version;
-	TelemetryProtocol Protocol;
+	struct
+	{
+		uint8_t Version;
+		TelemetryProtocol Protocol;
+	};
 }__attribute__((packed));
 
 class ConfigurationChanged
