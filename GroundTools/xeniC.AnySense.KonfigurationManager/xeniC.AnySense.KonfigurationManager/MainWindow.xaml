@@ -24,14 +24,14 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition />
+                        <RowDefinition Height="80" />
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Height="50">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="70" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Padding="5,0" Width="50" Command="{Binding Device.Flyout.CloseCommand}" Height="50" Style="{DynamicResource MetroCircleButtonStyle}"  Foreground="{DynamicResource IdealForegroundColorBrush}">
+                        <Button Grid.Column="0" Margin="10,0" Width="50" Command="{Binding Device.Flyout.CloseCommand}" Height="50" Style="{DynamicResource MetroCircleButtonStyle}"  Foreground="{DynamicResource IdealForegroundColorBrush}">
                             <fa:ImageAwesome Icon="ArrowLeft" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="{DynamicResource IdealForegroundColorBrush}"/>
                         </Button>
                         <Label Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding Device.Flyout.Title, Mode=OneWay}" Foreground="{DynamicResource IdealForegroundColorBrush}" FontSize="30" FontWeight="Bold" />
@@ -52,8 +52,80 @@
         <m:Location x:Key="defaultPosition" Latitude="53.581418" Longitude="10.010357"/>
         <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsModel}">
             <DataTemplate.Resources>
+                <Style TargetType="{x:Type Label}" x:Key="Header">
+                    <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
+                    <Setter Property="FontSize" Value="18" />
+                    <Setter Property="FontWeight" Value="Black" />
+                    <Setter Property="Padding" Value="2,10,10,2" />
+                    <Setter Property="BorderBrush" Value="{StaticResource IdealForegroundColorBrush}" />
+                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                    <Setter Property="VerticalContentAlignment" Value="Bottom" />
+                </Style>
+                <Style TargetType="{x:Type ComboBox}">
+                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource IdealForegroundColorBrush}" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="Height" Value="30" />
+                </Style>
+                <Style TargetType="{x:Type CheckBox}">
+                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource IdealForegroundColorBrush}" />
+                    <Setter Property="FontSize" Value="16" />
+                </Style>
+                <Style TargetType="{x:Type Label}">
+                    <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+                <Style TargetType="{x:Type Controls:ToggleSwitch}">
+                    <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="SwitchForeground" Value="{DynamicResource IdealForegroundColorBrush}" />
+                </Style>
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsFrSkyModel}">
-
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Content="Sensor Id" />
+                        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SensorIdSource}" SelectedValue="{Binding SensorId}" SelectedValuePath="Value" />
+                        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Active Sensors" Style="{StaticResource Header}"/>
+                        <Label Grid.Row="2" Grid.Column="0" Content="Vario" />
+                        <Controls:ToggleSwitch Grid.Row="2" Grid.Column="1" IsChecked="{Binding VarioEnable}" />
+                        <Label Grid.Row="3" Grid.Column="0" Content="Lipo Sensor (FLVSS)" />
+                        <Controls:ToggleSwitch Grid.Row="3" Grid.Column="1" IsChecked="{Binding FLVSSEnable}" />
+                        <Label Grid.Row="4" Grid.Column="0" Content="Current Sensor (FCS + FAS)" />
+                        <Controls:ToggleSwitch Grid.Row="4" Grid.Column="1" IsChecked="{Binding FCSEnable}" />
+                        <Label Grid.Row="5" Grid.Column="0" Content="GPS Sensor" />
+                        <Controls:ToggleSwitch Grid.Row="5" Grid.Column="1" IsChecked="{Binding GPSEnable}" />
+                        <Label Grid.Row="6" Grid.Column="0" Content="RPM Sensor" />
+                        <Controls:ToggleSwitch Grid.Row="6" Grid.Column="1" IsChecked="{Binding RPMEnable}" />
+                        <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Content="Sensor Value Mappings" Style="{StaticResource Header}"/>
+                        <Label Grid.Row="8" Grid.Column="0" Content="T1" />
+                        <ComboBox Grid.Row="8" Grid.Column="1" IsEnabled="{Binding RPMEnable}" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding T1}" SelectedValuePath="Value" />
+                        <Label Grid.Row="9" Grid.Column="0" Content="T2" />
+                        <ComboBox Grid.Row="9" Grid.Column="1" IsEnabled="{Binding RPMEnable}" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding T2}" SelectedValuePath="Value" />
+                        <Label Grid.Row="10" Grid.Column="0" Content="Fuel" />
+                        <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Fuel}" SelectedValuePath="Value" />
+                    </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsMAVLinkModel}">
 
@@ -74,28 +146,26 @@
 
                 </DataTemplate>
             </DataTemplate.Resources>
-            <Grid Margin="20">
+            <Grid >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="80" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="1" Visibility="{Binding IsLoading, Converter={StaticResource invertedVisibiltyConverter}}">
+                <Grid  Margin="20" Visibility="{Binding IsLoading, Converter={StaticResource invertedVisibiltyConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"  />
-                        <RowDefinition  />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Protocol" FontSize="16" VerticalAlignment="Center" />
-                    <ComboBox Grid.Row="0" Grid.Column="1" FontSize="16" Height="30"
+                    <Label Grid.Row="0" Grid.Column="0" Content="Protocol" />
+                    <ComboBox Grid.Row="0" Grid.Column="1"
                               ItemsSource="{Binding ProtocolSource}" 
-                              SelectedValue="{Binding Protocol}" SelectedValuePath="Value"
-                              Background="{DynamicResource AccentColorBrush}" Foreground="{DynamicResource IdealForegroundColorBrush}" BorderBrush="{DynamicResource IdealForegroundColorBrush}"/>
-                    <ContentControl Grid.Row="1" Content="{Binding Settings}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+                              SelectedValue="{Binding Protocol}" SelectedValuePath="Value" />
+                    <ContentControl Grid.Row="1" Grid.ColumnSpan="2" Content="{Binding Settings}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
                 </Grid>
-                <Controls:ProgressRing Grid.Row="1" IsActive="{Binding IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource IdealForegroundColorBrush}" />
+                <Controls:ProgressRing IsActive="{Binding IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource IdealForegroundColorBrush}" />
             </Grid>
         </DataTemplate>
     </Controls:MetroWindow.Resources>

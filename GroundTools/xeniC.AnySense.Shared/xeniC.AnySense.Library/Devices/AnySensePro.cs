@@ -44,6 +44,23 @@ namespace xeniC.AnySense.Library.Devices
             }
         }
 
+        private RelayCommand _showConfiguration;
+        public RelayCommand ShowConfiguration
+        {
+            get
+            {
+                if (_showConfiguration == null)
+                {
+                    _showConfiguration = new RelayCommand(() =>
+                    {
+                        ShowFlyout(new SettingsModel(CloseFlyout, Mavlink));
+                    }, () => Version == LatestVersion);
+                }
+
+                return _showConfiguration;
+            }
+        }
+
         private void CheckForUpdate()
         {
             if (Version >= LatestVersion)
@@ -154,24 +171,6 @@ namespace xeniC.AnySense.Library.Devices
             {
                 await Task.Delay(1500);
                 await progress.CloseAsync();
-            }
-        }
-
-
-        private RelayCommand _showConfiguration;
-        public RelayCommand ShowConfiguration
-        {
-            get
-            {
-                if (_showConfiguration == null)
-                {
-                    _showConfiguration = new RelayCommand(() =>
-                    {
-                        ShowFlyout(new SettingsModel(CloseFlyout, Mavlink));
-                    }, () => Version == LatestVersion);
-                }
-
-                return _showConfiguration;
             }
         }
 
@@ -301,19 +300,22 @@ namespace xeniC.AnySense.Library.Devices
 
             private void Serialize(out Msg_configuration_data msg)
             {
-                int offset = 0;
+                int offset = 1;
                 msg = new Msg_configuration_data();
                 msg.data = new byte[240];
                 msg.data[offset++] = (byte)Protocol;
 
+                offset = 32;
                 if (Settings != null)
                     Settings.Serialize(msg.data, offset);
             }
 
             private void Deserialize(Msg_configuration_data msg)
             {
-                int offset = 0;
+                int offset = 1;
+
                 Protocol = (TelemetryProtocol)msg.data[offset++];
+                offset = 32;
 
                 if (Settings != null)
                     Settings.DeSerialize(msg.data, offset);
@@ -428,14 +430,286 @@ namespace xeniC.AnySense.Library.Devices
 
         public class SettingsFrSkyModel : ProtocolSettingsModel
         {
+            private UInt16 isValid;
+            public SettingsFrSkyModel()
+            {
+                isValid = 0xCECE;
+
+                SensorId = FrSkySensorId.Id_0xCB;
+                VarioEnable = true;
+                FLVSSEnable = true;
+                FCSEnable = true;
+                GPSEnable = true;
+                RPMEnable = true;
+                T1 = SensorValueMapping.Satellites;
+                T2 = SensorValueMapping.GPSFix;
+                Fuel = SensorValueMapping.Combined;
+            }
+
+            #region Properties
+
+            private List<EnumExtensions.EnumItem> sensorIdSource;
+            public List<EnumExtensions.EnumItem> SensorIdSource
+            {
+                get
+                {
+                    if (sensorIdSource == null)
+                        sensorIdSource = typeof(FrSkySensorId).GetDataSource();
+
+                    return sensorIdSource;
+                }
+            }
+
+            private List<EnumExtensions.EnumItem> sensorValueSource;
+            public List<EnumExtensions.EnumItem> SensorValueSource
+            {
+                get
+                {
+                    if (sensorValueSource == null)
+                        sensorValueSource = typeof(SensorValueMapping).GetDataSource();
+
+                    return sensorValueSource;
+                }
+            }
+
+            private FrSkySensorId sensorId;
+            public FrSkySensorId SensorId
+            {
+                get { return sensorId; }
+                set
+                {
+                    if (sensorId == value)
+                        return;
+
+                    sensorId = value;
+                    RaisePropertyChanged(() => SensorId);
+                }
+            }
+
+            private bool varioEnable;
+            public bool VarioEnable
+            {
+                get { return varioEnable; }
+                set
+                {
+                    if (varioEnable == value)
+                        return;
+                    varioEnable = value;
+                    RaisePropertyChanged(() => VarioEnable);
+                }
+            }
+
+            private bool flvssEnable;
+            public bool FLVSSEnable
+            {
+                get { return flvssEnable; }
+                set
+                {
+                    if (flvssEnable == value)
+                        return;
+                    flvssEnable = value;
+                    RaisePropertyChanged(() => FLVSSEnable);
+                }
+            }
+
+            private bool fcsEnable;
+            public bool FCSEnable
+            {
+                get { return fcsEnable; }
+                set
+                {
+                    if (fcsEnable == value)
+                        return;
+                    fcsEnable = value;
+                    RaisePropertyChanged(() => FCSEnable);
+                }
+            }
+
+            private bool gpsEnable;
+            public bool GPSEnable
+            {
+                get { return gpsEnable; }
+                set
+                {
+                    if (gpsEnable == value)
+                        return;
+                    gpsEnable = value;
+                    RaisePropertyChanged(() => GPSEnable);
+                }
+            }
+
+            private bool rpmEnable;
+            public bool RPMEnable
+            {
+                get { return rpmEnable; }
+                set
+                {
+                    if (rpmEnable == value)
+                        return;
+                    rpmEnable = value;
+                    RaisePropertyChanged(() => RPMEnable);
+                }
+            }
+
+            private SensorValueMapping t1;
+            public SensorValueMapping T1
+            {
+                get { return t1; }
+                set
+                {
+                    if (t1 == value)
+                        return;
+                    t1 = value;
+                    RaisePropertyChanged(() => T1);
+                }
+            }
+
+            private SensorValueMapping t2;
+            public SensorValueMapping T2
+            {
+                get { return t2; }
+                set
+                {
+                    if (t2 == value)
+                        return;
+                    t2 = value;
+                    RaisePropertyChanged(() => T2);
+                }
+            }
+
+            private SensorValueMapping fuel;
+            public SensorValueMapping Fuel
+            {
+                get { return fuel; }
+                set
+                {
+                    if (fuel == value)
+                        return;
+                    fuel = value;
+                    RaisePropertyChanged(() => Fuel);
+                }
+            }
+
+            #endregion
+
+            #region Serialization / Deserialization
+
             public override void DeSerialize(byte[] data, int offset)
             {
+                isValid = Converter.ToUInt16(data, offset);
+                offset += 2;
+
+                SensorId = (FrSkySensorId)data[offset++];
+                VarioEnable = data[offset++] == 1;
+                FLVSSEnable = data[offset++] == 1;
+                FCSEnable = data[offset++] == 1;
+                GPSEnable = data[offset++] == 1;
+                RPMEnable = data[offset++] == 1;
+                T1 = (SensorValueMapping)data[offset++];
+                T2 = (SensorValueMapping)data[offset++];
+                Fuel = (SensorValueMapping)data[offset++];
             }
 
             public override void Serialize(byte[] data, int offset)
             {
+                Converter.GetBytes(isValid, data, offset);
+                offset += 2;
+                data[offset++] = (byte)SensorId;
+                data[offset++] = (byte)(VarioEnable ? 1 : 0);
+                data[offset++] = (byte)(FLVSSEnable ? 1 : 0);
+                data[offset++] = (byte)(FCSEnable ? 1 : 0);
+                data[offset++] = (byte)(GPSEnable ? 1 : 0);
+                data[offset++] = (byte)(RPMEnable ? 1 : 0);
+                data[offset++] = (byte)T1;
+                data[offset++] = (byte)T2;
+                data[offset++] = (byte)Fuel;
             }
+
+            #endregion
+
+            #region Nested Types
+
+            public enum SensorValueMapping : byte
+            {
+                [Description("Disabled / default")]
+                None = 0,
+                [Description("Visible Satellites")]
+                Satellites = 1,
+                [Description("GPS Fix")]
+                GPSFix = 2,
+                [Description("Flight mode")]
+                FlightMode = 3,
+                [Description("Combined (LUA Script)")]
+                Combined = 4,
+            };
+
+            public enum FrSkySensorId : byte
+            {
+
+                [Description("Phy. Id 01 (FVAS-02)")]
+                Id_0x00 = 0x00, //Physical 01 - Vario
+                [Description("Phy. Id 02 (FLVSS)")]
+                Id_0xA1 = 0xA1, //Physical 02 - FLVSS
+                [Description("Phy. Id 03 (FCS-40A)")]
+                Id_0x22 = 0x22, //Physical 03 - FCS 40A 
+                [Description("Phy. Id 04 (GPS)")]
+                Id_0x83 = 0x83, //Physical 04 - GPS
+                [Description("Phy. Id 05 (RPMS-02)")]
+                Id_0xE4 = 0xE4, //Physical 05 - RPM 
+                [Description("Phy. Id 06 (SP2UART Host)")]
+                Id_0x45 = 0x45, //Physical 06 - SP2UART (Host)
+                [Description("Phy. Id 07 (SP2UART Remote)")]
+                Id_0xC6 = 0xC6, //Physical 07 - SP2UART (Remote)
+                [Description("Phy. Id 08 (FCS-150A)")]
+                Id_0x67 = 0x67, //Physical 08 - FCS 150A
+                [Description("Phy. Id 09")]
+                Id_0x48 = 0x48, //Physical 09
+                [Description("Phy. Id 10")]
+                Id_0xE9 = 0xE9, //Physical 10
+                [Description("Phy. Id 11")]
+                Id_0x6A = 0x6A, //Physical 11
+                [Description("Phy. Id 12")]
+                Id_0xCB = 0xCB, //Physical 12
+                [Description("Phy. Id 13")]
+                Id_0xAC = 0xAC, //Physical 13
+                [Description("Phy. Id 14")]
+                Id_0x0D = 0x0D, //Physical 14
+                [Description("Phy. Id 15")]
+                Id_0x8E = 0x8E, //Physical 15
+                [Description("Phy. Id 16")]
+                Id_0x2F = 0x2F, //Physical 16
+
+                [Description("Phy. Id 17")]
+                Id_0xD0 = 0xD0, //Physical 17
+                [Description("Phy. Id 18")]
+                Id_0x71 = 0x71, //Physical 18
+                [Description("Phy. Id 19")]
+                Id_0xF2 = 0xF2, //Physical 19
+                [Description("Phy. Id 20")]
+                Id_0x53 = 0x53, //Physical 20
+                [Description("Phy. Id 21")]
+                Id_0x34 = 0x34, //Physical 21
+                [Description("Phy. Id 22")]
+                Id_0x95 = 0x95, //Physical 22
+                [Description("Phy. Id 23")]
+                Id_0x16 = 0x16, //Physical 23
+                [Description("Phy. Id 24")]
+                Id_0xB7 = 0xB7, //Physical 24
+                [Description("Phy. Id 25")]
+                Id_0x98 = 0x98, //Physical 25
+                [Description("Phy. Id 26")]
+                Id_0x39 = 0x39, //Physical 26
+                [Description("Phy. Id 27")]
+                Id_0xBA = 0xBA, //Physical 27
+                [Description("Phy. Id 28")]
+                Id_0x1B = 0x1B, //Physical 28
+                [Description("Phy. Id 29")]
+                Id_0x7E = 0x7E, //Physical 29
+            }
+
+            #endregion
         }
+
         public class SettingsMAVLinkModel : ProtocolSettingsModel
         {
             public override void DeSerialize(byte[] data, int offset)
@@ -496,7 +770,7 @@ namespace xeniC.AnySense.Library.Devices
             {
             }
         }
-     
+
         #endregion
     }
 }
