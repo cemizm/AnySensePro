@@ -25,6 +25,8 @@ union ConfigurationData
 	{
 		uint8_t Version;
 		TelemetryProtocol Protocol;
+		uint8_t Reserved[30];
+		uint8_t ProtocolSettings[128];
 	};
 }__attribute__((packed));
 
