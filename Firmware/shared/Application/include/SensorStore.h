@@ -168,6 +168,14 @@ public:
 		return m_Cells;
 	}
 
+	uint16_t GetCell(uint8_t cell) const
+	{
+		if (cell >= m_CellCount)
+			return 0;
+
+		return m_Cells[cell];
+	}
+
 	uint16_t GetCellLowest()
 	{
 		uint16_t cell = m_Cells[0];
