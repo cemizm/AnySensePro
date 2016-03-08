@@ -26,7 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <WixLibrary Include="difxapp_x86">
-      <HintPath>..\..\..\..\Program Files\WiX Toolset v3.10\bin\difxapp_x86.wixlib</HintPath>
+      <HintPath>c:\Program Files\WiX Toolset v3.10\bin\difxapp_x86.wixlib</HintPath>
       <Name>difxapp_x86</Name>
     </WixLibrary>
   </ItemGroup>
