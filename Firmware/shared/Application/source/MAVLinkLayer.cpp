@@ -75,7 +75,8 @@ uint16_t MAVLinkLayer::PackRCOut(mavlink_message_t* msg)
 uint16_t MAVLinkLayer::PackBatteryPack(mavlink_message_t* msg)
 {
 	return mavlink_msg_battery_status_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 1, MAV_BATTERY_FUNCTION_ALL,
-			MAV_BATTERY_TYPE_LIPO, SensorData.GetTemperatur1(), SensorData.GetCells(), -1, -1, -1, -1);
+			MAV_BATTERY_TYPE_LIPO, SensorData.GetTemperatur1(), SensorData.GetCells(), SensorData.GetCurrent() * 10,
+			SensorData.GetCapacity(), -1, SensorData.GetCharge());
 }
 
 uint16_t MAVLinkLayer::FillBytes(mavlink_message_t* msg, uint8_t* data)
