@@ -17,6 +17,16 @@ void Configuration::Init()
 {
 	if (Load() != 1)
 		Save();
+
+	if (m_data.Version < ConfigurationVersion)
+	{
+		for (uint8_t i = m_data.Version + 1; i <= ConfigurationVersion; i++)
+		{
+
+		}
+
+		Save();
+	}
 }
 
 uint8_t Configuration::Load()
@@ -44,6 +54,8 @@ uint8_t Configuration::Save()
 	spiffs_file fd = Storage::StorageFlashSPI::Open(cfgname, SPIFFS_CREAT | SPIFFS_TRUNC | SPIFFS_RDWR, 0);
 	if (fd < 0)
 		return 0;
+
+	m_data.Version = ConfigurationVersion;
 
 	if (Storage::StorageFlashSPI::Write(fd, &m_data, sizeof(ConfigurationData)) < 0)
 		return 0;
