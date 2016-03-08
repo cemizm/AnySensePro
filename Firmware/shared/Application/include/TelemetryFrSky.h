@@ -18,13 +18,12 @@
 namespace App
 {
 
-class TelemetryFrSky: public TelemetryAdapter, public HAL::InterruptHandler
+class TelemetryFrSky: public HAL::InterruptHandler, public TelemetryAdapterImpl<TelemetryProtocol::FrSky>
 {
 private:
 	static const uint8_t PacketSize = 8;
 	static const uint8_t DataStart = 0x7E;
 	static const uint8_t DataFrame = 0x10;
-	static const uint16_t ConfigValid = 0xCECE;
 
 	enum RXState
 	{
@@ -145,13 +144,9 @@ protected:
 	void DeInit() override;
 public:
 	TelemetryFrSky(HAL::USART& usart) :
-			m_usart(usart), m_run(1), m_state(RXState::Start), m_currentSensor(0), m_sensorValue(), m_config(nullptr)
+			TelemetryAdapterImpl(), m_usart(usart), m_run(1), m_state(RXState::Start), m_currentSensor(0), m_sensorValue(), m_config(
+					nullptr)
 	{
-	}
-
-	TelemetryProtocol Handles() override
-	{
-		return TelemetryProtocol::FrSky;
 	}
 
 	void ISR() override;

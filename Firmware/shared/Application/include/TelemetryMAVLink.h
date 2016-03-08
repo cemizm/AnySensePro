@@ -13,12 +13,11 @@
 #include "TelemetryAdapter.h"
 #include "MAVLinkLayer.h"
 #include "MAVLinkComm.h"
-#include "OSAL.h"
 
 namespace App
 {
 
-class TelemetryMAVLink: public TelemetryAdapter
+class TelemetryMAVLink: public TelemetryAdapterImpl<TelemetryProtocol::MAVLink>
 {
 private:
 	MAVLinkComm mav;
@@ -27,13 +26,8 @@ protected:
 	void Run(void) override;
 public:
 	TelemetryMAVLink(HAL::USART& usart) :
-			TelemetryAdapter(), mav(usart)
+			TelemetryAdapterImpl(), mav(usart)
 	{
-	}
-
-	TelemetryProtocol Handles() override
-	{
-		return TelemetryProtocol::MAVLink;
 	}
 };
 

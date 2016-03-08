@@ -19,9 +19,9 @@ void TelemetryFrSky::Init()
 {
 	m_config = (ProtocolConfig*) Config.GetConfiguration().ProtocolSettings;
 
-	if (m_config->IsValid != ConfigValid)
+	if (m_config->IsValid != ConfigKey)
 	{
-		m_config->IsValid = ConfigValid;
+		m_config->IsValid = ConfigKey;
 		m_config->SensorId = 0xCB;
 		m_config->VarioEnable = 1;
 		m_config->FLVSSEnable = 1;

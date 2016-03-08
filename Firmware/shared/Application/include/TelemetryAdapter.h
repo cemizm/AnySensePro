@@ -51,6 +51,23 @@ public:
 	}
 };
 
+template<TelemetryProtocol protocol>
+class TelemetryAdapterImpl: public TelemetryAdapter
+{
+protected:
+	static const TelemetryProtocol Protocol = protocol;
+	static const uint16_t ConfigKey = 0xCB00 + Protocol;
+public:
+	TelemetryAdapterImpl() :
+			TelemetryAdapter()
+	{
+	}
+	TelemetryProtocol Handles()
+	{
+		return Protocol;
+	}
+};
+
 } /* namespace Application */
 
 #endif /* APPLICATION_INCLUDE_TELEMETRYADAPTER_H_ */
