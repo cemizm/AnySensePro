@@ -20,6 +20,7 @@ void MAVLinkComm::Init(void)
 	m_usart.SetFlowControl(USART_FLOWCONTROL_NONE);
 	m_usart.SetParity(USART_PARITY_NONE);
 	m_usart.SetMode(USART_MODE_TX_RX);
+	m_usart.DisableOverrunDetection();
 
 	HAL::InterruptRegistry.Enable(m_usart.NVIC_IRQn, 15, this);
 	HAL::InterruptRegistry.Enable(m_usart.GetTXDMA().NVIC_IRQn, 15, this);
@@ -115,7 +116,7 @@ uint8_t MAVLinkComm::SendMessage()
 	{
 		uint16_t dataLen = m_mavlink.FillBytes(&m_msg_out, m_msg_buffer);
 
-		m_usart.SendDma((uint32_t) m_msg_buffer, dataLen);
+		m_usart.SendDma(m_msg_buffer, dataLen);
 
 		m_isSending = 1;
 		return 1;

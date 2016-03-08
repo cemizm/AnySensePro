@@ -162,11 +162,38 @@ public:
 	}
 	inline void EnableTimeoutInterrupt() const
 	{
-
 	}
 	inline void DisableTimeoutInterrupt() const
 	{
 
+	}
+	inline void EnableTXInversion() const
+	{
+		usart_enable_tx_inversion(m_usart);
+	}
+	inline void DisableTXInversion() const
+	{
+		usart_disable_tx_inversion(m_usart);
+	}
+	inline void EnableRXInversion() const
+	{
+		usart_enable_rx_inversion(m_usart);
+	}
+	inline void DisableRXInversion() const
+	{
+		usart_disable_rx_inversion(m_usart);
+	}
+	inline void EnableHalfduplex() const
+	{
+		usart_enable_halfduplex(m_usart);
+	}
+	inline void DisableHalfduplex() const
+	{
+		usart_disable_halfduplex(m_usart);
+	}
+	inline void DisableOverrunDetection() const
+	{
+		USART_CR3(m_usart) |= USART_CR3_OVRDIS;
 	}
 	inline bool GetFlag(uint32_t flag) const
 	{
@@ -187,9 +214,9 @@ public:
 		return m_tx_dma;
 	}
 
-	inline void SendDma(uint32_t address, uint16_t size)
+	inline void SendDma(const uint8_t* address, uint16_t size)
 	{
-		m_tx_dma.SetMemoryAddress(address);
+		m_tx_dma.SetMemoryAddress((uint32_t) address);
 		m_tx_dma.SetNumerOfData(size);
 
 		m_tx_dma.EnableChannel();
@@ -211,7 +238,8 @@ public:
 		EnableTxDma();
 	}
 
-	inline void ClearTXDma(){
+	inline void ClearTXDma()
+	{
 		m_tx_dma.ChannelReset();
 	}
 };
