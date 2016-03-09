@@ -9,6 +9,7 @@
 
 #include "TelemetryMAVLink.h"
 #include "TelemetryFrSky.h"
+#include "TelemetryHoTT.h"
 
 #include <new>
 
@@ -37,6 +38,9 @@ void TelemetryController::Run()
 			break;
 		case TelemetryProtocol::FrSky:
 			m_active = new (m_workspace) TelemetryFrSky(m_usart);
+			break;
+		case TelemetryProtocol::HoTT:
+			m_active = new (m_workspace) TelemetryHoTT(m_usart);
 			break;
 		default:
 			m_active = new (m_workspace) TelemetryAdapter();
