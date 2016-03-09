@@ -160,13 +160,6 @@ public:
 	{
 		usart_disable_error_interrupt(m_usart);
 	}
-	inline void EnableTimeoutInterrupt() const
-	{
-	}
-	inline void DisableTimeoutInterrupt() const
-	{
-
-	}
 	inline void EnableTXInversion() const
 	{
 		usart_enable_tx_inversion(m_usart);
@@ -195,13 +188,41 @@ public:
 	{
 		USART_CR3(m_usart) |= USART_CR3_OVRDIS;
 	}
+	inline void SetReceiveTimouet(uint32_t value) const
+	{
+		usart_set_rx_timeout_value(m_usart, value);
+	}
+	inline void EnableRxTimeout() const
+	{
+		usart_enable_rx_timeout(m_usart);
+	}
+	inline void DisableRxTimeout() const
+	{
+		usart_disable_rx_timeout(m_usart);
+	}
+	inline void EnableRxTimeoutInterrupt() const
+	{
+		usart_enable_rx_timeout_interrupt(m_usart);
+	}
+	inline void DisableRxTimeoutInterrupt() const
+	{
+		usart_disable_rx_timeout_interrupt(m_usart);
+	}
 	inline bool GetFlag(uint32_t flag) const
 	{
 		return usart_get_flag(m_usart, flag);
 	}
 	inline bool GetInterruptSource(uint32_t flag) const
 	{
+		if (flag == USART_ISR_RTOF)
+			return GetFlag(flag) && (USART_CR1(m_usart) & USART_CR1_RTOIE);
+
 		return usart_get_interrupt_source(m_usart, flag);
+	}
+
+	inline void ClearInterruptFlag(uint32_t flag) const
+	{
+		USART_ICR(m_usart) |= flag;
 	}
 
 	inline const DMA& GetRXDMA()
@@ -216,10 +237,22 @@ public:
 
 	inline void SendDma(const uint8_t* address, uint16_t size)
 	{
+		m_tx_dma.DisableChannel();
+
 		m_tx_dma.SetMemoryAddress((uint32_t) address);
 		m_tx_dma.SetNumerOfData(size);
 
 		m_tx_dma.EnableChannel();
+	}
+
+	inline void ReadDma(const uint8_t* address, uint16_t size)
+	{
+		m_rx_dma.DisableChannel();
+
+		m_rx_dma.SetMemoryAddress((uint32_t) address);
+		m_rx_dma.SetNumerOfData(size);
+
+		m_rx_dma.EnableChannel();
 	}
 
 	inline void SetupTXDMA()
@@ -238,9 +271,38 @@ public:
 		EnableTxDma();
 	}
 
+	inline void SetupRXDMA()
+	{
+		m_rx_dma.EnableClock();
+		m_rx_dma.ChannelReset();
+		m_rx_dma.SetPeriperalSize(DMA_CCR_PSIZE_8BIT);
+		m_rx_dma.SetMemorySize(DMA_CCR_MSIZE_8BIT);
+		m_rx_dma.EnableMemoryIncrementMode();
+		m_rx_dma.DisablePeripheralIncremtnMode();
+		m_rx_dma.SetReadFromPeripheral();
+		m_rx_dma.SetPeripheralAddress((uint32_t) &USART_RDR(m_usart));
+
+		EnableRxDma();
+	}
+
+	inline void EnableRxDMAChannel()
+	{
+		m_rx_dma.EnableChannel();
+	}
+
+	inline void DisableRxDMAChannel()
+	{
+		m_rx_dma.DisableChannel();
+	}
+
 	inline void ClearTXDma()
 	{
 		m_tx_dma.ChannelReset();
+	}
+
+	inline void ClearRXDma()
+	{
+		m_rx_dma.ChannelReset();
 	}
 };
 
