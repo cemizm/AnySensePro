@@ -173,21 +173,24 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Grid  Margin="20" Visibility="{Binding IsLoading, Converter={StaticResource invertedVisibiltyConverter}}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"  />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" Content="Protocol" />
-                    <ComboBox Grid.Row="0" Grid.Column="1"
+                <ScrollViewer Margin="20" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" 
+                              Visibility="{Binding IsLoading, Converter={StaticResource invertedVisibiltyConverter}}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"  />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Content="Protocol" />
+                        <ComboBox Grid.Row="0" Grid.Column="1"
                               ItemsSource="{Binding ProtocolSource}" 
                               SelectedValue="{Binding Protocol}" SelectedValuePath="Value" />
-                    <ContentControl Grid.Row="1" Grid.ColumnSpan="2" Content="{Binding Settings}" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
-                </Grid>
+                        <ContentControl Grid.Row="1" Grid.ColumnSpan="2" Content="{Binding Settings}" />
+                    </Grid>
+                </ScrollViewer>
                 <Controls:ProgressRing IsActive="{Binding IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource IdealForegroundColorBrush}" />
             </Grid>
         </DataTemplate>
