@@ -166,7 +166,65 @@
 
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsMultiplexModel}">
-
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Address Mapping" Style="{StaticResource Header}"/>
+                        <Label Grid.Row="1" Grid.Column="0" Content="Address 0" />
+                        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address00}" SelectedValuePath="Value" />
+                        <Label Grid.Row="2" Grid.Column="0" Content="Address 1" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address01}" SelectedValuePath="Value" />
+                        <Label Grid.Row="3" Grid.Column="0" Content="Address 2" />
+                        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address02}" SelectedValuePath="Value" />
+                        <Label Grid.Row="4" Grid.Column="0" Content="Address 3" />
+                        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address03}" SelectedValuePath="Value" />
+                        <Label Grid.Row="5" Grid.Column="0" Content="Address 4" />
+                        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address04}" SelectedValuePath="Value" />
+                        <Label Grid.Row="6" Grid.Column="0" Content="Address 5" />
+                        <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address05}" SelectedValuePath="Value" />
+                        <Label Grid.Row="7" Grid.Column="0" Content="Address 6" />
+                        <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address06}" SelectedValuePath="Value" />
+                        <Label Grid.Row="8" Grid.Column="0" Content="Address 7" />
+                        <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address07}" SelectedValuePath="Value" />
+                        <Label Grid.Row="9" Grid.Column="0" Content="Address 8" />
+                        <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address08}" SelectedValuePath="Value" />
+                        <Label Grid.Row="10" Grid.Column="0" Content="Address 9" />
+                        <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address09}" SelectedValuePath="Value" />
+                        <Label Grid.Row="11" Grid.Column="0" Content="Address 10" />
+                        <ComboBox Grid.Row="11" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address10}" SelectedValuePath="Value" />
+                        <Label Grid.Row="12" Grid.Column="0" Content="Address 11" />
+                        <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address11}" SelectedValuePath="Value" />
+                        <Label Grid.Row="13" Grid.Column="0" Content="Address 12" />
+                        <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address12}" SelectedValuePath="Value" />
+                        <Label Grid.Row="14" Grid.Column="0" Content="Address 13" />
+                        <ComboBox Grid.Row="14" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address13}" SelectedValuePath="Value" />
+                        <Label Grid.Row="15" Grid.Column="0" Content="Address 14" />
+                        <ComboBox Grid.Row="15" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address14}" SelectedValuePath="Value" />
+                        <Label Grid.Row="16" Grid.Column="0" Content="Address 15" />
+                        <ComboBox Grid.Row="16" Grid.Column="1" ItemsSource="{Binding SensorValueSource}" SelectedValue="{Binding Address15}" SelectedValuePath="Value" />
+                    </Grid>
                 </DataTemplate>
             </DataTemplate.Resources>
             <Grid >

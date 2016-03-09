@@ -843,13 +843,335 @@ namespace xeniC.AnySense.Library.Devices
         }
         public class SettingsMultiplexModel : ProtocolSettingsModel
         {
+            private UInt16 isValid;
+            public SettingsMultiplexModel()
+            {
+                isValid = 0xCB00 + (byte)TelemetryProtocol.Multiplex;
+
+                Address00 = SensorValueMapping.None;
+                Address01 = SensorValueMapping.None;
+                Address02 = SensorValueMapping.Distance;
+                Address03 = SensorValueMapping.Altitude;
+                Address04 = SensorValueMapping.Speed;
+                Address05 = SensorValueMapping.VSpeed;
+                Address06 = SensorValueMapping.Compass;
+                Address07 = SensorValueMapping.COG;
+                Address08 = SensorValueMapping.HomeDirection;
+                Address09 = SensorValueMapping.Flightmode;
+                Address10 = SensorValueMapping.Satellite;
+                Address11 = SensorValueMapping.GPS_Fix;
+                Address12 = SensorValueMapping.Voltage;
+                Address13 = SensorValueMapping.LipoVoltage;
+                Address14 = SensorValueMapping.Current;
+                Address15 = SensorValueMapping.Capacity;
+            }
+
+            #region Properties
+
+            private List<EnumExtensions.EnumItem> sensorValueSource;
+            public List<EnumExtensions.EnumItem> SensorValueSource
+            {
+                get
+                {
+                    if (sensorValueSource == null)
+                        sensorValueSource = typeof(SensorValueMapping).GetDataSource();
+
+                    return sensorValueSource;
+                }
+            }
+
+            private SensorValueMapping address00;
+            public SensorValueMapping Address00
+            {
+                get { return address00; }
+                set
+                {
+                    if (address00 == value)
+                        return;
+                    address00 = value;
+                    RaisePropertyChanged(() => Address00);
+                }
+            }
+
+            private SensorValueMapping address01;
+            public SensorValueMapping Address01
+            {
+                get { return address01; }
+                set
+                {
+                    if (address01 == value)
+                        return;
+                    address01 = value;
+                    RaisePropertyChanged(() => Address01);
+                }
+            }
+
+            private SensorValueMapping address02;
+            public SensorValueMapping Address02
+            {
+                get { return address02; }
+                set
+                {
+                    if (address02 == value)
+                        return;
+                    address02 = value;
+                    RaisePropertyChanged(() => Address02);
+                }
+            }
+    
+            private SensorValueMapping address03;
+            public SensorValueMapping Address03
+            {
+                get { return address03; }
+                set
+                {
+                    if (address03 == value)
+                        return;
+                    address03 = value;
+                    RaisePropertyChanged(() => Address03);
+                }
+            }
+            
+            private SensorValueMapping address04;
+            public SensorValueMapping Address04
+            {
+                get { return address04; }
+                set
+                {
+                    if (address04 == value)
+                        return;
+                    address04 = value;
+                    RaisePropertyChanged(() => Address04);
+                }
+            }
+     
+            private SensorValueMapping address05;
+            public SensorValueMapping Address05
+            {
+                get { return address05; }
+                set
+                {
+                    if (address05 == value)
+                        return;
+                    address05 = value;
+                    RaisePropertyChanged(() => Address05);
+                }
+            }
+     
+            private SensorValueMapping address06;
+            public SensorValueMapping Address06
+            {
+                get { return address06; }
+                set
+                {
+                    if (address06 == value)
+                        return;
+                    address06 = value;
+                    RaisePropertyChanged(() => Address06);
+                }
+            }
+ 
+            private SensorValueMapping address07;
+            public SensorValueMapping Address07
+            {
+                get { return address07; }
+                set
+                {
+                    if (address07 == value)
+                        return;
+                    address07 = value;
+                    RaisePropertyChanged(() => Address07);
+                }
+            }
+
+            private SensorValueMapping address08;
+            public SensorValueMapping Address08
+            {
+                get { return address08; }
+                set
+                {
+                    if (address08 == value)
+                        return;
+                    address08 = value;
+                    RaisePropertyChanged(() => Address08);
+                }
+            }
+  
+            private SensorValueMapping address09;
+            public SensorValueMapping Address09
+            {
+                get { return address09; }
+                set
+                {
+                    if (address09 == value)
+                        return;
+                    address09 = value;
+                    RaisePropertyChanged(() => Address09);
+                }
+            }
+    
+            private SensorValueMapping address10;
+            public SensorValueMapping Address10
+            {
+                get { return address10; }
+                set
+                {
+                    if (address10 == value)
+                        return;
+                    address10 = value;
+                    RaisePropertyChanged(() => Address10);
+                }
+            }
+     
+            private SensorValueMapping address11;
+            public SensorValueMapping Address11
+            {
+                get { return address11; }
+                set
+                {
+                    if (address11 == value)
+                        return;
+                    address11 = value;
+                    RaisePropertyChanged(() => Address11);
+                }
+            }
+           
+            private SensorValueMapping address12;
+            public SensorValueMapping Address12
+            {
+                get { return address12; }
+                set
+                {
+                    if (address12 == value)
+                        return;
+                    address12 = value;
+                    RaisePropertyChanged(() => Address12);
+                }
+            }
+
+            private SensorValueMapping address13;
+            public SensorValueMapping Address13
+            {
+                get { return address13; }
+                set
+                {
+                    if (address13 == value)
+                        return;
+                    address13 = value;
+                    RaisePropertyChanged(() => Address13);
+                }
+            }
+       
+            private SensorValueMapping address14;
+            public SensorValueMapping Address14
+            {
+                get { return address14; }
+                set
+                {
+                    if (address14 == value)
+                        return;
+                    address14 = value;
+                    RaisePropertyChanged(() => Address14);
+                }
+            }
+        
+            private SensorValueMapping address15;
+            public SensorValueMapping Address15
+            {
+                get { return address15; }
+                set
+                {
+                    if (address15 == value)
+                        return;
+                    address15 = value;
+                    RaisePropertyChanged(() => Address15);
+                }
+            }
+
+            #endregion
+
+            #region Serialization / Deserialization
+
             public override void DeSerialize(byte[] data, int offset)
             {
+                isValid = Converter.ToUInt16(data, offset);
+                offset += 2;
+
+                Address00 = (SensorValueMapping)data[offset++];
+                Address01 = (SensorValueMapping)data[offset++];
+                Address02 = (SensorValueMapping)data[offset++];
+                Address03 = (SensorValueMapping)data[offset++];
+                Address04 = (SensorValueMapping)data[offset++];
+                Address05 = (SensorValueMapping)data[offset++];
+                Address06 = (SensorValueMapping)data[offset++];
+                Address07 = (SensorValueMapping)data[offset++];
+                Address08 = (SensorValueMapping)data[offset++];
+                Address09 = (SensorValueMapping)data[offset++];
+                Address10 = (SensorValueMapping)data[offset++];
+                Address11 = (SensorValueMapping)data[offset++];
+                Address12 = (SensorValueMapping)data[offset++];
+                Address13 = (SensorValueMapping)data[offset++];
+                Address14 = (SensorValueMapping)data[offset++];
+                Address15 = (SensorValueMapping)data[offset++];
             }
 
             public override void Serialize(byte[] data, int offset)
             {
+                Converter.GetBytes(isValid, data, offset);
+                offset += 2;
+                data[offset++] = (byte)Address00;
+                data[offset++] = (byte)Address01;
+                data[offset++] = (byte)Address02;
+                data[offset++] = (byte)Address03;
+                data[offset++] = (byte)Address04;
+                data[offset++] = (byte)Address05;
+                data[offset++] = (byte)Address06;
+                data[offset++] = (byte)Address07;
+                data[offset++] = (byte)Address08;
+                data[offset++] = (byte)Address09;
+                data[offset++] = (byte)Address10;
+                data[offset++] = (byte)Address11;
+                data[offset++] = (byte)Address12;
+                data[offset++] = (byte)Address13;
+                data[offset++] = (byte)Address14;
+                data[offset++] = (byte)Address15;
             }
+
+            #endregion
+
+            #region Nested Types
+
+            public enum SensorValueMapping : byte
+            {
+                [Description("Disabled")]
+                None = 0,
+                [Description("Satellites")]
+                Satellite = 1,
+                [Description("GPS Fix")]
+                GPS_Fix = 2,
+                Flightmode = 3,
+                Speed = 4,
+                Distance = 5,
+                Altitude = 6,
+                [Description("Vertical Speed (Vario)")]
+                VSpeed = 7,
+                Compass = 8,
+                [Description("Flightdirection (COG)")]
+                COG = 9,
+                [Description("Home Direction")]
+                HomeDirection = 10,
+                Voltage = 11,
+                Current = 12,
+                Capacity = 13,
+                [Description("Lipo Voltage (lowest)")]
+                LipoVoltage = 14,
+                [Description("Lipo Temperature")]
+                LipoTemp = 15,
+                [Description("Lipo Charge")]
+                LipoCharge = 16,
+            }
+
+            #endregion
         }
 
         #endregion
