@@ -121,11 +121,12 @@ void System::calcFlightime()
 			ft_elapsed -= delay_sec(1);
 		}
 		SensorData.SetFlightime(ft);
+		ft_measured = tick;
 	}
 	else
 		ft_measured = 0;
 
-	ft_nextCalc = tick + delay_ms(300);
+	ft_nextCalc = tick + delay_ms(200);
 }
 
 void System::calcConsumption()
