@@ -433,7 +433,7 @@ namespace xeniC.AnySense.Library.Devices
             private UInt16 isValid;
             public SettingsFrSkyModel()
             {
-                isValid = 0xCECE;
+                isValid = 0xCE00 + (byte)TelemetryProtocol.FrSky;
 
                 SensorId = FrSkySensorId.Id_0xCB;
                 VarioEnable = true;
@@ -709,9 +709,10 @@ namespace xeniC.AnySense.Library.Devices
 
             #endregion
         }
-
         public class SettingsMAVLinkModel : ProtocolSettingsModel
         {
+
+
             public override void DeSerialize(byte[] data, int offset)
             {
             }
@@ -722,13 +723,93 @@ namespace xeniC.AnySense.Library.Devices
         }
         public class SettingsHoTTModel : ProtocolSettingsModel
         {
+            private UInt16 isValid;
+            public SettingsHoTTModel()
+            {
+                isValid = 0xCE00 + (byte)TelemetryProtocol.FrSky;
+
+                GPSEnable = true;
+                EAMEnable = true;
+                GAMEnable = true;
+                VarioEnable = true;
+            }
+
+            private bool eamEnable;
+            public bool EAMEnable
+            {
+                get { return eamEnable; }
+                set
+                {
+                    if (eamEnable == value)
+                        return;
+                    eamEnable = value;
+                    RaisePropertyChanged(() => EAMEnable);
+                }
+            }
+
+            private bool gamEnable;
+            public bool GAMEnable
+            {
+                get { return gamEnable; }
+                set
+                {
+                    if (gamEnable == value)
+                        return;
+                    gamEnable = value;
+                    RaisePropertyChanged(() => GAMEnable);
+                }
+            }
+
+            private bool varioEnable;
+            public bool VarioEnable
+            {
+                get { return varioEnable; }
+                set
+                {
+                    if (varioEnable == value)
+                        return;
+                    varioEnable = value;
+                    RaisePropertyChanged(() => VarioEnable);
+                }
+            }
+
+            private bool gpsEnable;
+            public bool GPSEnable
+            {
+                get { return gpsEnable; }
+                set
+                {
+                    if (gpsEnable == value)
+                        return;
+                    gpsEnable = value;
+                    RaisePropertyChanged(() => GPSEnable);
+                }
+            }
+
+            #region Serialization / Deserialization
+
             public override void DeSerialize(byte[] data, int offset)
             {
+                isValid = Converter.ToUInt16(data, offset);
+                offset += 2;
+
+                EAMEnable = data[offset++] == 1;
+                GAMEnable = data[offset++] == 1;
+                GPSEnable = data[offset++] == 1;
+                VarioEnable = data[offset++] == 1;
             }
 
             public override void Serialize(byte[] data, int offset)
             {
+                Converter.GetBytes(isValid, data, offset);
+                offset += 2;
+                data[offset++] = (byte)(EAMEnable ? 1 : 0);
+                data[offset++] = (byte)(GAMEnable ? 1 : 0);
+                data[offset++] = (byte)(GPSEnable ? 1 : 0);
+                data[offset++] = (byte)(VarioEnable ? 1 : 0);
             }
+
+            #endregion
         }
         public class SettingsJetiModel : ProtocolSettingsModel
         {

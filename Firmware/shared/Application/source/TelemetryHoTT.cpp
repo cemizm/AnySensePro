@@ -118,7 +118,8 @@ void TelemetryHoTT::UpdateGPS()
 	m_tx.GPS.Fix = 'x';
 	m_tx.GPS.Version = 0xCE;
 
-	if(SensorData.GetPositionCurrent())
+	if(!SensorData.IsPositionHomeSet())
+		m_tx.GPS.AlarmDisplay = AlarmDisplayMainCurr;
 
 	SendData();
 }

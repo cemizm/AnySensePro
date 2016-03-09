@@ -68,6 +68,7 @@
                     <Setter Property="BorderThickness" Value="1" />
                     <Setter Property="FontSize" Value="16" />
                     <Setter Property="Height" Value="30" />
+                    <Setter Property="Margin" Value="1" />
                 </Style>
                 <Style TargetType="{x:Type CheckBox}">
                     <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
@@ -88,17 +89,17 @@
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsFrSkyModel}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -131,7 +132,29 @@
 
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsHoTTModel}">
-
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Active Sensors" Style="{StaticResource Header}"/>
+                        <Label Grid.Row="1" Grid.Column="0" Content="GPS Sensor" />
+                        <Controls:ToggleSwitch Grid.Row="1" Grid.Column="1" IsChecked="{Binding GPSEnable}" />
+                        <Label Grid.Row="2" Grid.Column="0" Content="Vario Sensor" />
+                        <Controls:ToggleSwitch Grid.Row="2" Grid.Column="1" IsChecked="{Binding VarioEnable}" />
+                        <Label Grid.Row="3" Grid.Column="0" Content="Electric Air Modul (EAM)" />
+                        <Controls:ToggleSwitch Grid.Row="3" Grid.Column="1" IsChecked="{Binding EAMEnable}" />
+                        <Label Grid.Row="4" Grid.Column="0" Content="General Air Modul (GAM)" />
+                        <Controls:ToggleSwitch Grid.Row="4" Grid.Column="1" IsChecked="{Binding GAMEnable}" />
+                    </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsFutabaModel}">
 
@@ -152,7 +175,7 @@
                 </Grid.RowDefinitions>
                 <Grid  Margin="20" Visibility="{Binding IsLoading, Converter={StaticResource invertedVisibiltyConverter}}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="30"  />
+                        <RowDefinition Height="Auto"  />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
