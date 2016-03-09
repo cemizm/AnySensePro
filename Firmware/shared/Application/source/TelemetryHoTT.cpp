@@ -13,7 +13,7 @@
 namespace App
 {
 
-static_assert (sizeof(TelemetryHoTT) <= TELEMETRY_WORKSPACE, "TelemetryFrSky will not fit!");
+static_assert (sizeof(TelemetryHoTT) <= TELEMETRY_WORKSPACE, "TelemetryHoTT will not fit!");
 
 //Manual = 0, GPS = 1, Failsafe = 2, Attitude = 3
 //FixNo = 0, Fix2D = 2, Fix3D = 3, FixDGPS = 4
@@ -261,7 +261,6 @@ void TelemetryHoTT::Reset()
 {
 	m_usart.Disable();
 	m_usart.ClearTXDma();
-	m_usart.ClearRXDma();
 
 	m_usart.DeInit();
 
