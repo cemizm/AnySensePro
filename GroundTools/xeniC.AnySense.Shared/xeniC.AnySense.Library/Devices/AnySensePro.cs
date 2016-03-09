@@ -433,7 +433,7 @@ namespace xeniC.AnySense.Library.Devices
             private UInt16 isValid;
             public SettingsFrSkyModel()
             {
-                isValid = 0xCE00 + (byte)TelemetryProtocol.FrSky;
+                isValid = 0xCB00 + (byte)TelemetryProtocol.FrSky;
 
                 SensorId = FrSkySensorId.Id_0xCB;
                 VarioEnable = true;
@@ -726,7 +726,7 @@ namespace xeniC.AnySense.Library.Devices
             private UInt16 isValid;
             public SettingsHoTTModel()
             {
-                isValid = 0xCE00 + (byte)TelemetryProtocol.FrSky;
+                isValid = 0xCB00 + (byte)TelemetryProtocol.FrSky;
 
                 GPSEnable = true;
                 EAMEnable = true;
