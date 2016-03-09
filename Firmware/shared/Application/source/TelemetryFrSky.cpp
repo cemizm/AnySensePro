@@ -104,7 +104,6 @@ uint8_t TelemetryFrSky::UpdateValue()
 
 	return 0;
 }
-
 uint8_t TelemetryFrSky::UpdateAnySense()
 {
 	switch (m_sensorValue[SensorMapping::MapAnySense])
@@ -143,7 +142,6 @@ uint8_t TelemetryFrSky::UpdateAnySense()
 
 	return 1;
 }
-
 uint8_t TelemetryFrSky::UpdateVario()
 {
 	if (!m_config->VarioEnable)
@@ -280,7 +278,6 @@ uint8_t TelemetryFrSky::UpdateRPM()
 
 	return 1;
 }
-
 uint8_t TelemetryFrSky::UpdateSensorValueMapping(SensorValueMapping mapping)
 {
 	switch (mapping)
@@ -322,7 +319,7 @@ void TelemetryFrSky::ISR()
 		case RXState::Sensor:
 			m_currentSensor = read;
 			m_state = RXState::Start;
-			eventFlag.signal();
+			eventFlag.signal_isr();
 			break;
 		default:
 			m_state = RXState::Sensor;
