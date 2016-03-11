@@ -16,28 +16,32 @@
         Title="AnySense - Studio" MinHeight="600" MinWidth="800"
         RightWindowCommandsOverlayBehavior="Never"
         GlowBrush="{DynamicResource AccentColorBrush}"
-        Icon="Logo_Quadratisch_32_transparent.ico" WindowStartupLocation="CenterScreen" ShowIconOnTitleBar="False">
+        Icon="Images/Icon.ico" WindowStartupLocation="CenterScreen" ShowIconOnTitleBar="False">
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl>
             <Controls:Flyout IsOpen="{Binding Device.FlyoutVisible, Mode=OneWay}" Position="Right" Width="550" IsModal="True" Theme="Accent" CloseButtonVisibility="Collapsed">
-                <Grid>
+                <Grid Margin="20,-25,20,5">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="80" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Height="50">
+                    <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="70" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Margin="10,0" Width="50" Command="{Binding Device.Flyout.CloseCommand}" Height="50" Style="{DynamicResource MetroCircleButtonStyle}"  Foreground="{DynamicResource IdealForegroundColorBrush}">
+                        <Button Grid.Column="0" Margin="10,0" Width="50" Height="50" 
+                                Command="{Binding Device.Flyout.CloseCommand}" 
+                                Style="{DynamicResource MetroCircleButtonStyle}" 
+                                Foreground="{DynamicResource IdealForegroundColorBrush}" 
+                                Background="{DynamicResource AccentColorBrush3}">
                             <fa:ImageAwesome Icon="ArrowLeft" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="{DynamicResource IdealForegroundColorBrush}"/>
                         </Button>
-                        <Label Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding Device.Flyout.Title, Mode=OneWay}" Foreground="{DynamicResource IdealForegroundColorBrush}" FontSize="30" FontWeight="Bold" />
+                        <Label Grid.Column="1" HorizontalAlignment="Left" Content="{Binding Device.Flyout.Title, Mode=OneWay}" Foreground="{DynamicResource IdealForegroundColorBrush}" FontSize="30" FontWeight="Bold" />
                     </Grid>
                     <ContentControl Grid.Row="1" Content="{Binding Device.Flyout}" />
-                    <Image Source="Images/AnySense.png" Grid.Row="2" Width="200" Height="80" Margin="15,0,0,10" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                    <Image Source="Images/AnySense.png" Margin="-15,0,0,0" Grid.Row="2" Width="200" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
                 </Grid>
             </Controls:Flyout>
         </Controls:FlyoutsControl>
@@ -185,7 +189,6 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -227,11 +230,11 @@
                     </Grid>
                 </DataTemplate>
             </DataTemplate.Resources>
-            <Grid >
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <ScrollViewer Margin="20" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" 
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" 
                               Visibility="{Binding IsLoading, Converter={StaticResource invertedVisibiltyConverter}}">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -359,10 +362,10 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Telemetry" Style="{StaticResource Header}"/>
@@ -496,7 +499,7 @@
                 <Button Padding="1"
 				Width="50" Command="{Binding Device.ShowConfiguration}"
 				Height="50"
-				Style="{DynamicResource MetroCircleButtonStyle}">
+				Style="{DynamicResource MetroCircleButtonStyle}" Background="{DynamicResource AccentColorBrush3}">
                     <fa:ImageAwesome Icon="Cogs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="{DynamicResource IdealForegroundColorBrush}" />
                 </Button>
 
