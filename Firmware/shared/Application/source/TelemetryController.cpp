@@ -47,7 +47,7 @@ void TelemetryController::Run()
 			m_active = new (m_workspace) TelemetryMultiplex(m_usart);
 			break;
 		default:
-			m_active = new (m_workspace) TelemetryAdapter();
+			m_active = new (m_workspace) TelemetryAdapterBase();
 			break;
 		}
 

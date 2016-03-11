@@ -10,7 +10,7 @@
 namespace App
 {
 
-class TelemetryHoTT: public TelemetryAdapterImpl<TelemetryProtocol::HoTT>, public HAL::InterruptHandler
+class TelemetryHoTT: public TelemetryAdapter<TelemetryProtocol::HoTT>, public HAL::InterruptHandler
 {
 private:
 	static const uint8_t EAMCells = 14;
@@ -269,7 +269,7 @@ protected:
 	void DeInit() override;
 public:
 	TelemetryHoTT(HAL::USART& usart) :
-			TelemetryAdapterImpl(), m_usart(usart), m_config(), m_run(1)
+		TelemetryAdapter(), m_usart(usart), m_config(), m_run(1)
 	{
 		m_tx.StartByte = 0x7C;
 		m_tx.EndByte = 0x7D;

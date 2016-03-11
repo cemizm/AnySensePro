@@ -22,7 +22,7 @@ class TelemetryController: public ConfigurationChanged
 {
 private:
 	uint8_t m_workspace[TELEMETRY_WORKSPACE];
-	TelemetryAdapter* m_active;
+	TelemetryAdapterBase* m_active;
 
 	HAL::USART& m_usart;
 

@@ -16,12 +16,12 @@
 namespace App
 {
 
-class TelemetryAdapter
+class TelemetryAdapterBase
 {
 protected:
 	OSAL::EventFlag eventFlag;
 public:
-	TelemetryAdapter() :
+	TelemetryAdapterBase() :
 			eventFlag()
 	{
 	}
@@ -46,25 +46,27 @@ public:
 	{
 
 	}
-	virtual ~TelemetryAdapter(void)
+	virtual ~TelemetryAdapterBase(void)
 	{
 	}
 };
 
 template<TelemetryProtocol protocol>
-class TelemetryAdapterImpl: public TelemetryAdapter
+class TelemetryAdapter: public TelemetryAdapterBase
 {
 protected:
-	static const TelemetryProtocol Protocol = protocol;
-	static const uint16_t ConfigKey = 0xCB00 + Protocol;
+	static const uint16_t ConfigKey = 0xCB00 + protocol;
 public:
-	TelemetryAdapterImpl() :
-			TelemetryAdapter()
+	TelemetryAdapter() :
+			TelemetryAdapterBase()
 	{
 	}
-	TelemetryProtocol Handles()
+	TelemetryProtocol Handles() override
 	{
-		return Protocol;
+		return protocol;
+	}
+	virtual ~TelemetryAdapter(void)
+	{
 	}
 };
 

@@ -18,7 +18,7 @@
 namespace App
 {
 
-class TelemetryFrSky: public HAL::InterruptHandler, public TelemetryAdapterImpl<TelemetryProtocol::FrSky>
+class TelemetryFrSky: public HAL::InterruptHandler, public TelemetryAdapter<TelemetryProtocol::FrSky>
 {
 private:
 	static const uint8_t PacketSize = 8;
@@ -144,7 +144,7 @@ protected:
 	void DeInit() override;
 public:
 	TelemetryFrSky(HAL::USART& usart) :
-			TelemetryAdapterImpl(), m_usart(usart), m_run(1), m_state(RXState::Start), m_currentSensor(0), m_sensorValue(), m_config(
+		TelemetryAdapter(), m_usart(usart), m_run(1), m_state(RXState::Start), m_currentSensor(0), m_sensorValue(), m_config(
 					nullptr)
 	{
 	}

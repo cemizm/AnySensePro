@@ -17,7 +17,7 @@
 namespace App
 {
 
-class TelemetryMAVLink: public TelemetryAdapterImpl<TelemetryProtocol::MAVLink>
+class TelemetryMAVLink: public TelemetryAdapter<TelemetryProtocol::MAVLink>
 {
 private:
 	MAVLinkComm mav;
@@ -26,7 +26,7 @@ protected:
 	void Run(void) override;
 public:
 	TelemetryMAVLink(HAL::USART& usart) :
-			TelemetryAdapterImpl(), mav(usart)
+			TelemetryAdapter(), mav(usart)
 	{
 	}
 };

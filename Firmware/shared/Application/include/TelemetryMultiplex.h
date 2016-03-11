@@ -16,7 +16,7 @@
 namespace App
 {
 
-class TelemetryMultiplex: public TelemetryAdapterImpl<TelemetryProtocol::Multiplex>, public HAL::InterruptHandler
+class TelemetryMultiplex: public TelemetryAdapter<TelemetryProtocol::Multiplex>, public HAL::InterruptHandler
 {
 private:
 	static const uint8_t MaxTelemetryValues = 16;
@@ -110,7 +110,7 @@ protected:
 	void DeInit() override;
 public:
 	TelemetryMultiplex(HAL::USART& usart) :
-			TelemetryAdapterImpl(), m_usart(usart), m_config(), m_run(1)
+		TelemetryAdapter(), m_usart(usart), m_config(), m_run(1)
 	{
 	}
 };
