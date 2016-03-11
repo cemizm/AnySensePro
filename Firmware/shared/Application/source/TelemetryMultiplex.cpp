@@ -103,9 +103,6 @@ void TelemetryMultiplex::Run(void)
 			case TelemetryValue::HomeDirection:
 				m_tx.SetValue(UnitType::UnitDir, SensorData.GetHomeDirection() * 10);
 				break;
-			case TelemetryValue::LipoTemp:
-				m_tx.SetValue(UnitType::UnitTemp, SensorData.GetTemperatur1() * 10);
-				break;
 			case TelemetryValue::LipoVoltage:
 				m_tx.SetValue(UnitType::UnitVoltage, SensorData.GetCellLowest() / 100);
 				break;
@@ -120,6 +117,15 @@ void TelemetryMultiplex::Run(void)
 				break;
 			case TelemetryValue::Charge:
 				m_tx.SetValue(UnitType::UnitPercent, SensorData.GetCharge());
+				break;
+			case TelemetryValue::Temperatur1:
+				m_tx.SetValue(UnitType::UnitTemp, SensorData.GetTemperatur1() * 10);
+				break;
+			case TelemetryValue::Temperatur2:
+				m_tx.SetValue(UnitType::UnitTemp, SensorData.GetTemperatur2() * 10);
+				break;
+			case TelemetryValue::RPM:
+				m_tx.SetValue(UnitType::UnitRPM, (SensorData.GetRpm() / 10) * -1);
 				break;
 			case TelemetryValue::None:
 				break;

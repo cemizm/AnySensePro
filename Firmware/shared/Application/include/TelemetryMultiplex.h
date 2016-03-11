@@ -38,8 +38,10 @@ private:
 		Current = 12,
 		Capacity = 13,
 		LipoVoltage = 14,
-		LipoTemp = 15,
-		Charge=16,
+		Temperatur1 = 15,
+		Temperatur2 = 16,
+		Charge = 17,
+		RPM = 18,
 	};
 
 	enum UnitType

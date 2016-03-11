@@ -1165,10 +1165,12 @@ namespace xeniC.AnySense.Library.Devices
                 Capacity = 13,
                 [Description("Lipo Voltage (lowest)")]
                 LipoVoltage = 14,
-                [Description("Lipo Temperature")]
-                LipoTemp = 15,
-                [Description("Lipo Charge")]
-                LipoCharge = 16,
+                [Description("Temperature 1")]
+                Temperatur1 = 15,
+                [Description("Temperature 2")]
+                Temperatur2 = 16,
+                Charge = 17,
+                RPM = 18,
             }
 
             #endregion
