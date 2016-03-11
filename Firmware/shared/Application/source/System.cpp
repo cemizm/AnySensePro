@@ -70,12 +70,12 @@ void System::Run()
 		{
 			if (blink < 15)
 			{
-				if (SensorData.GetSatellites() == 0)
+				if (SensorData.GetSatellites() < 5)
 					ledActivity.On();
 			}
 			else if (blink < 30)
 			{
-				if (SensorData.GetSatellites() < 4)
+				if (SensorData.GetSatellites() < 6)
 					ledActivity.On();
 			}
 			else if (blink < 45)
