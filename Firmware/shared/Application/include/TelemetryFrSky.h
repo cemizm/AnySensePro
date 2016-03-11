@@ -11,9 +11,7 @@
 #include <USART.h>
 
 #include "TelemetryAdapter.h"
-#include "OSAL.h"
 #include "Interrupt.h"
-#include "Configuration.h"
 
 namespace App
 {
