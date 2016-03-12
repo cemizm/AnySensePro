@@ -88,6 +88,8 @@ namespace xeniC.AnySense.Studio
                         return;
                     }
                 }
+
+                Title += string.Format(" (Version {0}.{1}.{2})", ad.CurrentVersion.Major, ad.CurrentVersion.Minor, ad.CurrentVersion.Build);
             }
 
             DataContext = new MainViewModel();
