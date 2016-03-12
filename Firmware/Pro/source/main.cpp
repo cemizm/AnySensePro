@@ -5,28 +5,32 @@
  *      Author: cem
  */
 
+#include <scmRTOS.h>
+#include <OSAL.h>
+
 #include "Board.h"
+
+#include <Configuration.h>
 
 #include <StorageFlashSPI.h>
 
 #include <TelemetryController.h>
-#include <System.h>
 #include <DJIController.h>
 #include <MAVLinkComm.h>
+#include <SensorController.h>
 #include <USBWorker.h>
+#include <System.h>
 
-#include <scmRTOS.h>
-#include <OSAL.h>
 
-#include <Configuration.h>
 
 using namespace App;
 
 TelemetryController telemetryController(Board::Telemetry::USART);
 DJIController djiController(Board::FC::CAN);
 MAVLinkComm mavLinkComm(Board::OSD::USART);
-System SystemService(Board::LedError, Board::LedActivity);
+SensorController sensorController(Board::Sensor::USART);
 USBWorker usb_worker(Board::CDCDevice);
+System SystemService(Board::LedError, Board::LedActivity);
 
 // Process types
 typedef OS::process<OS::pr0, 1024> TProc0; //Telemetry Controller
@@ -104,7 +108,8 @@ OS_PROCESS void TProc3::exec()
 {
 	SystemService.isLoaded();
 
-	//FrSky Sensor worker...
+	sensorController.Init();
+	sensorController.Run();
 
 	//supress compiler warnings
 	for (;;)

@@ -48,14 +48,12 @@ extern HAL::SPI SPI;
 namespace Flash
 {
 
-
 }
 
 namespace FC
 {
 extern HAL::CAN CAN;
 extern HAL::USART USART;
-
 }
 
 namespace Telemetry
