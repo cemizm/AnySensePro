@@ -7,11 +7,16 @@
              mc:Ignorable="d" 
              d:DesignWidth="500"
              x:Name="avionic">
-    <Grid>
+    <Grid Background="Transparent">
+        <Grid.Resources>
+            <c:PitchConverter x:Key="pitchCon" />
+            <c:RollConverter x:Key="rollCon" />
+            <c:AltitudeConverter x:Key="altCon" />
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="80" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="80"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,19 +25,34 @@
         </Grid.RowDefinitions>
         <Label Grid.Column="1" Grid.Row="0" 
                Content="{Binding Roll, ElementName=avionic}" ContentStringFormat="{}{0:0 °}" 
-               VerticalAlignment="Bottom" HorizontalAlignment="Center" 
-               Width="50" Height="25" Margin="15" 
-               BorderBrush="White" BorderThickness="1" 
-               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+               VerticalAlignment="Center" HorizontalAlignment="Center" 
+               VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+               Width="50" Height="32" Margin="15" BorderBrush="White" BorderThickness="1" 
+               Background="#FFbc0000" />
 
-        <Label Grid.Column="0" Grid.Row="1" 
-               Content="{Binding Altitude, ElementName=avionic}" ContentStringFormat="{}{0:0.00 m}"
-               VerticalAlignment="Center" HorizontalAlignment="Right"
-               Width="50" Height="25" Margin="15" 
-               BorderBrush="White" BorderThickness="1" 
-               HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+        <ContentControl  Grid.Column="0" Grid.Row="1" Margin="0,0,5,0" ClipToBounds="True">
+            <Grid  VerticalAlignment="Center" HorizontalAlignment="Center" Height="1120" Width="129" Margin="-42,0,0,0" >
+                <Image Source="Images/altimeter.png" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform Y="{Binding Altitude, Converter={StaticResource altCon}, ElementName=avionic}" />
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+            </Grid>
+        </ContentControl>
 
-        <Border Grid.Column="1" Grid.Row="1" BorderBrush="#FF000000" BorderThickness="0" CornerRadius="25" ClipToBounds="True">
+        
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Image Source="Images/indicator.png" Width="60" />
+            <Label Content="{Binding Altitude, ElementName=avionic}" ContentStringFormat="{}{0:0.00 m}" 
+                   VerticalAlignment="Center" HorizontalAlignment="Right"
+                   HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Margin="0,0,15,0"/>
+        </Grid>
+        <Border Grid.Column="1" Grid.Row="1" BorderThickness="0" CornerRadius="15" ClipToBounds="True">
             <Border.OpacityMask>
                 <VisualBrush>
                     <VisualBrush.Visual>
@@ -44,21 +64,26 @@
                     </VisualBrush.Visual>
                 </VisualBrush>
             </Border.OpacityMask>
-            <Grid  VerticalAlignment="Center" HorizontalAlignment="Center" Height="1120" Width="350" Background="#FF2D486A">
-                <Grid.Resources>
-                    <c:PitchConverter x:Key="pitchCon" />
-                    <c:RollConverter x:Key="rollCon" />
-                </Grid.Resources>
-                <Image Source="Images/horizon.bmp" RenderTransformOrigin="0.5,0.5" >
-                    <Image.RenderTransform>
-                        <TransformGroup>
-                            <TranslateTransform Y="{Binding Pitch, Converter={StaticResource pitchCon}, ElementName=avionic}" />
-                            <RotateTransform Angle="{Binding Roll, Converter={StaticResource rollCon},ElementName=avionic}"/>
-                        </TransformGroup>
-                    </Image.RenderTransform>
-                </Image>
-                <Canvas Width="10" Height="10" Background="white">
-                </Canvas>
+            <Grid>
+                <Grid  VerticalAlignment="Center" HorizontalAlignment="Center" Height="1120" Width="350">
+                    <Image Source="Images/horizon.jpg" RenderTransformOrigin="0.5,0.5" >
+                        <Image.RenderTransform>
+                            <TransformGroup>
+                                <TranslateTransform Y="{Binding Pitch, Converter={StaticResource pitchCon}, ElementName=avionic}" />
+                                <RotateTransform Angle="{Binding Roll, Converter={StaticResource rollCon},ElementName=avionic}"/>
+                            </TransformGroup>
+                        </Image.RenderTransform>
+                    </Image>
+                    <Canvas Width="10" Height="10" Background="white">
+                    </Canvas>
+                </Grid>
+                <Border BorderThickness="1" BorderBrush="White" ClipToBounds="True" CornerRadius="15">
+                    <Border BorderBrush="Black" BorderThickness="10" Margin="-12" CornerRadius="15">
+                        <Border.Effect>
+                            <DropShadowEffect Color="Black" ShadowDepth="0" Direction="0" BlurRadius="20" />
+                        </Border.Effect>
+                    </Border>
+                </Border>
             </Grid>
         </Border>
 
@@ -67,8 +92,9 @@
                Content="{Binding Pitch, ElementName=avionic}" 
                ContentStringFormat="{}{0:0 °}" 
                VerticalAlignment="Center"  HorizontalAlignment="Left" 
-               Width="50" Height="25" Margin="15" 
+               Width="50" Height="32" Margin="15" 
                BorderBrush="White" BorderThickness="1" 
+               Background="#FFbc0000"
                HorizontalContentAlignment="Right" 
                VerticalContentAlignment="Center"/>
     </Grid>

@@ -265,73 +265,57 @@
             <ColumnDefinition />
             <ColumnDefinition Width="50" />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions >
-            <RowDefinition Height="320"/>
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <mControl:AvionicGauge Roll="{Binding Device.Roll}"
-			Pitch="{Binding Device.Pitch}" Altitude="{Binding Device.Altitude}">
-            <mControl:AvionicGauge.Resources>
-                <Style TargetType="{x:Type Label}">
-                    <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}" />
-                    <Setter Property="FontSize" Value="12" />
-                </Style>
-            </mControl:AvionicGauge.Resources>
-        </mControl:AvionicGauge>
-        <mControl:BindableMap Grid.RowSpan="2" Grid.Column="1" 
-                              CredentialsProvider="W3G3hvCFkqPZKLmIlQKP~Z-cKfu9jLkqpc8DrNNdthw~AgA42M_i4L3DTEqge0pt2pbTs69ehI1JYJwYdYKnpzcXBe1B5iMPGvmHulvKDJR8" 
-                              ZoomLevel="{Binding Value, ElementName=zoomLvl}"
-                              Center="{Binding Device.Position, Converter={StaticResource positionConverter}, FallbackValue={StaticResource defaultPosition}}" />
-        <ContentControl Grid.RowSpan="2" Grid.Column="1" RenderTransformOrigin="0.5,0.5" Width="15" Height="15"  >
-            <ContentControl.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="{Binding Device.Heading}"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </ContentControl.RenderTransform>
-            <fa:ImageAwesome Icon="LocationArrow" Foreground="Red" RenderTransformOrigin="0.5,0.5">
-                <fa:ImageAwesome.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="315"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </fa:ImageAwesome.RenderTransform>
-            </fa:ImageAwesome>
-        </ContentControl>
-        <ScrollViewer Grid.Row="1" Grid.Column="0" >
-            <Grid Margin="5"
-			ScrollViewer.CanContentScroll="True" 
-			ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-			ScrollViewer.VerticalScrollBarVisibility="Auto">
-                <Grid.Resources>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="320" />
+                <RowDefinition Height="100" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <mControl:AvionicGauge Grid.Row="0" Roll="{Binding Device.Roll}" Pitch="{Binding Device.Pitch}" Altitude="{Binding Device.Altitude}">
+                <mControl:AvionicGauge.Resources>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                    </Style>
+                </mControl:AvionicGauge.Resources>
+            </mControl:AvionicGauge>
+            <ContentControl Grid.Row="1">
+                <mControl:Compass Heading="{Binding Device.Heading}" Height="400" Margin="0,5,0,2" />
+            </ContentControl>
+            <Border Grid.Row="1" BorderThickness="0" ClipToBounds="True" Margin="0,2,0,2">
+                <Border BorderThickness="0,0,0,3" BorderBrush="White" Margin="-3">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" />
+                    </Border.Effect>
+                </Border>
+            </Border>
+            <ScrollViewer Grid.Row="2" >
+                <ScrollViewer.Resources>
                     <Style TargetType="{x:Type TextBlock}" x:Key="Value">
-                        <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}" />
+                        <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
                         <Setter Property="FontSize" Value="14" />
                         <Setter Property="Margin" Value="3,0" />
                     </Style>
                     <Style TargetType="{x:Type TextBlock}" x:Key="Title">
-                        <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}" />
+                        <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
                         <Setter Property="FontSize" Value="14" />
                         <Setter Property="FontWeight" Value="Black" />
                         <Setter Property="Margin" Value="3,0" />
                     </Style>
                     <Style TargetType="{x:Type Label}" x:Key="Header">
-                        <Setter Property="Foreground" Value="{StaticResource ForegroundColorBrush}" />
+                        <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
                         <Setter Property="FontSize" Value="20" />
                         <Setter Property="FontWeight" Value="Black" />
                         <Setter Property="Margin" Value="0,10,10,10" />
-                        <Setter Property="BorderBrush" Value="{StaticResource ForegroundColorBrush}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource IdealForegroundColorBrush}" />
                         <Setter Property="BorderThickness" Value="0,0,0,1" />
                     </Style>
                     <Style TargetType="{x:Type StackPanel}">
                         <Setter Property="Width" Value="90" />
                         <Style.Resources>
                             <Style TargetType="{x:Type Grid}">
-                                <Setter Property="Margin" Value="5" />
+                                <Setter Property="Margin" Value="5,5,5,0" />
                                 <Style.Resources>
                                     <Style TargetType="{x:Type mControl:CircularProgressBar}">
                                         <Setter Property="SegmentColor" Value="{StaticResource AccentColorBrush}" />
@@ -356,26 +340,8 @@
                     <sys:Int32 x:Key="MaxSpeed">30</sys:Int32>
                     <sys:Int32 x:Key="MaxAltitude">800</sys:Int32>
                     <sys:Int32 x:Key="MaxClimbRate">5</sys:Int32>
-                </Grid.Resources>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Telemetry" Style="{StaticResource Header}"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Device" Style="{StaticResource Title}"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Device.Firmware, FallbackValue='not connected'}" Style="{StaticResource Value}"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Flightcontroller" Style="{StaticResource Title}" />
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Device.FlightController, Converter={StaticResource enumConverter}, FallbackValue='not connected'}" Style="{StaticResource Value}" />
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="GPS Position" Style="{StaticResource Title}" />
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Device.Position, FallbackValue='53.581418 10.010357'}" Style="{StaticResource Value}" />
-                <WrapPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+                </ScrollViewer.Resources>
+                <WrapPanel HorizontalAlignment="Center">
                     <StackPanel>
                         <Grid>
                             <mControl:CircularProgressBar Percentage="0"/>
@@ -481,9 +447,94 @@
                         <TextBlock Text="Climb rate" />
                     </StackPanel>
                 </WrapPanel>
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Column="1">
+            <mControl:BindableMap CredentialsProvider="W3G3hvCFkqPZKLmIlQKP~Z-cKfu9jLkqpc8DrNNdthw~AgA42M_i4L3DTEqge0pt2pbTs69ehI1JYJwYdYKnpzcXBe1B5iMPGvmHulvKDJR8" 
+                                  ZoomLevel="{Binding Value, ElementName=zoomLvl}"
+                                  Center="{Binding Device.Position, Converter={StaticResource positionConverter}, FallbackValue={StaticResource defaultPosition}}" />
+            <ContentControl RenderTransformOrigin="0.5,0.5" Width="15" Height="15"  >
+                <ContentControl.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="{Binding Device.Heading}"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </ContentControl.RenderTransform>
+                <fa:ImageAwesome Icon="LocationArrow" Foreground="Red" RenderTransformOrigin="0.5,0.5">
+                    <fa:ImageAwesome.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="315"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </fa:ImageAwesome.RenderTransform>
+                </fa:ImageAwesome>
+            </ContentControl>
+            <Grid VerticalAlignment="Top">
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
+                    </Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Margin" Value="5" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.Effect>
+                    <DropShadowEffect ShadowDepth="3" Direction="270" Opacity="0.6"/>
+                </Grid.Effect>
+                <Grid Background="#FF2fc800" Visibility="{Binding Connected, Converter={StaticResource visibleConverter}}">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <TextBlock FontWeight="Bold" Text="Device: "/>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} ({1})">
+                                    <Binding Path="Device.Firmware" />
+                                    <Binding Path="Device.FlightController" Converter="{StaticResource enumConverter}" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock FontWeight="Bold" Text="Position: " />
+                        <TextBlock Text="{Binding Device.Position, FallbackValue='53.581418 10.010357'}" />
+                    </StackPanel>
+                </Grid>
+                <Grid Visibility="{Binding Connected, Converter={StaticResource invertedVisibiltyConverter}}" 
+                      Background="#FF9E0000">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <fa:ImageAwesome Icon="Warning" Width="20" Height="20"  Margin="5,0,5,0" Foreground="#FFFFD23A">
+                            <fa:ImageAwesome.Style>
+                                <Style TargetType="{x:Type fa:ImageAwesome}">
+                                    <Style.Resources>
+                                        <Storyboard x:Key="flashAnimation" >
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" AutoReverse="True" Duration="0:0:0.5" RepeatBehavior="Forever" />
+                                        </Storyboard>
+                                    </Style.Resources>
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Connected}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard Name="flash" Storyboard="{StaticResource flashAnimation}" />
+                                            </DataTrigger.EnterActions>
+                                            <DataTrigger.ExitActions>
+                                                <StopStoryboard BeginStoryboardName="flash"/>
+                                            </DataTrigger.ExitActions>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </fa:ImageAwesome.Style>
+                        </fa:ImageAwesome>
+                        <TextBlock Text="Please connect and turn on your Device." FontWeight="Bold"/>
+                    </StackPanel>
+                </Grid>
             </Grid>
-        </ScrollViewer>
-        <Grid Grid.RowSpan="2" Grid.Column="2">
+        </Grid>
+        <Grid Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition Height="3*" />
@@ -503,13 +554,6 @@
                     <fa:ImageAwesome Icon="Cogs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12" Foreground="{DynamicResource IdealForegroundColorBrush}" />
                 </Button>
 
-            </StackPanel>
-        </Grid>
-        <Grid Grid.ColumnSpan="3" Visibility="{Binding Connected, Converter={StaticResource invertedVisibiltyConverter}}"
-              Background="{DynamicResource ProgressBrush}" VerticalAlignment="Top">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Label Grid.Column="1" Content="AnySense not connected. Please connect AnySense and turn on your model." Foreground="{DynamicResource IdealForegroundColorBrush}" FontSize="14" FontWeight="Bold"/>
-                <fa:ImageAwesome Icon="Warning" Width="20" Height="20"  Margin="0,0,10,0" Grid.Column="0" Foreground="#FFFFD23A" />
             </StackPanel>
         </Grid>
     </Grid>
