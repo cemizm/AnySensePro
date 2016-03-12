@@ -14,11 +14,11 @@ namespace App
 
 void DJIController::Init()
 {
-	m_can.Init(0, 0, 0, 1, 0, 0, CAN_BTR_SJW_1TQ, CAN_BTR_TS1_8TQ, CAN_BTR_TS2_3TQ, 3, 0, 0);
+	m_can.Init(0, 1, 0, 1, 0, 0, CAN_BTR_SJW_1TQ, CAN_BTR_TS1_8TQ, CAN_BTR_TS2_3TQ, 3, 0, 0);
 
 	m_can.FilterIdList16BitInit(0, 0x90 << 5, 0x108 << 5, 0x7F8 << 5, 0x388 << 5, 0, 1);
 	m_can.FilterIdList16BitInit(1, 0x308 << 5, 0x92 << 5, 0x00, 0x00, 0, 1);
-	m_can.FilterIdMask32BitInit(0, 0, 0, 0, 1);
+	//m_can.FilterIdMask32BitInit(0, 0, 0, 0, 1);
 
 	HAL::CRC::PowerUp();
 
