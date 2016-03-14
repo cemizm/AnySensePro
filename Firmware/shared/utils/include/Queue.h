@@ -29,41 +29,44 @@ public:
 	{
 	}
 
-	T* Enqueue()
+	uint8_t push(const T& item)
 	{
 		if (count == queueSize)
-			return NULL;
+			return 0;
 
-		T* item = &queueItems[head];
-
+		queueItems[head] = item;
 		head = (head + 1) % queueSize;
-
 		count++;
 
-		return item;
+		return 1;
 	}
 
-	T* Dequeue()
+	uint8_t pop(T& item)
 	{
 		if (count == 0)
-			return NULL;
+			return 0;
 
-		T* ret = &queueItems[tail];
-
+		item = queueItems[tail];
 		tail = (tail + 1) % queueSize;
-
 		count--;
 
-		return ret;
-
+		return 1;
 	}
 
-	T* Peek()
+	uint16_t getSize()
+	{
+		return count;
+	}
+
+	uint8_t getItem(uint8_t index, T& item)
 	{
 		if (count == 0)
-			return NULL;
+			return 0;
 
-		return &queueItems[tail];
+		uint16_t tmpTail = (tail + index) % queueSize;
+		item = queueItems[tmpTail];
+
+		return 1;
 	}
 
 	uint8_t IsEmpty()

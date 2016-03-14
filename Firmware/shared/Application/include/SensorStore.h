@@ -232,6 +232,11 @@ public:
 		m_dateTime.Second = sec;
 	}
 
+	void SetDateTime(GPSTime& dateTime)
+	{
+		m_dateTime = dateTime;
+	}
+
 	FCType GetFCType() const
 	{
 		return m_FCType;

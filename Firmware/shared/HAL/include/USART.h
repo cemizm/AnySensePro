@@ -152,6 +152,14 @@ public:
 	{
 		usart_disable_tx_interrupt(m_usart);
 	}
+	inline void EnableTcInterrupt() const
+	{
+		USART_CR1(m_usart) |= USART_CR1_TCIE;
+	}
+	inline void DisableTcInterrupt() const
+	{
+		USART_CR1(m_usart) &= ~USART_CR1_TCIE;
+	}
 	inline void EnableErrorInterrupt() const
 	{
 		usart_enable_error_interrupt(m_usart);
