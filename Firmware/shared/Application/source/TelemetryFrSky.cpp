@@ -173,10 +173,11 @@ uint8_t TelemetryFrSky::UpdateFLVSS()
 	uint8_t cellCount = SensorData.GetCellCount();
 	uint8_t cs = (cellCount / 2) + (cellCount % 2);
 	uint8_t cell = m_sensorValue[SensorMapping::MapFLVSS] * 2;
-	uint16_t cell1 = SensorData.GetCell(cell) / 10;
-	uint16_t cell2 = SensorData.GetCell(cell + 1) / 10;
 
-	m_packet.Value = ((cell2 * 5) << 20) | ((cell1 * 5) << 8) | ((cellCount << 4) & 0xF0) | (cell & 0xF);
+	m_packet.Lipo.StartCell = cell;
+	m_packet.Lipo.TotalCells = cellCount;
+	m_packet.Lipo.Cell1 = SensorData.GetCell(cell) * 5 / 10;
+	m_packet.Lipo.Cell2 = SensorData.GetCell(cell + 1) * 5 / 10;
 
 	m_sensorValue[SensorMapping::MapFLVSS] = (m_sensorValue[SensorMapping::MapFLVSS] + 1) % cs;
 

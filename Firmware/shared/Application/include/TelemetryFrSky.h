@@ -94,6 +94,14 @@ private:
 		SensorValueMapping Fuel;
 	};
 
+	struct LipoData
+	{
+		uint8_t StartCell :4;
+		uint8_t TotalCells :4;
+		uint16_t Cell1 :12;
+		uint16_t Cell2 :12;
+	}__attribute__((packed, aligned(1)));
+
 	union
 	{
 		uint8_t Data[PacketSize];
@@ -101,7 +109,11 @@ private:
 		{
 			uint8_t Header;
 			uint16_t Id;
-			int32_t Value;
+			union
+			{
+				int32_t Value;
+				LipoData Lipo;
+			};
 			uint8_t crc;
 		}__attribute__((packed, aligned(1)));
 		void UpdateCRC()
@@ -142,7 +154,7 @@ protected:
 	void DeInit() override;
 public:
 	TelemetryFrSky(HAL::USART& usart) :
-		TelemetryAdapter(), m_usart(usart), m_run(1), m_state(RXState::Start), m_currentSensor(0), m_sensorValue(), m_config(
+			TelemetryAdapter(), m_usart(usart), m_run(1), m_state(RXState::Start), m_currentSensor(0), m_sensorValue(), m_config(
 					nullptr)
 	{
 	}
