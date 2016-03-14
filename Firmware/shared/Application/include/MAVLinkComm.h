@@ -42,8 +42,8 @@ private:
 	uint16_t PackNextMessage();
 
 public:
-	MAVLinkComm(HAL::USART& usart) :
-			m_usart(usart), m_messages_in(), m_messages_out(), m_mavlink(MAVLINK_COMM_1), m_delay_ms(MAVLINK_COMM_DELAY_MS), m_msg_in(), m_msg_buffer(), m_msg_out(), m_msg_work(), m_isSending(
+	MAVLinkComm(HAL::USART& usart, mavlink_channel_t channel) :
+			m_usart(usart), m_messages_in(), m_messages_out(), m_mavlink(channel), m_delay_ms(MAVLINK_COMM_DELAY_MS), m_msg_in(), m_msg_buffer(), m_msg_out(), m_msg_work(), m_isSending(
 					0), m_currentItem(0)
 	{
 

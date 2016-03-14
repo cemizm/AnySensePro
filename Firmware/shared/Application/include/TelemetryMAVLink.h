@@ -26,7 +26,7 @@ protected:
 	void Run(void) override;
 public:
 	TelemetryMAVLink(HAL::USART& usart) :
-			TelemetryAdapter(), mav(usart)
+			TelemetryAdapter(), mav(usart, MAVLINK_COMM_2)
 	{
 	}
 };

@@ -27,7 +27,7 @@ using namespace App;
 
 TelemetryController telemetryController(Board::Telemetry::USART);
 DJIController djiController(Board::FC::CAN);
-MAVLinkComm mavLinkComm(Board::OSD::USART);
+MAVLinkComm mavLinkComm(Board::OSD::USART, MAVLINK_COMM_1);
 SensorController sensorController(Board::Sensor::USART);
 USBWorker usb_worker(Board::CDCDevice);
 System SystemService(Board::LedError, Board::LedActivity);
