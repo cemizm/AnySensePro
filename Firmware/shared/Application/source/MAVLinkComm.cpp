@@ -67,8 +67,7 @@ void MAVLinkComm::loop()
 	if (dataLen > 0)
 	{
 		m_messages_out.push(m_msg_work);
-		if (!m_isSending)
-			SendMessage();
+		SendMessage();
 		dataLen = 0;
 	}
 }
@@ -109,6 +108,9 @@ uint16_t MAVLinkComm::PackNextMessage()
 
 uint8_t MAVLinkComm::SendMessage()
 {
+	if(m_isSending == 1)
+		return 0;
+
 	if (m_messages_out.get_count() == 0)
 		return 0;
 
@@ -116,9 +118,9 @@ uint8_t MAVLinkComm::SendMessage()
 	{
 		uint16_t dataLen = m_mavlink.FillBytes(&m_msg_out, m_msg_buffer);
 
+		m_isSending = 1;
 		m_usart.SendDma(m_msg_buffer, dataLen);
 
-		m_isSending = 1;
 		return 1;
 	}
 
@@ -138,11 +140,10 @@ void MAVLinkComm::ISR(void)
 	if (m_usart.GetTXDMA().GetInterruptFlag(DMA_TCIF))
 	{
 		m_usart.GetTXDMA().ClearInterruptFlags(DMA_TCIF);
+		m_isSending = 0;
 		if (!SendMessage())
 		{
 			m_usart.GetTXDMA().DisableChannel();
-
-			m_isSending = 0;
 		}
 	}
 }

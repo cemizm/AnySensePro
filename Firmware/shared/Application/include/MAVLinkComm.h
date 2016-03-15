@@ -24,7 +24,7 @@ const uint16_t MAVLINK_COMM_DELAY_MS = 50;
 
 class MAVLinkComm: public HAL::InterruptHandler
 {
-private:
+protected:
 	HAL::USART& m_usart;
 	OSAL::Channel<mavlink_message_t, MAVLINK_COMM_MESSAGES_IN> m_messages_in;
 	OSAL::Channel<mavlink_message_t, MAVLINK_COMM_MESSAGES_OUT> m_messages_out;
@@ -53,7 +53,7 @@ public:
 
 	void Init(void);
 	void DeInit(void);
-	void Run(void);
+	virtual void Run(void);
 	void ISR(void) override;
 };
 
