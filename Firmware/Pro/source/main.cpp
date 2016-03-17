@@ -21,6 +21,7 @@
 #include <SensorController.h>
 #include <USBWorker.h>
 #include <System.h>
+#include <LoggingController.h>
 
 using namespace App;
 
@@ -31,6 +32,7 @@ MAVLinkComm mavLinkComm(Board::OSD::USART, MAVLINK_COMM_1);
 SensorController sensorController(Board::Sensor::USART);
 USBWorker usb_worker(Board::CDCDevice);
 System SystemService(Board::LedError, Board::LedActivity);
+LoggingController loggingController;
 
 // Process types
 typedef OS::process<OS::pr0, 1024> TProc0; //Telemetry Controller
@@ -102,7 +104,7 @@ OS_PROCESS void TProc2::exec()
 
 	//supress compiler warnings
 	for (;;)
-		;
+		OSAL::Timer::SleepSeconds(5);
 }
 
 template<>
@@ -158,11 +160,12 @@ OS_PROCESS void TProc7::exec()
 {
 	SystemService.isLoaded();
 
-	//Logger worker...
+	loggingController.Init();
+	loggingController.Run();
 
 	//supress compiler warnings
 	for (;;)
-		OSAL::Timer::SleepSeconds(5);
+		;
 }
 
 }
