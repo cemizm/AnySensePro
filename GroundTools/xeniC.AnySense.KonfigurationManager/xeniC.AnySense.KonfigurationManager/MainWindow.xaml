@@ -450,30 +450,11 @@
             </ScrollViewer>
         </Grid>
         <Grid Grid.Column="1">
-            <mControl:BindableMap CredentialsProvider="W3G3hvCFkqPZKLmIlQKP~Z-cKfu9jLkqpc8DrNNdthw~AgA42M_i4L3DTEqge0pt2pbTs69ehI1JYJwYdYKnpzcXBe1B5iMPGvmHulvKDJR8" 
-                                  ZoomLevel="{Binding Value, ElementName=zoomLvl}"
-                                  Center="{Binding Device.Position, Converter={StaticResource positionConverter}, FallbackValue={StaticResource defaultPosition}}" />
-            <ContentControl RenderTransformOrigin="0.5,0.5" Width="15" Height="15"  >
-                <ContentControl.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="{Binding Device.Heading}"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </ContentControl.RenderTransform>
-                <fa:ImageAwesome Icon="LocationArrow" Foreground="Red" RenderTransformOrigin="0.5,0.5">
-                    <fa:ImageAwesome.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="315"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </fa:ImageAwesome.RenderTransform>
-                </fa:ImageAwesome>
-            </ContentControl>
-            <Grid VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
                         <Setter Property="FontSize" Value="14" />
@@ -483,9 +464,6 @@
                         <Setter Property="Margin" Value="5" />
                     </Style>
                 </Grid.Resources>
-                <Grid.Effect>
-                    <DropShadowEffect ShadowDepth="3" Direction="270" Opacity="0.6"/>
-                </Grid.Effect>
                 <Grid Background="#FF2fc800" Visibility="{Binding Connected, Converter={StaticResource visibleConverter}}">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                         <TextBlock FontWeight="Bold" Text="Device: "/>
@@ -532,6 +510,38 @@
                         <TextBlock Text="Please connect and turn on your Device." FontWeight="Bold"/>
                     </StackPanel>
                 </Grid>
+            </Grid>
+            <Grid Row="1">
+                <mControl:BindableMap CredentialsProvider="W3G3hvCFkqPZKLmIlQKP~Z-cKfu9jLkqpc8DrNNdthw~AgA42M_i4L3DTEqge0pt2pbTs69ehI1JYJwYdYKnpzcXBe1B5iMPGvmHulvKDJR8" 
+                                  ZoomLevel="{Binding Value, ElementName=zoomLvl}"
+                                  Center="{Binding Device.Position, Converter={StaticResource positionConverter}, FallbackValue={StaticResource defaultPosition}}" />
+                <ContentControl RenderTransformOrigin="0.5,0.5" Width="15" Height="15"  >
+                    <ContentControl.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="{Binding Device.Heading}"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </ContentControl.RenderTransform>
+                    <fa:ImageAwesome Icon="LocationArrow" Foreground="Red" RenderTransformOrigin="0.5,0.5">
+                        <fa:ImageAwesome.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="315"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </fa:ImageAwesome.RenderTransform>
+                    </fa:ImageAwesome>
+                </ContentControl>
+                <Border BorderThickness="1" BorderBrush="White" ClipToBounds="True">
+                    <Border BorderBrush="Black" BorderThickness="10" Margin="-12">
+                        <Border.Effect>
+                            <DropShadowEffect Color="Black" ShadowDepth="0" Direction="0" BlurRadius="20" />
+                        </Border.Effect>
+                    </Border>
+                </Border>
             </Grid>
         </Grid>
         <Grid Grid.Column="2">
