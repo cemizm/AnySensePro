@@ -79,6 +79,11 @@ uint16_t MAVLinkLayer::PackBatteryPack(mavlink_message_t* msg)
 			SensorData.GetCapacity(), -1, SensorData.GetCharge());
 }
 
+uint16_t MAVLinkLayer::PackMAVStreams(mavlink_message_t* msg, uint8_t stream, uint8_t rate)
+{
+	return mavlink_msg_request_data_stream_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 7, 1, stream, rate, 1);
+}
+
 uint16_t MAVLinkLayer::FillBytes(mavlink_message_t* msg, uint8_t* data)
 {
 	return mavlink_msg_to_send_buffer(data, msg);

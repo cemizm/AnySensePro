@@ -35,6 +35,8 @@ public:
 	uint16_t PackConfigurationVersion3(mavlink_message_t* msg, uint32_t firmware, uint8_t hardware);
 	uint16_t PackLogData(mavlink_message_t* msg, uint8_t count, const uint8_t* data);
 	uint16_t PackConfigurationData(mavlink_message_t* msg, const uint8_t* data);
+
+	uint16_t PackMAVStreams(mavlink_message_t* msg, uint8_t stream, uint8_t rate);
 };
 
 } /* namespace Utils */
