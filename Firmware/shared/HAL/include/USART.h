@@ -242,6 +242,10 @@ public:
 	{
 		return m_tx_dma;
 	}
+	inline const Pin& GetTXPin()
+	{
+		return m_tx;
+	}
 
 	inline void SendDma(const uint8_t* address, uint16_t size)
 	{

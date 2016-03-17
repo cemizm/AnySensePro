@@ -11,6 +11,7 @@
 #include "TelemetryFrSky.h"
 #include "TelemetryHoTT.h"
 #include "TelemetryMultiplex.h"
+#include "TelemetryJeti.h"
 
 #include <new>
 
@@ -45,6 +46,9 @@ void TelemetryController::Run()
 			break;
 		case TelemetryProtocol::Multiplex:
 			m_active = new (m_workspace) TelemetryMultiplex(m_usart);
+			break;
+		case TelemetryProtocol::Jeti:
+			m_active = new (m_workspace) TelemetryJeti(m_usart, m_timer);
 			break;
 		default:
 			m_active = new (m_workspace) TelemetryAdapterBase();
