@@ -39,7 +39,7 @@ void TelemetryJeti::Init()
 	m_timer.ClearFlag(TIM_SR_UIF);
 	m_timer.EnableIRQ(TIM_DIER_UIE);
 
-	HAL::InterruptRegistry.Enable(m_timer.NVIC_IRQn, 12, this);
+	HAL::InterruptRegistry.Enable(m_timer.NVIC_IRQn, PriorityTelemetry, this);
 }
 void TelemetryJeti::Run(void)
 {

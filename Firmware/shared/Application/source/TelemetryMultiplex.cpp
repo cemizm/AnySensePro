@@ -50,8 +50,8 @@ void TelemetryMultiplex::Init()
 	m_usart.SetMode(USART_MODE_TX_RX);
 	m_usart.SetReceiveTimouet(15);
 
-	HAL::InterruptRegistry.Enable(m_usart.NVIC_IRQn, 15, this);
-	HAL::InterruptRegistry.Enable(m_usart.GetTXDMA().NVIC_IRQn, 15, this);
+	HAL::InterruptRegistry.Enable(m_usart.NVIC_IRQn, PriorityTelemetry, this);
+	HAL::InterruptRegistry.Enable(m_usart.GetTXDMA().NVIC_IRQn, PriorityTelemetry, this);
 
 	m_usart.EnableHalfduplex();
 	m_usart.DisableOverrunDetection();

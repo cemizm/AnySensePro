@@ -11,6 +11,8 @@
 #include <TimeoutTimer.h>
 #include <ChipSelect.h>
 
+extern uint8_t PriorityFlash;
+
 namespace Storage
 {
 
@@ -36,7 +38,7 @@ void StorageFlashSPI::InitHW()
 	m_spi.SetupRXDMA();
 	m_spi.SetupTXDMA();
 
-	HAL::InterruptRegistry.Enable(m_spi.GetRXDMA().NVIC_IRQn, 15, this);
+	HAL::InterruptRegistry.Enable(m_spi.GetRXDMA().NVIC_IRQn, PriorityFlash, this);
 
 	m_spi.Enable();
 }

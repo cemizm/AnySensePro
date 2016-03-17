@@ -127,7 +127,7 @@ void USBCDCDevice::Init()
 {
 	singleton = this;
 
-	HAL::InterruptRegistry.Enable(m_usb.IRQN_USB_LP, 2, this);
+	HAL::InterruptRegistry.Enable(m_usb.IRQN_USB_LP, PriorityUSB, this);
 
 	m_usb.Init();
 	m_usbd_dev = usbd_init(m_usb.Driver, &m_dev, &m_config, m_usb_strings, 3, m_usbd_control_buffer,

@@ -13,6 +13,8 @@
 
 #define TELEMETRY_WORKSPACE		1024*3
 
+extern uint8_t PriorityTelemetry;
+
 namespace App
 {
 

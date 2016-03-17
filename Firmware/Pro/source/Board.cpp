@@ -32,6 +32,14 @@ uint32_t get_fattime(void)
 	return time;
 }
 
+uint8_t PriorityTelemetry = 10;
+uint8_t PrioritySensor = 20;
+uint8_t PriorityFC = 30;
+uint8_t PriorityMavlink = 35;
+uint8_t PriorityFlash = 40;
+uint8_t PriorityUSB = 50;
+uint8_t PrioritySD = 60;
+
 namespace Board
 {
 

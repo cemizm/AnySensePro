@@ -10,6 +10,8 @@
 #include <TimeoutTimer.h>
 #include <Stopwatch.h>
 
+extern uint8_t PrioritySD;
+
 namespace Storage
 {
 
@@ -303,7 +305,7 @@ void StorageSDSPI::initHardware()
 	m_spi.SetupRXDMA();
 	m_spi.SetupTXDMA();
 
-	HAL::InterruptRegistry.Enable(m_spi.GetRXDMA().NVIC_IRQn, 15, this);
+	HAL::InterruptRegistry.Enable(m_spi.GetRXDMA().NVIC_IRQn, PrioritySD, this);
 	//HAL::InterruptRegistry.Enable(m_spi.GetTXDMA().NVIC_IRQn, 15, this);
 
 	m_cd.PowerUp();
@@ -314,7 +316,7 @@ void StorageSDSPI::initHardware()
 	m_cd.EXTI_SetTrigger(EXTI_TRIGGER_BOTH);
 	m_cd.EXTI_Enable();
 
-	HAL::InterruptRegistry.Enable(m_cd.EXTI_NVIC_IRQ, 2, this);
+	HAL::InterruptRegistry.Enable(m_cd.EXTI_NVIC_IRQ, PrioritySD, this);
 
 	m_spi.Enable();
 

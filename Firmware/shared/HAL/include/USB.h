@@ -12,6 +12,8 @@
 #include <libopencm3/usb/usbd.h>
 #include <Interrupt.h>
 
+extern uint8_t PriorityUSB;
+
 namespace HAL
 {
 
@@ -85,7 +87,7 @@ public:
 		m_Disconnect.ModeSetup(GPIO_MODE_OUTPUT, GPIO_PUPD_NONE);
 		m_Disconnect.SetOutputOptions(GPIO_OTYPE_PP, GPIO_OSPEED_25MHZ);
 
-		InterruptRegistry.Enable(m_Sense.EXTI_NVIC_IRQ, 2, this);
+		InterruptRegistry.Enable(m_Sense.EXTI_NVIC_IRQ, PriorityUSB, this);
 
 		if (IsConnected())
 			Connect();

@@ -9,6 +9,8 @@
 #include "System.h"
 #include "CRC.h"
 
+extern uint8_t PriorityFC;
+
 namespace App
 {
 
@@ -22,7 +24,7 @@ void DJIController::Init()
 
 	HAL::CRC::PowerUp();
 
-	HAL::InterruptRegistry.Enable(m_can.NVIC_RX0_IRQn, 15, this);
+	HAL::InterruptRegistry.Enable(m_can.NVIC_RX0_IRQn, PriorityFC, this);
 
 	m_can.EnableIRQ(CAN_IER_FMPIE0);
 }

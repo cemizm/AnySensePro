@@ -9,6 +9,8 @@
 #include <string.h>
 #include <SensorStore.h>
 
+extern uint8_t PrioritySensor;
+
 namespace App
 {
 
@@ -39,7 +41,7 @@ void SensorFrSky::Init()
 
 	m_usart.DisableOverrunDetection();
 
-	HAL::InterruptRegistry.Enable(m_usart.NVIC_IRQn, 15, this);
+	HAL::InterruptRegistry.Enable(m_usart.NVIC_IRQn, PrioritySensor, this);
 
 	m_usart.EnableTXInversion();
 	m_usart.EnableRXInversion();

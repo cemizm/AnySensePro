@@ -8,6 +8,8 @@
 #include <MAVLinkComm.h>
 #include "Interrupt.h"
 
+extern uint8_t PriorityMavlink;
+
 namespace App
 {
 
@@ -22,8 +24,8 @@ void MAVLinkComm::Init(void)
 	m_usart.SetMode(USART_MODE_TX_RX);
 	m_usart.DisableOverrunDetection();
 
-	HAL::InterruptRegistry.Enable(m_usart.NVIC_IRQn, 15, this);
-	HAL::InterruptRegistry.Enable(m_usart.GetTXDMA().NVIC_IRQn, 15, this);
+	HAL::InterruptRegistry.Enable(m_usart.NVIC_IRQn, PriorityMavlink, this);
+	HAL::InterruptRegistry.Enable(m_usart.GetTXDMA().NVIC_IRQn, PriorityMavlink, this);
 
 	m_usart.SetupTXDMA();
 	m_usart.EnableRxInterrupt();

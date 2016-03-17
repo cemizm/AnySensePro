@@ -49,8 +49,8 @@ void TelemetryFrSky::Init()
 
 	m_usart.DisableOverrunDetection();
 
-	HAL::InterruptRegistry.Enable(m_usart.NVIC_IRQn, 15, this);
-	HAL::InterruptRegistry.Enable(m_usart.GetTXDMA().NVIC_IRQn, 15, this);
+	HAL::InterruptRegistry.Enable(m_usart.NVIC_IRQn, PriorityTelemetry, this);
+	HAL::InterruptRegistry.Enable(m_usart.GetTXDMA().NVIC_IRQn, PriorityTelemetry, this);
 
 	m_usart.EnableTXInversion();
 	m_usart.EnableRXInversion();
