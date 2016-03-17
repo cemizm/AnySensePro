@@ -13,6 +13,7 @@
 #include "Configuration.h"
 
 #include "USART.h"
+#include "Timer.h"
 
 namespace App
 {
@@ -25,10 +26,11 @@ private:
 	TelemetryAdapterBase* m_active;
 
 	HAL::USART& m_usart;
+	HAL::Timer& m_timer;
 
 public:
-	TelemetryController(HAL::USART& usart) :
-			m_workspace(), m_active(NULL), m_usart(usart)
+	TelemetryController(HAL::USART& usart, HAL::Timer& timer) :
+			m_workspace(), m_active(NULL), m_usart(usart), m_timer(timer)
 	{
 
 	}

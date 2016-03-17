@@ -15,6 +15,7 @@
 #include <USB.h>
 #include <USART.h>
 #include <USBCDCDevice.h>
+#include <Timer.h>
 
 #define FIRMWARE_VERSION		0x01000103
 #define HARDWARE_VERSION		0x01
@@ -59,6 +60,7 @@ extern HAL::USART USART;
 namespace Telemetry
 {
 extern HAL::USART USART;
+extern HAL::Timer TIMER;
 }
 
 namespace Sensor

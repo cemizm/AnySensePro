@@ -114,6 +114,8 @@ HAL::DMA RX_DMA(DMA1, DMA_CHANNEL5, NVIC_DMA1_CHANNEL5_IRQ, rcc_periph_clken::RC
 
 HAL::USART USART(USART1, RCC_USART1, RX, TX, GPIO_AF7, NVIC_USART1_EXTI25_IRQ, RX_DMA, TX_DMA);
 
+HAL::Timer TIMER(TIM16, RCC_TIM16, NVIC_TIM1_UP_TIM16_IRQ, 72000000);
+
 }
 
 namespace Sensor
@@ -371,6 +373,11 @@ extern "C" void dma2_channel3_isr()
 extern "C" void dma2_channel5_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_DMA2_CHANNEL5_IRQ);
+}
+
+extern "C" void tim1_up_tim16_isr()
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_TIM1_UP_TIM16_IRQ);
 }
 
 #endif
