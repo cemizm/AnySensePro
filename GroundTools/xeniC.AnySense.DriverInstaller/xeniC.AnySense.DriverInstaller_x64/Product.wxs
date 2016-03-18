@@ -3,7 +3,7 @@
      xmlns:difx="http://schemas.microsoft.com/wix/DifxAppExtension">
   <Product Id="9C79570E-74CE-4BAE-92C7-6635617D6864" 
            Name="AnySense Driver (x64)" 
-           Language="1033" Version="1.0.0.0" 
+           Language="1033" Version="1.0.0.1" 
            Manufacturer="xeniC GmbH" UpgradeCode="DF524F2E-58B7-4475-A0FF-8996D9EF657B">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
     <Media Id='1' Cabinet='Installer.cab' EmbedCab='yes' DiskPrompt='AnySense Driver Media' />
@@ -13,7 +13,8 @@
         <Directory Id='INSTALLDIR' Name='AnySense'>
           <Directory Id='DriverDir' Name='Drivers'>
             <Component Id='AnySenseDriver' Guid='3F209A1E-16C9-4620-87E7-414B8E464E37'>
-              <File Id='AnySenseDriveInf' Name='AnySensePro.inf' DiskId='1' Source='AnySensePro.inf' />
+              <File Id='AnySenseDriveInf' Name='AnySensePro.inf' DiskId='1' Source='../Driver/AnySensePro.inf' />
+              <File Id='AnySenseDriveCat' Name='anysensepro.cat' DiskId='1' Source='../Driver/AnySensePro.cat' />
               <difx:Driver Legacy='yes' AddRemovePrograms='no' PlugAndPlayPrompt='no' />
             </Component>
           </Directory>

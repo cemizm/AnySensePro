@@ -813,6 +813,12 @@ namespace xeniC.AnySense.Library.Devices
         }
         public class SettingsJetiModel : ProtocolSettingsModel
         {
+            private UInt16 isValid;
+            public SettingsJetiModel()
+            {
+                isValid = 0xCB00 + (byte)TelemetryProtocol.Jeti;
+            }
+
             public override void DeSerialize(byte[] data, int offset)
             {
             }
@@ -823,6 +829,12 @@ namespace xeniC.AnySense.Library.Devices
         }
         public class SettingsFutabaModel : ProtocolSettingsModel
         {
+            private UInt16 isValid;
+            public SettingsFutabaModel()
+            {
+                isValid = 0xCB00 + (byte)TelemetryProtocol.Futaba;
+            }
+
             public override void DeSerialize(byte[] data, int offset)
             {
             }
@@ -830,6 +842,52 @@ namespace xeniC.AnySense.Library.Devices
             public override void Serialize(byte[] data, int offset)
             {
             }
+
+            #region Nested Types
+
+            public class SlotType
+            {
+                public byte Number { get; set; }
+                public string Name { get; set; }
+            }
+
+            public class ValueType
+            {
+                public byte Number { get; set; }
+                public string Name { get; set; }
+                public byte Size { get; set; }
+
+                public List<ValueType> GetValues()
+                {
+                    List<ValueType> vals = new List<ValueType>();
+
+                    vals.Add(new ValueType() { Number = 0, Name = "Disabled", Size = 0 });
+                    vals.Add(new ValueType() { Number = 1, Name = "Vario", Size = 2 });
+                    vals.Add(new ValueType() { Number = 2, Name = "Kompass", Size = 1 });
+                    vals.Add(new ValueType() { Number = 3, Name = "Current", Size = 3 });
+                    vals.Add(new ValueType() { Number = 4, Name = "GPS", Size = 8 });
+                    vals.Add(new ValueType() { Number = 5, Name = "Lowest Cell Voltage", Size = 2 });
+                    vals.Add(new ValueType() { Number = 6, Name = "Number of Satellites", Size = 1 });
+                    vals.Add(new ValueType() { Number = 7, Name = "Flightmode", Size = 1 });
+                    vals.Add(new ValueType() { Number = 8, Name = "Temperatur", Size = 1 });
+
+                    return vals;
+                }
+            }
+
+            public class SlotMapping : ViewModelBase
+            {
+                private byte slot;
+
+                public byte Slot
+                {
+                    get { return slot; }
+                    set { slot = value; }
+                }
+            }
+
+            #endregion
+
         }
         public class SettingsSpektrumModel : ProtocolSettingsModel
         {
@@ -918,7 +976,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address02);
                 }
             }
-    
+
             private SensorValueMapping address03;
             public SensorValueMapping Address03
             {
@@ -931,7 +989,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address03);
                 }
             }
-            
+
             private SensorValueMapping address04;
             public SensorValueMapping Address04
             {
@@ -944,7 +1002,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address04);
                 }
             }
-     
+
             private SensorValueMapping address05;
             public SensorValueMapping Address05
             {
@@ -957,7 +1015,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address05);
                 }
             }
-     
+
             private SensorValueMapping address06;
             public SensorValueMapping Address06
             {
@@ -970,7 +1028,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address06);
                 }
             }
- 
+
             private SensorValueMapping address07;
             public SensorValueMapping Address07
             {
@@ -996,7 +1054,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address08);
                 }
             }
-  
+
             private SensorValueMapping address09;
             public SensorValueMapping Address09
             {
@@ -1009,7 +1067,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address09);
                 }
             }
-    
+
             private SensorValueMapping address10;
             public SensorValueMapping Address10
             {
@@ -1022,7 +1080,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address10);
                 }
             }
-     
+
             private SensorValueMapping address11;
             public SensorValueMapping Address11
             {
@@ -1035,7 +1093,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address11);
                 }
             }
-           
+
             private SensorValueMapping address12;
             public SensorValueMapping Address12
             {
@@ -1061,7 +1119,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address13);
                 }
             }
-       
+
             private SensorValueMapping address14;
             public SensorValueMapping Address14
             {
@@ -1074,7 +1132,7 @@ namespace xeniC.AnySense.Library.Devices
                     RaisePropertyChanged(() => Address14);
                 }
             }
-        
+
             private SensorValueMapping address15;
             public SensorValueMapping Address15
             {

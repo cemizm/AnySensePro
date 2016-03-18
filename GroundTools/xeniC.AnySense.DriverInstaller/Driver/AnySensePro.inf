@@ -9,7 +9,8 @@ ClassGuid={4D36E978-E325-11CE-BFC1-08002BE10318}
 Provider=%MFGNAME%
 LayoutFile=layout.inf
 CatalogFile=%MFGFILENAME%.cat
-DriverVer=13/06/2015,2.0.0.0
+DriverVer=06/13/2015,2.0.0.0
+DriverPackageDisplayName="%DESCRIPTION% Driver"
 
 [Manufacturer]
 %MFGNAME%=DeviceList, NTamd64
@@ -97,7 +98,7 @@ ServiceBinary=%12%\%DRIVERFILENAME%.sys
 ;Modify these strings to customize your device
 ;------------------------------------------------------------------------------
 [Strings]
-MFGFILENAME="CDC_vista"
+MFGFILENAME="AnySensePro"
 DRIVERFILENAME ="usbser"
 MFGNAME="xeniC UG"
 INSTDISK="AnySense Pro Installer"

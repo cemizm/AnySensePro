@@ -37,9 +37,17 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AnySensePro.inf" />
+    <Content Include="..\Driver\anysensepro.cat">
+      <Link>anysensepro.cat</Link>
+    </Content>
+    <Content Include="..\Driver\AnySensePro.inf">
+      <Link>AnySensePro.inf</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
+  <PropertyGroup>
+    <PostBuildEvent />
+  </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.
 	Other similar extension points exist, see Wix.targets.

@@ -31,7 +31,12 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AnySensePro.inf" />
+    <Content Include="..\Driver\anysensepro.cat">
+      <Link>anysensepro.cat</Link>
+    </Content>
+    <Content Include="..\Driver\AnySensePro.inf">
+      <Link>AnySensePro.inf</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <WixLibrary Include="difxapp_x64">
