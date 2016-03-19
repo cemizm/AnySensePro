@@ -196,7 +196,7 @@ public:
 	{
 		USART_CR3(m_usart) |= USART_CR3_OVRDIS;
 	}
-	inline void SetReceiveTimouet(uint32_t value) const
+	inline void SetReceiveTimeout(uint32_t value) const
 	{
 		usart_set_rx_timeout_value(m_usart, value);
 	}

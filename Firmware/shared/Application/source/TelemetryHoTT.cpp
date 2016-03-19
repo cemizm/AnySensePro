@@ -49,7 +49,7 @@ void TelemetryHoTT::Init()
 	m_usart.SetFlowControl(USART_FLOWCONTROL_NONE);
 	m_usart.SetParity(USART_PARITY_NONE);
 	m_usart.SetMode(USART_MODE_TX_RX);
-	m_usart.SetReceiveTimouet(92);
+	m_usart.SetReceiveTimeout(92);
 
 	HAL::InterruptRegistry.Enable(m_usart.NVIC_IRQn, PriorityTelemetry, this);
 	HAL::InterruptRegistry.Enable(m_usart.GetTXDMA().NVIC_IRQn, PriorityTelemetry, this);
