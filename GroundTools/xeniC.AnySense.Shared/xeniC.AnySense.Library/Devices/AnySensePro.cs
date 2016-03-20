@@ -741,7 +741,7 @@ namespace xeniC.AnySense.Library.Devices
             private UInt16 isValid;
             public SettingsHoTTModel()
             {
-                isValid = 0xCB00 + (byte)TelemetryProtocol.FrSky;
+                isValid = 0xCB00 + (byte)TelemetryProtocol.HoTT;
 
                 GPSEnable = true;
                 EAMEnable = true;
