@@ -822,15 +822,324 @@ namespace xeniC.AnySense.Library.Devices
             public SettingsJetiModel()
             {
                 isValid = 0xCB00 + (byte)TelemetryProtocol.Jeti;
+
+                Value01 = TelemetryValue.Latitude;
+                Value02 = TelemetryValue.Longitude;
+                Value03 = TelemetryValue.Satellite;
+                Value04 = TelemetryValue.GPS_Fix;
+                Value05 = TelemetryValue.Speed;
+                Value06 = TelemetryValue.Distance;
+                Value07 = TelemetryValue.Altitude;
+                Value08 = TelemetryValue.VSpeed;
+                Value09 = TelemetryValue.Compass;
+                Value10 = TelemetryValue.HomeDirection;
+                Value11 = TelemetryValue.Voltage;
+                Value12 = TelemetryValue.Current;
+                Value13 = TelemetryValue.Capacity;
+                Value14 = TelemetryValue.LipoVoltage;
+                Value15 = TelemetryValue.LipoTemp;
             }
+
+            #region Properties
+
+            private List<EnumExtensions.EnumItem> sensorValueSource;
+            public List<EnumExtensions.EnumItem> SensorValueSource
+            {
+                get
+                {
+                    if (sensorValueSource == null)
+                        sensorValueSource = typeof(TelemetryValue).GetDataSource();
+
+                    return sensorValueSource;
+                }
+            }
+
+            private TelemetryValue value01;
+            public TelemetryValue Value01
+            {
+                get { return value01; }
+                set
+                {
+                    if (value01 == value)
+                        return;
+                    value01 = value;
+                    RaisePropertyChanged(() => Value01);
+                }
+            }
+
+            private TelemetryValue value02;
+            public TelemetryValue Value02
+            {
+                get { return value02; }
+                set
+                {
+                    if (value02 == value)
+                        return;
+                    value02 = value;
+                    RaisePropertyChanged(() => Value02);
+                }
+            }
+
+            private TelemetryValue value03;
+            public TelemetryValue Value03
+            {
+                get { return value03; }
+                set
+                {
+                    if (value03 == value)
+                        return;
+                    value03 = value;
+                    RaisePropertyChanged(() => Value03);
+                }
+            }
+
+            private TelemetryValue value04;
+            public TelemetryValue Value04
+            {
+                get { return value04; }
+                set
+                {
+                    if (value04 == value)
+                        return;
+                    value04 = value;
+                    RaisePropertyChanged(() => Value04);
+                }
+            }
+
+            private TelemetryValue value05;
+            public TelemetryValue Value05
+            {
+                get { return value05; }
+                set
+                {
+                    if (value05 == value)
+                        return;
+                    value05 = value;
+                    RaisePropertyChanged(() => Value05);
+                }
+            }
+
+            private TelemetryValue value06;
+            public TelemetryValue Value06
+            {
+                get { return value06; }
+                set
+                {
+                    if (value06 == value)
+                        return;
+                    value06 = value;
+                    RaisePropertyChanged(() => Value06);
+                }
+            }
+
+            private TelemetryValue value07;
+            public TelemetryValue Value07
+            {
+                get { return value07; }
+                set
+                {
+                    if (value07 == value)
+                        return;
+                    value07 = value;
+                    RaisePropertyChanged(() => Value07);
+                }
+            }
+
+            private TelemetryValue value08;
+            public TelemetryValue Value08
+            {
+                get { return value08; }
+                set
+                {
+                    if (value08 == value)
+                        return;
+                    value08 = value;
+                    RaisePropertyChanged(() => Value08);
+                }
+            }
+
+            private TelemetryValue value09;
+            public TelemetryValue Value09
+            {
+                get { return value09; }
+                set
+                {
+                    if (value09 == value)
+                        return;
+                    value09 = value;
+                    RaisePropertyChanged(() => Value09);
+                }
+            }
+
+            private TelemetryValue value10;
+            public TelemetryValue Value10
+            {
+                get { return value10; }
+                set
+                {
+                    if (value10 == value)
+                        return;
+                    value10 = value;
+                    RaisePropertyChanged(() => Value10);
+                }
+            }
+
+            private TelemetryValue value11;
+            public TelemetryValue Value11
+            {
+                get { return value11; }
+                set
+                {
+                    if (value11 == value)
+                        return;
+                    value11 = value;
+                    RaisePropertyChanged(() => Value11);
+                }
+            }
+
+            private TelemetryValue value12;
+            public TelemetryValue Value12
+            {
+                get { return value12; }
+                set
+                {
+                    if (value12 == value)
+                        return;
+                    value12 = value;
+                    RaisePropertyChanged(() => Value12);
+                }
+            }
+
+            private TelemetryValue value13;
+            public TelemetryValue Value13
+            {
+                get { return value13; }
+                set
+                {
+                    if (value13 == value)
+                        return;
+                    value13 = value;
+                    RaisePropertyChanged(() => Value13);
+                }
+            }
+
+            private TelemetryValue value14;
+            public TelemetryValue Value14
+            {
+                get { return value14; }
+                set
+                {
+                    if (value14 == value)
+                        return;
+                    value14 = value;
+                    RaisePropertyChanged(() => Value14);
+                }
+            }
+
+            private TelemetryValue value15;
+            public TelemetryValue Value15
+            {
+                get { return value15; }
+                set
+                {
+                    if (value15 == value)
+                        return;
+                    value15 = value;
+                    RaisePropertyChanged(() => Value15);
+                }
+            }
+
+            #endregion
+
+            #region Serialization / Deserialization
 
             public override void DeSerialize(byte[] data, int offset)
             {
+                isValid = Converter.ToUInt16(data, offset);
+                offset += 2;
+
+                Value01 = (TelemetryValue)data[offset++];
+                Value02 = (TelemetryValue)data[offset++];
+                Value03 = (TelemetryValue)data[offset++];
+                Value04 = (TelemetryValue)data[offset++];
+                Value05 = (TelemetryValue)data[offset++];
+                Value06 = (TelemetryValue)data[offset++];
+                Value07 = (TelemetryValue)data[offset++];
+                Value08 = (TelemetryValue)data[offset++];
+                Value09 = (TelemetryValue)data[offset++];
+                Value10 = (TelemetryValue)data[offset++];
+                Value11 = (TelemetryValue)data[offset++];
+                Value12 = (TelemetryValue)data[offset++];
+                Value13 = (TelemetryValue)data[offset++];
+                Value14 = (TelemetryValue)data[offset++];
+                Value15 = (TelemetryValue)data[offset++];
+
             }
 
             public override void Serialize(byte[] data, int offset)
             {
+                Converter.GetBytes(isValid, data, offset);
+                offset += 2;
+
+                data[offset++] = (byte)Value01;
+                data[offset++] = (byte)Value02;
+                data[offset++] = (byte)Value03;
+                data[offset++] = (byte)Value04;
+                data[offset++] = (byte)Value05;
+                data[offset++] = (byte)Value06;
+                data[offset++] = (byte)Value07;
+                data[offset++] = (byte)Value08;
+                data[offset++] = (byte)Value09;
+                data[offset++] = (byte)Value10;
+                data[offset++] = (byte)Value11;
+                data[offset++] = (byte)Value12;
+                data[offset++] = (byte)Value13;
+                data[offset++] = (byte)Value14;
+                data[offset++] = (byte)Value15;
+
             }
+
+            #endregion
+
+            #region Nested Types
+
+            public enum TelemetryValue : byte
+            {
+                [Description("Disabled")]
+                None = 0,
+                Latitude = 1,
+                Longitude = 2,
+                [Description("Satellites")]
+                Satellite = 3,
+                [Description("GPS Fix")]
+                GPS_Fix = 4,
+                Flightmode = 5,
+                Speed = 6,
+                Distance = 7,
+                Altitude = 8,
+                [Description("Vertical Speed (Vario)")]
+                VSpeed = 9,
+                Compass = 10,
+                [Description("Flightdirection (COG)")]
+                COG = 11,
+                [Description("Home Direction")]
+                HomeDirection = 12,
+                Voltage = 13,
+                Current = 14,
+                Capacity = 15,
+                [Description("Lipo Voltage (lowest)")]
+                LipoVoltage = 16,
+                [Description("Lipo Temperature")]
+                LipoTemp = 17,
+                [Description("Home Latitude")]
+                Home_Latitude = 18,
+                [Description("Home Longitude")]
+                Home_Longitude = 19,
+
+            };
+
+            #endregion
+
         }
         public class SettingsFutabaModel : ProtocolSettingsModel
         {
