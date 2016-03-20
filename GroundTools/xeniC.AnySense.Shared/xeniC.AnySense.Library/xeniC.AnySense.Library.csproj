@@ -80,7 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\..\Firmware\Pro\Release\AnySensePro.bin">
+    <EmbeddedResource Include="..\..\..\Firmware\Releases\AnySensePro.bin">
       <Link>Firmware\AnySensePro.bin</Link>
     </EmbeddedResource>
     <None Include="packages.config" />
