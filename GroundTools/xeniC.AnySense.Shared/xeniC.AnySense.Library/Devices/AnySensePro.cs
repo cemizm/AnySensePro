@@ -718,13 +718,23 @@ namespace xeniC.AnySense.Library.Devices
                 isValid = 0xCB00 + (byte)TelemetryProtocol.MAVLink;
             }
 
+            #region Serialization / Deserialization
+
             public override void DeSerialize(byte[] data, int offset)
             {
+                isValid = Converter.ToUInt16(data, offset);
+                offset += 2;
+
             }
 
             public override void Serialize(byte[] data, int offset)
             {
+                Converter.GetBytes(isValid, data, offset);
+                offset += 2;
+
             }
+
+            #endregion
         }
         public class SettingsHoTTModel : ProtocolSettingsModel
         {
