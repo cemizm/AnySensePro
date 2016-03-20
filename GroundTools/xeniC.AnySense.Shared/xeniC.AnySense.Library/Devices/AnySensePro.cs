@@ -1591,13 +1591,85 @@ namespace xeniC.AnySense.Library.Devices
         }
         public class SettingsSpektrumModel : ProtocolSettingsModel
         {
+
+            private UInt16 isValid;
+            public SettingsSpektrumModel()
+            {
+                isValid = 0xCB00 + (byte)TelemetryProtocol.Spektrum;
+                SensorGPS = true;
+                SensorPowerbox = true;
+                SensorCurrent = true;
+            }
+
+            #region Properties
+
+            private bool sensorGPS;
+            public bool SensorGPS
+            {
+                get { return sensorGPS; }
+                set
+                {
+                    if (sensorGPS == value)
+                        return;
+
+                    sensorGPS = value;
+                    RaisePropertyChanged(() => SensorGPS);
+                }
+            }
+
+            private bool sensorPowerbox;
+            public bool SensorPowerbox
+            {
+                get { return sensorPowerbox; }
+                set
+                {
+                    if (sensorPowerbox == value)
+                        return;
+
+                    sensorPowerbox = value;
+                    RaisePropertyChanged(() => SensorPowerbox);
+                }
+            }
+
+            private bool sensorCurrent;
+            public bool SensorCurrent
+            {
+                get { return sensorCurrent; }
+                set
+                {
+                    if (sensorCurrent == value)
+                        return;
+
+                    sensorCurrent = value;
+                    RaisePropertyChanged(() => SensorCurrent);
+                }
+            }
+
+            #endregion
+
+            #region Serialization / Deserialization
+
             public override void DeSerialize(byte[] data, int offset)
             {
+                isValid = Converter.ToUInt16(data, offset);
+                offset += 2;
+
+                SensorGPS = data[offset++] == 1;
+                SensorPowerbox = data[offset++] == 1;
+                SensorCurrent = data[offset++] == 1;
             }
 
             public override void Serialize(byte[] data, int offset)
             {
+                Converter.GetBytes(isValid, data, offset);
+                offset += 2;
+
+                data[offset++] = (byte)(SensorGPS ? 1 : 0);
+                data[offset++] = (byte)(SensorPowerbox ? 1 : 0);
+                data[offset++] = (byte)(SensorCurrent ? 1 : 0);
             }
+
+            #endregion
         }
         public class SettingsMultiplexModel : ProtocolSettingsModel
         {

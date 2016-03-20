@@ -256,7 +256,25 @@
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsSpektrumModel}">
-
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Active Sensors" Style="{StaticResource Header}"/>
+                        <Label Grid.Row="1" Grid.Column="0" Content="GPS Sensor (SPMA9587)" />
+                        <Controls:ToggleSwitch Grid.Row="1" Grid.Column="1" IsChecked="{Binding SensorGPS}" />
+                        <Label Grid.Row="2" Grid.Column="0" Content="PowerBox Sensor (PBS4850)" />
+                        <Controls:ToggleSwitch Grid.Row="2" Grid.Column="1" IsChecked="{Binding SensorPowerbox}" />
+                        <Label Grid.Row="3" Grid.Column="0" Content="High Current Sensor (SPMA9590)" />
+                        <Controls:ToggleSwitch Grid.Row="3" Grid.Column="1" IsChecked="{Binding SensorCurrent}" />
+                    </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsMultiplexModel}">
                     <Grid>
