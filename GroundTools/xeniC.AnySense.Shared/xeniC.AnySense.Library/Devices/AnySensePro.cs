@@ -829,19 +829,403 @@ namespace xeniC.AnySense.Library.Devices
         }
         public class SettingsFutabaModel : ProtocolSettingsModel
         {
+            private const byte SlotCount = 32;
             private UInt16 isValid;
+            private SlotValues[] slots;
+
             public SettingsFutabaModel()
             {
                 isValid = 0xCB00 + (byte)TelemetryProtocol.Futaba;
+
+                slots = new SlotValues[SlotCount];
+
+                slots[1] = SlotValues.Vario;
+                slots[3] = SlotValues.Cell;
+                slots[5] = SlotValues.Current;
+                slots[8] = SlotValues.GPS;
+
+                UpdateValue();
             }
+
+            private byte slotVario;
+            public byte SlotVario
+            {
+                get { return slotVario; }
+                set
+                {
+                    if (slotVario == value)
+                        return;
+
+                    slotVario = value;
+                    UpdateSlots();
+                    RaisePropertyChanged(() => SlotVario);
+                }
+            }
+
+            private List<SlotType> mapSlotVario;
+            public List<SlotType> MapSlotVario
+            {
+                get { return mapSlotVario; }
+                set
+                {
+                    if (mapSlotVario == value)
+                        return;
+
+                    mapSlotVario = value;
+                    RaisePropertyChanged(() => MapSlotVario);
+                }
+            }
+
+            private byte slotCurrent;
+            public byte SlotCurrent
+            {
+                get { return slotCurrent; }
+                set
+                {
+                    if (slotCurrent == value)
+                        return;
+
+                    slotCurrent = value;
+                    UpdateSlots();
+                    RaisePropertyChanged(() => SlotCurrent);
+                }
+            }
+
+            private List<SlotType> mapSlotCurrent;
+            public List<SlotType> MapSlotCurrent
+            {
+                get { return mapSlotCurrent; }
+                set
+                {
+                    if (mapSlotCurrent == value)
+                        return;
+
+                    mapSlotCurrent = value;
+                    RaisePropertyChanged(() => MapSlotCurrent);
+                }
+            }
+
+            private byte slotGPS;
+            public byte SlotGPS
+            {
+                get { return slotGPS; }
+                set
+                {
+                    if (slotGPS == value)
+                        return;
+
+                    slotGPS = value;
+                    UpdateSlots();
+                    RaisePropertyChanged(() => SlotGPS);
+                }
+            }
+
+            private List<SlotType> mapSlotGPS;
+            public List<SlotType> MapSlotGPS
+            {
+                get { return mapSlotGPS; }
+                set
+                {
+                    if (mapSlotGPS == value)
+                        return;
+
+                    mapSlotGPS = value;
+                    RaisePropertyChanged(() => MapSlotGPS);
+                }
+            }
+
+            private byte slotCell;
+            public byte SlotCell
+            {
+                get { return slotCell; }
+                set
+                {
+                    if (slotCell == value)
+                        return;
+
+                    slotCell = value;
+                    UpdateSlots();
+                    RaisePropertyChanged(() => SlotCell);
+                }
+            }
+
+            private List<SlotType> mapSlotCell;
+            public List<SlotType> MapSlotCell
+            {
+                get { return mapSlotCell; }
+                set
+                {
+                    if (mapSlotCell == value)
+                        return;
+
+                    mapSlotCell = value;
+                    RaisePropertyChanged(() => MapSlotCell);
+                }
+            }
+
+            private byte slotCompass;
+            public byte SlotCompass
+            {
+                get { return slotCompass; }
+                set
+                {
+                    if (slotCompass == value)
+                        return;
+
+                    slotCompass = value;
+                    UpdateSlots();
+                    RaisePropertyChanged(() => SlotCompass);
+                }
+            }
+
+            private List<SlotType> mapSlotCompass;
+            public List<SlotType> MapSlotCompass
+            {
+                get { return mapSlotCompass; }
+                set
+                {
+                    if (mapSlotCompass == value)
+                        return;
+
+                    mapSlotCompass = value;
+                    RaisePropertyChanged(() => MapSlotCompass);
+                }
+            }
+
+            private byte slotSats;
+            public byte SlotSats
+            {
+                get { return slotSats; }
+                set
+                {
+                    if (slotSats == value)
+                        return;
+
+                    slotSats = value;
+                    UpdateSlots();
+                    RaisePropertyChanged(() => SlotSats);
+                }
+            }
+
+            private List<SlotType> mapSlotSats;
+            public List<SlotType> MapSlotSats
+            {
+                get { return mapSlotSats; }
+                set
+                {
+                    if (mapSlotSats == value)
+                        return;
+
+                    mapSlotSats = value;
+                    RaisePropertyChanged(() => MapSlotSats);
+                }
+            }
+
+            private byte slotFlightmode;
+            public byte SlotFlightmode
+            {
+                get { return slotFlightmode; }
+                set
+                {
+                    if (slotFlightmode == value)
+                        return;
+
+                    slotFlightmode = value;
+                    UpdateSlots();
+                    RaisePropertyChanged(() => SlotFlightmode);
+                }
+            }
+
+            private List<SlotType> mapSlotFlightMode;
+            public List<SlotType> MapSlotFlightMode
+            {
+                get { return mapSlotFlightMode; }
+                set
+                {
+                    if (mapSlotFlightMode == value)
+                        return;
+
+                    mapSlotFlightMode = value;
+                    RaisePropertyChanged(() => MapSlotFlightMode);
+                }
+            }
+
+            private byte slotTemperatur;
+            public byte SlotTemperatur
+            {
+                get { return slotTemperatur; }
+                set
+                {
+                    if (slotTemperatur == value)
+                        return;
+
+                    slotTemperatur = value;
+                    UpdateSlots();
+                    RaisePropertyChanged(() => SlotTemperatur);
+                }
+            }
+
+            private List<SlotType> mapSlotTemperatur;
+            public List<SlotType> MapSlotTemperatur
+            {
+                get { return mapSlotTemperatur; }
+                set
+                {
+                    if (mapSlotTemperatur == value)
+                        return;
+
+                    mapSlotTemperatur = value;
+                    RaisePropertyChanged(() => MapSlotTemperatur);
+                }
+            }
+
+            void UpdateSlots()
+            {
+                for (byte i = 0; i < SlotCount; i++)
+                    slots[i] = SlotValues.None;
+
+                if (SlotVario != 0)
+                    slots[SlotVario] = SlotValues.Vario;
+
+                if (SlotCurrent != 0)
+                    slots[SlotCurrent] = SlotValues.Current;
+
+                if (SlotCell != 0)
+                    slots[SlotCell] = SlotValues.Cell;
+
+                if (SlotGPS != 0)
+                    slots[SlotGPS] = SlotValues.GPS;
+
+                if (SlotSats != 0)
+                    slots[SlotSats] = SlotValues.Sats;
+
+                if (SlotFlightmode != 0)
+                    slots[SlotFlightmode] = SlotValues.Flightmode;
+
+                if (SlotTemperatur != 0)
+                    slots[SlotTemperatur] = SlotValues.Temperatur;
+
+                if (SlotCompass != 0)
+                    slots[SlotCompass] = SlotValues.Kompass;
+
+                MapSlotVario = GetSlots(SlotValues.Vario);
+                MapSlotCurrent = GetSlots(SlotValues.Current);
+                MapSlotCell = GetSlots(SlotValues.Cell);
+                MapSlotGPS = GetSlots(SlotValues.GPS);
+                MapSlotCompass = GetSlots(SlotValues.Kompass);
+                MapSlotFlightMode = GetSlots(SlotValues.Flightmode);
+                MapSlotSats = GetSlots(SlotValues.Sats);
+                MapSlotTemperatur = GetSlots(SlotValues.Temperatur);
+            }
+
+            List<SlotType> GetSlots(SlotValues slotValue)
+            {
+                List<SlotType> types = SlotType.GetSlots();
+                List<SlotType> remaining = new List<SlotType>();
+                List<SlotType> tmp = new List<SlotType>();
+
+                byte size = GetSlotSize(slotValue);
+
+                remaining.Add(types[0]);
+
+                for (byte i = 1; i < SlotCount; )
+                {
+                    if (i % 8 == 0)
+                        tmp.Clear();
+
+                    if (slots[i] == SlotValues.None || slots[i] == slotValue)
+                        tmp.Add(types[i]);
+                    else
+                        tmp.Clear();
+
+                    if (tmp.Count >= size)
+                    {
+                        remaining.Add(tmp[0]);
+                        tmp.RemoveAt(0);
+                    }
+
+                    i += GetSlotSize(slots[i] == slotValue ? SlotValues.None : slots[i]);
+                }
+
+                return remaining;
+            }
+
+            void UpdateValue()
+            {
+                for (byte i = 0; i < SlotCount; i++)
+                {
+                    switch (slots[i])
+                    {
+                        case SlotValues.Vario:
+                            slotVario = i;
+                            break;
+                        case SlotValues.Kompass:
+                            slotCompass = i;
+                            break;
+                        case SlotValues.Current:
+                            slotCurrent = i;
+                            break;
+                        case SlotValues.GPS:
+                            slotGPS = i;
+                            break;
+                        case SlotValues.Cell:
+                            slotCell = i;
+                            break;
+                        case SlotValues.Sats:
+                            slotSats = i;
+                            break;
+                        case SlotValues.Flightmode:
+                            slotFlightmode = i;
+                            break;
+                        case SlotValues.Temperatur:
+                            slotTemperatur = i;
+                            break;
+                    }
+                }
+
+                UpdateSlots();
+            }
+
+            byte GetSlotSize(SlotValues value)
+            {
+                switch (value)
+                {
+                    case SlotValues.Vario:
+                        return 2;
+                    case SlotValues.Current:
+                        return 3;
+                    case SlotValues.GPS:
+                        return 8;
+                    case SlotValues.Cell:
+                        return 2;
+                    default:
+                        return 1;
+                }
+            }
+
+            #region Serialize/Deserialize
 
             public override void DeSerialize(byte[] data, int offset)
             {
+                isValid = Converter.ToUInt16(data, offset);
+                offset += 2;
+
+                for (int i = 0; i < SlotCount; i++)
+                    slots[i] = (SlotValues)data[offset++];
+
+                UpdateValue();
             }
 
             public override void Serialize(byte[] data, int offset)
             {
+                Converter.GetBytes(isValid, data, offset);
+                offset += 2;
+
+                for (int i = 0; i < SlotCount; i++)
+                    data[offset++] = (byte)slots[i];
             }
+
+            #endregion
 
             #region Nested Types
 
@@ -849,41 +1233,33 @@ namespace xeniC.AnySense.Library.Devices
             {
                 public byte Number { get; set; }
                 public string Name { get; set; }
-            }
 
-            public class ValueType
-            {
-                public byte Number { get; set; }
-                public string Name { get; set; }
-                public byte Size { get; set; }
-
-                public List<ValueType> GetValues()
+                private static List<SlotType> slots;
+                public static List<SlotType> GetSlots()
                 {
-                    List<ValueType> vals = new List<ValueType>();
+                    if (slots != null)
+                        return slots;
 
-                    vals.Add(new ValueType() { Number = 0, Name = "Disabled", Size = 0 });
-                    vals.Add(new ValueType() { Number = 1, Name = "Vario", Size = 2 });
-                    vals.Add(new ValueType() { Number = 2, Name = "Kompass", Size = 1 });
-                    vals.Add(new ValueType() { Number = 3, Name = "Current", Size = 3 });
-                    vals.Add(new ValueType() { Number = 4, Name = "GPS", Size = 8 });
-                    vals.Add(new ValueType() { Number = 5, Name = "Lowest Cell Voltage", Size = 2 });
-                    vals.Add(new ValueType() { Number = 6, Name = "Number of Satellites", Size = 1 });
-                    vals.Add(new ValueType() { Number = 7, Name = "Flightmode", Size = 1 });
-                    vals.Add(new ValueType() { Number = 8, Name = "Temperatur", Size = 1 });
+                    slots = new List<SlotType>();
+                    slots.Add(new SlotType() { Number = 0, Name = "Disabled" });
+                    for (byte i = 1; i < SlotCount; i++)
+                        slots.Add(new SlotType() { Number = i, Name = string.Format("Slot {0:00}", i) });
 
-                    return vals;
+                    return slots;
                 }
             }
 
-            public class SlotMapping : ViewModelBase
+            public enum SlotValues
             {
-                private byte slot;
-
-                public byte Slot
-                {
-                    get { return slot; }
-                    set { slot = value; }
-                }
+                None = 0,
+                Vario = 1,
+                Kompass = 2,
+                Current = 3,
+                GPS = 4,
+                Cell = 5,
+                Sats = 6,
+                Flightmode = 7,
+                Temperatur = 8,
             }
 
             #endregion

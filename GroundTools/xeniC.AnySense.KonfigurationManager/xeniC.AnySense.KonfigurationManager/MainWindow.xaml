@@ -163,7 +163,40 @@
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsFutabaModel}">
-
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Active Sensors" Style="{StaticResource Header}"/>
+                        <Label Grid.Row="1" Grid.Column="0" Content="Vario Sensor (VARIO-1672)" />
+                        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding MapSlotVario}" SelectedValue="{Binding SlotVario}" SelectedValuePath="Number" DisplayMemberPath="Name" />
+                        <Label Grid.Row="2" Grid.Column="0" Content="Current Sensor (CURR-1678)" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding MapSlotCurrent}" SelectedValue="{Binding SlotCurrent}" SelectedValuePath="Number" DisplayMemberPath="Name" />
+                        <Label Grid.Row="3" Grid.Column="0" Content="Voltage Sensor (SBS-01V)" />
+                        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding MapSlotCell}" SelectedValue="{Binding SlotCell}" SelectedValuePath="Number" DisplayMemberPath="Name" />
+                        <Label Grid.Row="4" Grid.Column="0" Content="GPS Sensor (SBS-01G)" />
+                        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding MapSlotGPS}" SelectedValue="{Binding SlotGPS}" SelectedValuePath="Number" DisplayMemberPath="Name" />
+                        <Label Grid.Row="5" Grid.Column="0" Content="Compass / Heading (SBS-01RM/O)" />
+                        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding MapSlotCompass}" SelectedValue="{Binding SlotCompass}" SelectedValuePath="Number" DisplayMemberPath="Name" />
+                        <Label Grid.Row="6" Grid.Column="0" Content="Flight-Mode (SBS-01T)" />
+                        <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding MapSlotFlightMode}" SelectedValue="{Binding SlotFlightmode}" SelectedValuePath="Number" DisplayMemberPath="Name" />
+                        <Label Grid.Row="7" Grid.Column="0" Content="Number of Satellites (SBS-01T)" />
+                        <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding MapSlotSats}" SelectedValue="{Binding SlotSats}" SelectedValuePath="Number" DisplayMemberPath="Name" />
+                        <Label Grid.Row="8" Grid.Column="0" Content="Temperatur 1 (SBS-01T)" />
+                        <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding MapSlotTemperatur}" SelectedValue="{Binding SlotTemperatur}" SelectedValuePath="Number" DisplayMemberPath="Name" />
+                    </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsJetiModel}">
 
