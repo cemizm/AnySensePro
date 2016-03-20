@@ -712,6 +712,11 @@ namespace xeniC.AnySense.Library.Devices
         public class SettingsMAVLinkModel : ProtocolSettingsModel
         {
 
+            private UInt16 isValid;
+            public SettingsMAVLinkModel()
+            {
+                isValid = 0xCB00 + (byte)TelemetryProtocol.MAVLink;
+            }
 
             public override void DeSerialize(byte[] data, int offset)
             {
