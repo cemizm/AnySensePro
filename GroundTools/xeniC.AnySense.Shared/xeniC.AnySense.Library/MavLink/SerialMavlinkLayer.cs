@@ -39,7 +39,8 @@ namespace MavLink
         {
             MavlinkPacket packet = CreatePacket(msg);
             byte[] bytes = Send(packet);
-            serial.Write(bytes, 0, bytes.Length);
+            try { serial.Write(bytes, 0, bytes.Length); }
+            catch { }
         }
 
         private MavlinkPacket CreatePacket(MavlinkMessage msg)
