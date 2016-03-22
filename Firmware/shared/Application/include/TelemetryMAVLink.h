@@ -21,12 +21,14 @@ class TelemetryMAVLink: public TelemetryAdapter<TelemetryProtocol::MAVLink>
 {
 private:
 	MAVLinkComm mav;
+	uint8_t m_run;
 protected:
 	void Init() override;
 	void Run(void) override;
+	void DeInit() override;
 public:
 	TelemetryMAVLink(HAL::USART& usart) :
-			TelemetryAdapter(), mav(usart, MAVLINK_COMM_2)
+			TelemetryAdapter(), mav(usart, MAVLINK_COMM_2), m_run(1)
 	{
 	}
 };

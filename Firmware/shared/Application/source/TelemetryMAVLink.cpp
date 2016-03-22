@@ -20,19 +20,18 @@ void TelemetryMAVLink::Init()
 
 void TelemetryMAVLink::Run(void)
 {
-	uint8_t run = 1;
-
-	while (run)
+	do
 	{
-		if (!eventFlag.wait(delay_ms(MAVLINK_COMM_DELAY_MS)))
-		{
-			mav.loop();
-		}
-		else
-			run = 0;
-	}
+		mav.loop();
+	} while (m_run);
 
 	mav.DeInit();
+}
+
+void TelemetryMAVLink::DeInit()
+{
+	m_run = 0;
+	eventFlag.signal();
 }
 
 } /* namespace Utils */

@@ -28,8 +28,6 @@ private:
 
 	uint_fast32_t m_alive;
 
-	void RequestStreams();
-
 	void UpdateHeartbeat(mavlink_message_t& msg);
 	void UpdateSysStatus(mavlink_message_t& msg);
 	void UpdateGPSRaw(mavlink_message_t& msg);

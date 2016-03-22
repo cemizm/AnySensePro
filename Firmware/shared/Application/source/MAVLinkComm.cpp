@@ -46,87 +46,68 @@ void MAVLinkComm::DeInit(void)
 
 void MAVLinkComm::Run(void)
 {
-
 	for (;;)
-	{
-		m_messages_in.pop(m_msg_work, delay_ms(MAVLINK_COMM_DELAY_MS));
 		loop();
-	}
 }
 
 void MAVLinkComm::loop()
 {
 	uint16_t dataLen = 0;
 
-	if (m_messages_in.get_count() > 0)
+	if (gotMsg.wait(delay_ms(MAVLINK_COMM_DELAY_MS)))
 	{
-		m_messages_in.pop(m_msg_work);
 		//handle message??
 	}
-	else if (m_messages_out.get_free_size() > 0)
-		dataLen = PackNextMessage();
+	else if (!m_isSending)
+	{
+		switch (m_currentItem)
+		{
+		case 0:
+			dataLen = m_mavlink.PackGPS(&m_msg_work);
+			break;
+		case 1:
+		case 4:
+		case 8:
+			dataLen = m_mavlink.PackAttitude(&m_msg_work);
+			break;
+		case 2:
+			dataLen = m_mavlink.PackVFRHud(&m_msg_work);
+			break;
+		case 3:
+		case 7:
+			dataLen = m_mavlink.PackRCOut(&m_msg_work);
+			break;
+		case 5:
+			dataLen = m_mavlink.PackBatteryPack(&m_msg_work);
+			break;
+		case 6:
+			dataLen = m_mavlink.PackHeartbeat(&m_msg_work);
+			break;
+		case 9:
+			dataLen = m_mavlink.PackSystemStatus(&m_msg_work);
+			break;
+		}
+		m_currentItem = (m_currentItem + 1) % 10;
+	}
 
 	if (dataLen > 0)
 	{
-		m_messages_out.push(m_msg_work);
 		SendMessage();
 		dataLen = 0;
 	}
 }
 
-uint16_t MAVLinkComm::PackNextMessage()
-{
-	uint16_t dataLen = 0;
-	switch (m_currentItem)
-	{
-	case 0:
-		dataLen = m_mavlink.PackGPS(&m_msg_work);
-		break;
-	case 1:
-	case 4:
-	case 8:
-		dataLen = m_mavlink.PackAttitude(&m_msg_work);
-		break;
-	case 2:
-		dataLen = m_mavlink.PackVFRHud(&m_msg_work);
-		break;
-	case 3:
-	case 7:
-		dataLen = m_mavlink.PackRCOut(&m_msg_work);
-		break;
-	case 5:
-		dataLen = m_mavlink.PackBatteryPack(&m_msg_work);
-		break;
-	case 6:
-		dataLen = m_mavlink.PackHeartbeat(&m_msg_work);
-		break;
-	case 9:
-		dataLen = m_mavlink.PackSystemStatus(&m_msg_work);
-		break;
-	}
-	m_currentItem = (m_currentItem + 1) % 10;
-	return dataLen;
-}
-
 uint8_t MAVLinkComm::SendMessage()
 {
-	if(m_isSending == 1)
+	if (m_isSending == 1)
 		return 0;
+	m_isSending = 1;
 
-	if (m_messages_out.get_count() == 0)
-		return 0;
+	uint16_t dataLen = m_mavlink.FillBytes(&m_msg_work, m_msg_buffer);
 
-	if (m_messages_out.pop(m_msg_out, 0))
-	{
-		uint16_t dataLen = m_mavlink.FillBytes(&m_msg_out, m_msg_buffer);
+	m_usart.SendDma(m_msg_buffer, dataLen);
 
-		m_isSending = 1;
-		m_usart.SendDma(m_msg_buffer, dataLen);
-
-		return 1;
-	}
-
-	return 0;
+	return 1;
 }
 
 void MAVLinkComm::ISR(void)
@@ -134,19 +115,12 @@ void MAVLinkComm::ISR(void)
 	if (m_usart.GetInterruptSource(USART_ISR_RXNE))
 	{
 		if (m_mavlink.Decode(m_usart.Receive(), &m_msg_in))
-		{
-			if (m_messages_in.get_free_size() > 0)
-				m_messages_in.push(m_msg_in);
-		}
+			gotMsg.signal_isr();
 	}
 	if (m_usart.GetTXDMA().GetInterruptFlag(DMA_TCIF))
 	{
 		m_usart.GetTXDMA().ClearInterruptFlags(DMA_TCIF);
 		m_isSending = 0;
-		if (!SendMessage())
-		{
-			m_usart.GetTXDMA().DisableChannel();
-		}
 	}
 }
 

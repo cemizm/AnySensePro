@@ -25,30 +25,28 @@ void FCMAVLink::Run()
 
 	while (m_alive > OSAL::Timer::GetTime())
 	{
-		if (m_messages_in.pop(m_msg_work, WaitForDataTimeout))
+		if (gotMsg.wait(WaitForDataTimeout))
 		{
-			switch (m_msg_work.msgid)
+			switch (m_msg_in.msgid)
 			{
 			case MAVLINK_MSG_ID_HEARTBEAT:
 				m_alive = OSAL::Timer::GetTime() + delay_sec(5);
-				UpdateHeartbeat(m_msg_work);
+				UpdateHeartbeat(m_msg_in);
 				break;
 			case MAVLINK_MSG_ID_SYS_STATUS:
-				UpdateSysStatus(m_msg_work);
+				UpdateSysStatus(m_msg_in);
 				break;
 			case MAVLINK_MSG_ID_GPS_RAW_INT:
-				UpdateGPSRaw(m_msg_work);
+				UpdateGPSRaw(m_msg_in);
 				break;
 			case MAVLINK_MSG_ID_VFR_HUD:
-				UpdateVFRHUD(m_msg_work);
+				UpdateVFRHUD(m_msg_in);
 				break;
 			case MAVLINK_MSG_ID_ATTITUDE:
-				UpdateAttitude(m_msg_work);
+				UpdateAttitude(m_msg_in);
 				break;
 			}
 		}
-		else
-			RequestStreams();
 	}
 
 	DeInit();
@@ -133,15 +131,6 @@ void FCMAVLink::UpdateAttitude(mavlink_message_t& msg)
 {
 	SensorData.SetPitch(mavlink_msg_attitude_get_pitch(&msg) * (180.0f / M_PI));
 	SensorData.SetRoll(mavlink_msg_attitude_get_roll(&msg) * (180.0f / M_PI));
-}
-
-void FCMAVLink::RequestStreams()
-{
-	for (uint8_t i = 0; i < MaxMAVStreams; i++)
-	{
-		m_messages_out.push(m_msg_work);
-		SendMessage();
-	}
 }
 
 } /* namespace App */
