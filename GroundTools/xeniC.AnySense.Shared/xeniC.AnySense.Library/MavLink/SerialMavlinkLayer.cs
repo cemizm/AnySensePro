@@ -55,8 +55,12 @@ namespace MavLink
 
         public override void Dispose()
         {
-            if (serial != null)
-                serial.Dispose();
+            try
+            {
+                if (serial != null)
+                    serial.Dispose();
+            }
+            catch { }
         }
     }
 }
