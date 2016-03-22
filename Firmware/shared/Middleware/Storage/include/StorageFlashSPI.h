@@ -87,9 +87,15 @@ public:
 				fh(fd)
 		{
 		}
-		~FileAutoRelease()
+
+		void Release()
 		{
 			Close(fh);
+		}
+
+		~FileAutoRelease()
+		{
+			Release();
 		}
 	};
 

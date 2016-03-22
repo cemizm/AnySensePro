@@ -43,6 +43,14 @@ uint8_t Configuration::Load()
 	if (Storage::StorageFlashSPI::FileStat(fd, &st) < 0)
 		return 0;
 
+	if(st.size == 0)
+	{
+		far.Release();
+		Storage::StorageFlashSPI::Remove(cfgname);
+		return 0;
+	}
+
+
 	if (Storage::StorageFlashSPI::Read(fd, &m_data, sizeof(ConfigurationData)) < 0)
 		return 0;
 
