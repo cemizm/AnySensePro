@@ -33,6 +33,7 @@ private:
 	void UpdateGPSRaw(mavlink_message_t& msg);
 	void UpdateVFRHUD(mavlink_message_t& msg);
 	void UpdateAttitude(mavlink_message_t& msg);
+	void UpdateTime(mavlink_message_t& msg);
 public:
 	FCMAVLink(HAL::USART& usart) :
 			MAVLinkComm(usart, MAVLINK_COMM_3), m_alive(0)

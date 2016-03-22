@@ -45,6 +45,9 @@ void FCMAVLink::Run()
 			case MAVLINK_MSG_ID_ATTITUDE:
 				UpdateAttitude(m_msg_in);
 				break;
+			case MAVLINK_MSG_ID_SYSTEM_TIME:
+				UpdateTime(m_msg_in);
+				break;
 			}
 		}
 	}
@@ -98,8 +101,6 @@ void FCMAVLink::UpdateGPSRaw(mavlink_message_t& msg)
 {
 	SensorData.SetSensorPresent(Sensors::SGPS, 1);
 
-	SensorData.SetDateTime(16, 03, 22, 21, 0, 0);
-
 	double lat = mavlink_msg_gps_raw_int_get_lat(&msg);
 	double lon = mavlink_msg_gps_raw_int_get_lon(&msg);
 	SensorData.SetPositionCurrent(lat / 10000000, lon / 10000000);
@@ -133,6 +134,12 @@ void FCMAVLink::UpdateAttitude(mavlink_message_t& msg)
 {
 	SensorData.SetPitch(mavlink_msg_attitude_get_pitch(&msg) * (180.0f / M_PI));
 	SensorData.SetRoll(mavlink_msg_attitude_get_roll(&msg) * (180.0f / M_PI));
+}
+
+void FCMAVLink::UpdateTime(mavlink_message_t& msg)
+{
+	Utils::DateTime dt = Utils::DateTime(msg.payload64[0] / (1000 * 1000));
+	SensorData.SetDateTime(dt);
 }
 
 } /* namespace App */
