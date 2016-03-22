@@ -98,6 +98,8 @@ void FCMAVLink::UpdateGPSRaw(mavlink_message_t& msg)
 {
 	SensorData.SetSensorPresent(Sensors::SGPS, 1);
 
+	SensorData.SetDateTime(16, 03, 22, 21, 0, 0);
+
 	double lat = mavlink_msg_gps_raw_int_get_lat(&msg);
 	double lon = mavlink_msg_gps_raw_int_get_lon(&msg);
 	SensorData.SetPositionCurrent(lat / 10000000, lon / 10000000);
