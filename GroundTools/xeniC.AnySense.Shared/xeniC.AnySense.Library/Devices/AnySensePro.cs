@@ -1534,6 +1534,15 @@ namespace xeniC.AnySense.Library.Devices
                 isValid = Converter.ToUInt16(data, offset);
                 offset += 2;
 
+                slotVario = 0;
+                slotCompass = 0;
+                slotCurrent = 0;
+                slotGPS = 0;
+                slotCell = 0;
+                slotSats = 0;
+                slotFlightmode = 0;
+                slotTemperatur = 0;
+
                 for (int i = 0; i < SlotCount; i++)
                     slots[i] = (SlotValues)data[offset++];
 

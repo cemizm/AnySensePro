@@ -23,7 +23,7 @@ namespace App
 /*
  *
  */
-class TelemetryFutaba: public HAL::InterruptHandler, public TelemetryAdapter<TelemetryProtocol::Jeti>
+class TelemetryFutaba: public HAL::InterruptHandler, public TelemetryAdapter<TelemetryProtocol::Futaba>
 {
 private:
 	static const uint16_t Prescaler = 2;
