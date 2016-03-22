@@ -50,11 +50,15 @@ private:
 
 	uint_fast32_t gps_nextCalc;
 
+	uint32_t lastFlightTime;
+
 	const uint8_t LevelWarning = 1;
 	const uint8_t LevelError = 2;
 
 	const uint8_t amp_elapsed_interval = 50;
 	const uint16_t amp_elapsed_limit = (360000 / amp_elapsed_interval);
+
+	const uint8_t SessionThreshold = 20;
 
 	void log(uint8_t level, const char* msg);
 
@@ -68,7 +72,7 @@ public:
 	System(HAL::Pin& error, HAL::Pin& activity) :
 			ledError(error), ledActivity(activity), ft_nextCalc(0), ft_measured(0), ft_elapsed(0), amp_nextCalc(0), amp_elapsed(
 					0), cells_nextCalc(0), cells_measure_end(0), home_nextCalc(0), home_measure_end(0), home_gps_measure_end(0), gps_nextCalc(
-					0)
+					0), lastFlightTime(0)
 	{
 	}
 

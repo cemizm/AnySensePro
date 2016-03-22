@@ -9,6 +9,8 @@
 #include <string.h>
 #include <math.h>
 
+#include <Configuration.h>
+
 #include <SensorStore.h>
 
 namespace App
@@ -50,6 +52,8 @@ void System::Run()
 
 	ledActivity.Off();
 	OSAL::Timer::SleepSeconds(2);
+
+	Config.UpdateFlightNumber();
 
 	uint8_t blink = 0;
 	for (;;)
@@ -100,10 +104,11 @@ void System::Run()
 
 void System::calcFlightime()
 {
+	uint_fast32_t tick = OSAL::Timer::GetTime();
+
 	if (!SensorData.GetSensorPresent(Sensors::Arming))
 		return;
 
-	uint_fast32_t tick = OSAL::Timer::GetTime();
 	if (ft_nextCalc > tick)
 		return;
 
@@ -124,7 +129,17 @@ void System::calcFlightime()
 		ft_measured = tick;
 	}
 	else
+	{
+		if ((SensorData.GetFlightime() - lastFlightTime) > SessionThreshold)
+		{
+			Config.UpdateFlightNumber();
+			SensorData.UpdateSession();
+		}
+
+		lastFlightTime = SensorData.GetFlightime();
+
 		ft_measured = 0;
+	}
 
 	ft_nextCalc = tick + delay_ms(200);
 }

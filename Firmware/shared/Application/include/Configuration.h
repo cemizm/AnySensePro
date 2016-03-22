@@ -45,18 +45,31 @@ public:
 	}
 };
 
+struct SystemData
+{
+	uint32_t FlightNumber;
+}__attribute__((packed));
+
 class Configuration
 {
 private:
 	const char* cfgname = "system.cfg";
+	const char* intname = "intern.bin";
 	const uint8_t ConfigurationVersion = 0;
 	static const uint8_t MaxHandlers = 5;
 
 	ConfigurationData m_data;
+	SystemData m_SystemData;
 
 	ConfigurationChanged* m_handlers[MaxHandlers];
 
 	void NotifyHandler();
+
+	uint8_t LoadFile(void* data, uint16_t size, const char* file);
+	uint8_t SaveFile(void* data, uint16_t size, const char* file);
+
+	uint8_t LoadSystem();
+	uint8_t SaveSystem();
 
 public:
 	void Init();
@@ -72,6 +85,9 @@ public:
 
 	uint8_t GetVersion();
 	void SetVersion(uint8_t version);
+
+	uint32_t GetNextFlightNumber();
+	void UpdateFlightNumber();
 
 	TelemetryProtocol GetProtocol();
 	void SetProtocol(TelemetryProtocol protocol);

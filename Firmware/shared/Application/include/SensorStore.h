@@ -112,6 +112,8 @@ private:
 
 	uint32_t m_Sensors = 0;
 
+	uint8_t m_session = 1;
+
 public:
 	float GetAltitude() const
 	{
@@ -515,6 +517,16 @@ public:
 	float GetHomeDirection()
 	{
 		return m_HomeDirection;
+	}
+
+	uint8_t GetSession()
+	{
+		return m_session;
+	}
+
+	void UpdateSession()
+	{
+		m_session++;
 	}
 };
 

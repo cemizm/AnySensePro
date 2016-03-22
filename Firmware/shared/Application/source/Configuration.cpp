@@ -18,6 +18,9 @@ void Configuration::Init()
 	if (Load() != 1)
 		Save();
 
+	if (LoadSystem() != 1)
+		SaveSystem();
+
 	if (m_data.Version < ConfigurationVersion)
 	{
 		for (uint8_t i = m_data.Version + 1; i <= ConfigurationVersion; i++)
@@ -31,7 +34,18 @@ void Configuration::Init()
 
 uint8_t Configuration::Load()
 {
-	spiffs_file fd = Storage::StorageFlashSPI::Open(cfgname, SPIFFS_RDONLY, 0);
+	return LoadFile(&m_data, sizeof(ConfigurationData), cfgname);
+}
+
+uint8_t Configuration::Save()
+{
+	m_data.Version = ConfigurationVersion;
+	return SaveFile(&m_data, sizeof(ConfigurationData), cfgname);
+}
+
+uint8_t Configuration::LoadFile(void* data, uint16_t size, const char* file)
+{
+	spiffs_file fd = Storage::StorageFlashSPI::Open(file, SPIFFS_RDONLY, 0);
 
 	if (fd < 0)
 		return 0;
@@ -43,35 +57,42 @@ uint8_t Configuration::Load()
 	if (Storage::StorageFlashSPI::FileStat(fd, &st) < 0)
 		return 0;
 
-	if(st.size == 0)
+	if (st.size == 0)
 	{
 		far.Release();
-		Storage::StorageFlashSPI::Remove(cfgname);
+		Storage::StorageFlashSPI::Remove(file);
 		return 0;
 	}
 
-
-	if (Storage::StorageFlashSPI::Read(fd, &m_data, sizeof(ConfigurationData)) < 0)
+	if (Storage::StorageFlashSPI::Read(fd, data, size) < 0)
 		return 0;
 
 	return 1;
 }
 
-uint8_t Configuration::Save()
+uint8_t Configuration::SaveFile(void* data, uint16_t size, const char* file)
 {
-	spiffs_file fd = Storage::StorageFlashSPI::Open(cfgname, SPIFFS_CREAT | SPIFFS_TRUNC | SPIFFS_RDWR, 0);
+	spiffs_file fd = Storage::StorageFlashSPI::Open(file, SPIFFS_CREAT | SPIFFS_TRUNC | SPIFFS_RDWR, 0);
 	if (fd < 0)
 		return 0;
 
-	m_data.Version = ConfigurationVersion;
-
-	if (Storage::StorageFlashSPI::Write(fd, &m_data, sizeof(ConfigurationData)) < 0)
+	if (Storage::StorageFlashSPI::Write(fd, data, (uint32_t) size) < 0)
 		return 0;
 
 	if (Storage::StorageFlashSPI::Close(fd) < 0)
 		return 0;
 
 	return 1;
+
+}
+
+uint8_t Configuration::LoadSystem()
+{
+	return LoadFile(&m_SystemData, sizeof(SystemData), intname);
+}
+uint8_t Configuration::SaveSystem()
+{
+	return SaveFile(&m_SystemData, sizeof(SystemData), intname);
 }
 
 void Configuration::AddUpdateHandler(ConfigurationChanged& handler)
@@ -145,6 +166,17 @@ void Configuration::SetProtocol(TelemetryProtocol protocol)
 
 	m_data.Protocol = protocol;
 	Save();
+}
+
+uint32_t Configuration::GetNextFlightNumber()
+{
+	return m_SystemData.FlightNumber;
+}
+
+void Configuration::UpdateFlightNumber()
+{
+	m_SystemData.FlightNumber++;
+	SaveSystem();
 }
 
 } /* namespace Application */
