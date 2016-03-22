@@ -173,7 +173,7 @@ void TelemetryJeti::Run(void)
 					packetLen = packet->UpdateU14(1, SensorData.GetCurrent() * 10);
 					break;
 				case TelemetryValue::Capacity: //capa
-					packetLen = packet->UpdateU14(1, SensorData.GetCapacity() / 10.0f);
+					packetLen = packet->UpdateU14(2, SensorData.GetCapacity() / 10.0f);
 					break;
 				case TelemetryValue::LipoVoltage: //cell
 					packetLen = packet->UpdateU14(2, SensorData.GetCellLowest() / 10.0f);
