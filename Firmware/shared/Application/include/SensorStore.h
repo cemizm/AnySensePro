@@ -257,6 +257,11 @@ public:
 		m_FixType = fixType;
 	}
 
+	uint8_t IsGPSOK() const
+	{
+		return m_FixType >= GPSFixType::Fix3D;
+	}
+
 	uint32_t GetFlightime() const
 	{
 		return m_Flightime;

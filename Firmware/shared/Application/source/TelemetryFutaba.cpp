@@ -187,7 +187,7 @@ void TelemetryFutaba::UpdateRPM(uint8_t* rpm, uint16_t value)
 
 void TelemetryFutaba::UpdateGPS(GPSType* gps)
 {
-	if (SensorData.GetFixType() >= GPSFixType::Fix3D)
+	if (SensorData.IsGPSOK())
 	{
 		const GPSPosition& pos = SensorData.GetPositionCurrent();
 		const GPSTime& time = SensorData.GetDateTime();

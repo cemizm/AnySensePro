@@ -209,7 +209,7 @@ uint8_t TelemetryFrSky::UpdateGPS()
 	if (!m_config->GPSEnable)
 		return 0;
 
-	if (SensorData.GetFixType() < GPSFixType::Fix3D)
+	if (!SensorData.IsGPSOK())
 		return 0;
 
 	GPSPosition pos = SensorData.GetPositionCurrent();
