@@ -10,7 +10,6 @@
 
 #include "TelemetryAdapter.h"
 
-#include "stdlib.h"
 
 #include "Timer.h"
 #include "USART.h"
@@ -147,7 +146,7 @@ private:
 			DataType = 0;
 			U6.Sign = val < 0;
 			U6.Decimalpoint = decimal;
-			U6.Data = abs(val);
+			U6.Data = val;
 
 			return 2;
 		}
@@ -156,7 +155,7 @@ private:
 			DataType = 1;
 			U14.Sign = val < 0;
 			U14.Decimalpoint = decimal;
-			U14.Data = abs(val);
+			U14.Data = val;
 
 			return 3;
 		}
@@ -165,7 +164,7 @@ private:
 			DataType = 4;
 			U22.Sign = val < 0;
 			U22.Decimalpoint = decimal;
-			U22.Data = abs(val);
+			U22.Data = val;
 
 			return 4;
 		}
@@ -174,7 +173,7 @@ private:
 			DataType = 8;
 			U30.Sign = val < 0;
 			U30.Decimalpoint = decimal;
-			U30.Data = abs(val);
+			U30.Data = val;
 
 			return 5;
 		}
