@@ -117,7 +117,7 @@ OS_PROCESS void TProc3::exec()
 
 	//supress compiler warnings
 	for (;;)
-		;
+		OSAL::Timer::SleepSeconds(5);
 }
 
 template<>
