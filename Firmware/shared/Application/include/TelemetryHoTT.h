@@ -215,11 +215,11 @@ private:
 						uint8_t Minutes;		//#34 UTC time minutes
 						uint8_t Seconds;		//#35 UTC time seconds
 						uint8_t Milliseconds;	//#36 UTC time milliseconds
-						void Set(const GPSTime& time)
+						void Set(const Utils::DateTime& time)
 						{
-							Hours = time.Hour;
-							Minutes = time.Minute;
-							Seconds = time.Second;
+							Hours = time.GetHour();
+							Minutes = time.GetMinute();
+							Seconds = time.GetSecond();
 						}
 					}__attribute__((packed, aligned(1))) GPSTime;
 					uint16_t GPSAltitude;  		//#37 mean sea level altitude

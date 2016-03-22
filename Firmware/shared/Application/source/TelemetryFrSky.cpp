@@ -213,7 +213,7 @@ uint8_t TelemetryFrSky::UpdateGPS()
 		return 0;
 
 	GPSPosition pos = SensorData.GetPositionCurrent();
-	GPSTime time = SensorData.GetDateTime();
+	Utils::DateTime time = SensorData.GetDateTime();
 	switch (m_sensorValue[SensorMapping::MapGPS])
 	{
 	case 0:
@@ -240,11 +240,11 @@ uint8_t TelemetryFrSky::UpdateGPS()
 		break;
 	case 5:
 		m_packet.Id = SensorValue::GPS_TIME_DATE;
-		m_packet.Value = time.Year << 24 | time.Month << 16 | time.Day << 8 | 0xff;
+		m_packet.Value = time.GetDate() << 8 | 0xff;
 		break;
 	case 6:
 		m_packet.Id = SensorValue::GPS_TIME_DATE;
-		m_packet.Value = time.Hour << 24 | time.Minute << 16 | time.Second << 8;
+		m_packet.Value = time.GetTime() << 8;
 		break;
 	}
 

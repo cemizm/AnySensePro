@@ -14,6 +14,8 @@
 #include <StorageFlashSPI.h>
 #include <SensorStore.h>
 
+#include <DateTime.h>
+
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/can.h>
@@ -29,21 +31,7 @@ volatile uint32_t* bootSwitch = (uint32_t *) BOOTLOADER_SWITCH_MEM;
 
 uint32_t get_fattime(void)
 {
-	//        	Year 1980	  Month		Day		   Hours	  Minute   Second
-	uint32_t time = 4 << 25 | 6 << 21 | 13 << 16 | 18 << 11 | 0 << 5 | 0 << 0;
-
-	if (App::SensorData.GetSatellites() > 2)
-	{
-		const App::GPSTime gtime = App::SensorData.GetDateTime();
-		time = (gtime.Year + 20) << 25;
-		time |= gtime.Month << 21;
-		time |= gtime.Day << 16;
-		time |= gtime.Hour << 11;
-		time |= gtime.Minute << 5;
-		time |= gtime.Second / 2 << 0;
-	}
-
-	return time;
+	return App::SensorData.GetDateTime().ToFatTime();
 }
 
 uint8_t PriorityTelemetry = 10;

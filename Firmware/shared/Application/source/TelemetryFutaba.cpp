@@ -190,7 +190,7 @@ void TelemetryFutaba::UpdateGPS(GPSType* gps)
 	if (SensorData.IsGPSOK())
 	{
 		const GPSPosition& pos = SensorData.GetPositionCurrent();
-		const GPSTime& time = SensorData.GetDateTime();
+		const Utils::DateTime& time = SensorData.GetDateTime();
 
 		gps->LongitudeSign = pos.Longitude < 0 ? 1 : 0;
 		gps->Longitude = ((pos.Longitude < 0 ? pos.Longitude * -1 : pos.Longitude) * 600000);
@@ -201,7 +201,7 @@ void TelemetryFutaba::UpdateGPS(GPSType* gps)
 		gps->GPSFix = 1;
 		gps->Speed = SensorData.GetSpeed() * 3.6;
 
-		gps->UTC = time.Hour * 3600 + time.Minute * 60 + time.Second;
+		gps->UTC = time.GetTimeTotalSeconds();
 	}
 	else
 		gps->GPSFix = 0;

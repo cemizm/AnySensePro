@@ -233,19 +233,19 @@ void SensorFrSky::UpdateData()
 		SensorData.SetCourseOverGround(DATA_U32(m_rx.Value) / 100.0f);
 		break;
 	case SensorValue::GPS_TIME_DATE:
-		GPSTime time = GPSTime(SensorData.GetDateTime());
+		Utils::DateTime time = SensorData.GetDateTime();
 		uint32_t gps_time_date = DATA_U32(m_rx.Value);
 		if (gps_time_date & 0x000000ff)
 		{
-			time.Year = gps_time_date >> 24;
-			time.Month = gps_time_date >> 16;
-			time.Day = gps_time_date >> 8;
+			time.SetYear(gps_time_date >> 24);
+			time.SetMonth(gps_time_date >> 16);
+			time.SetDay(gps_time_date >> 8);
 		}
 		else
 		{
-			time.Hour = gps_time_date >> 24;
-			time.Minute = gps_time_date >> 16;
-			time.Second = gps_time_date >> 8;
+			time.SetHour(gps_time_date >> 24);
+			time.SetMinute(gps_time_date >> 16);
+			time.SetSecond(gps_time_date >> 8);
 		}
 		SensorData.SetDateTime(time);
 		break;

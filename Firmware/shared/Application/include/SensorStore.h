@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 #include <math.h>
+#include <DateTime.h>
 
 const uint8_t MAXRCCHANNELS = 16;
 const uint8_t MAXCELLS = 24;
@@ -54,16 +55,6 @@ struct GPSPosition
 	double Longitude;
 };
 
-struct GPSTime
-{
-	uint8_t Year; //since 2000
-	uint8_t Month;
-	uint8_t Day;
-	uint8_t Hour;
-	uint8_t Minute;
-	uint8_t Second;
-};
-
 class SensorStore
 {
 private:
@@ -77,7 +68,7 @@ private:
 	float m_Speed = 0; //speed in m/s
 	float m_CourseOverGround = 0; //course over ground
 
-	GPSTime m_dateTime;
+	Utils::DateTime m_dateTime = Utils::DateTime(14, 6, 13, 18, 0, 0);
 
 	float m_Altitude = 0; //altitude in m (from barometric sensor)
 	float m_HomeAltitude = 0; // home altitude from barometric sensor
@@ -219,22 +210,22 @@ public:
 		m_Current = current;
 	}
 
-	const GPSTime& GetDateTime() const
+	const Utils::DateTime& GetDateTime() const
 	{
 		return m_dateTime;
 	}
 
 	void SetDateTime(uint8_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 	{
-		m_dateTime.Year = year;
-		m_dateTime.Month = month;
-		m_dateTime.Day = day;
-		m_dateTime.Hour = hour;
-		m_dateTime.Minute = min;
-		m_dateTime.Second = sec;
+		m_dateTime.SetYear(year);
+		m_dateTime.SetMonth(month);
+		m_dateTime.SetDay(day);
+		m_dateTime.SetHour(hour);
+		m_dateTime.SetMinute(min);
+		m_dateTime.SetSecond(sec);
 	}
 
-	void SetDateTime(GPSTime& dateTime)
+	void SetDateTime(Utils::DateTime& dateTime)
 	{
 		m_dateTime = dateTime;
 	}
