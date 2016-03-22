@@ -54,7 +54,7 @@ private:
 	const uint8_t LevelError = 2;
 
 	const uint8_t amp_elapsed_interval = 50;
-	const uint16_t amp_elapsed_limit = (36000 / amp_elapsed_interval);
+	const uint16_t amp_elapsed_limit = (360000 / amp_elapsed_interval);
 
 	void log(uint8_t level, const char* msg);
 
