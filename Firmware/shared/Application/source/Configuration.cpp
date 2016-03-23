@@ -11,6 +11,8 @@
 namespace App
 {
 
+static_assert(offsetof(ConfigurationData, ProtocolSettings) == 32, "Protocol configuration will miss align!");
+
 Configuration Config;
 
 void Configuration::Init()
