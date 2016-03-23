@@ -17,7 +17,7 @@ class FCAdapter
 {
 protected:
 public:
-	static const uint16_t Workspace = 1024 * 3;
+	static const uint16_t Workspace = 1024 * 1;
 
 	enum Protocol
 	{

@@ -30,7 +30,7 @@ class DJIController: HAL::InterruptHandler
 {
 private:
 	HAL::CAN& m_can;
-	OSAL::Channel<HAL::CANRxMessage, 5> m_channel;
+	OSAL::Channel<HAL::CANRxMessage, 5> m_channel; //TODO: replace
 	HAL::CANRxMessage m_tmp_msg;
 	uint_fast32_t m_nextHeartbeat;
 	uint_fast32_t m_nextTimeout;

@@ -11,7 +11,7 @@
 #include "Configuration.h"
 #include "OSAL.h"
 
-#define TELEMETRY_WORKSPACE		1024*3
+#define TELEMETRY_WORKSPACE		1024
 
 extern uint8_t PriorityTelemetry;
 

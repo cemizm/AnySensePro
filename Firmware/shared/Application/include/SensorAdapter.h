@@ -18,7 +18,7 @@ class SensorAdapterBase
 protected:
 	OSAL::EventFlag eventFlag;
 public:
-	static const uint16_t Workspace = 512;
+	static const uint16_t Workspace = 384;
 
 	enum Procotol
 	{
