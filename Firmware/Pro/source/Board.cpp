@@ -22,6 +22,7 @@
 #include <libopencm3/stm32/st_usbfs.h>
 #include <libopencm3/stm32/syscfg.h>
 #include <libopencm3/cm3/scb.h>
+#include <libopencm3/stm32/i2c.h>
 
 #define	BOOTLOADER_SWITCH_MEM					0x2000F3E0
 #define BOOTLOADER_SWITCH_VALUE					0xDEADBEEF
@@ -126,6 +127,8 @@ HAL::USART USART(USART1, RCC_USART1, RX, TX, GPIO_AF7, NVIC_USART1_EXTI25_IRQ, R
 
 HAL::Timer TIMER(TIM16, RCC_TIM16, NVIC_TIM1_UP_TIM16_IRQ, 72000000);
 
+HAL::I2C I2C(I2C2, RCC_I2C2, TX, RX, GPIO_AF4, NVIC_I2C2_EV_EXTI24_IRQ, RX_DMA, TX_DMA);
+
 }
 
 namespace Sensor
@@ -188,9 +191,6 @@ void InitClock()
 	/* Set the peripheral clock frequencies used. */
 	rcc_apb1_frequency = 36000000;
 	rcc_apb2_frequency = 72000000;
-
-	/* Disable internal high-speed oscillator. */
-	rcc_osc_off(RCC_HSI);
 }
 
 void InitUSB()
@@ -388,6 +388,10 @@ extern "C" void dma2_channel5_isr()
 extern "C" void tim1_up_tim16_isr()
 {
 	HAL::InterruptRegistry.HandleISR(NVIC_TIM1_UP_TIM16_IRQ);
+}
+extern "C" void i2c2_ev_exti24_isr()
+{
+	HAL::InterruptRegistry.HandleISR(NVIC_I2C2_EV_EXTI24_IRQ);
 }
 
 #endif
