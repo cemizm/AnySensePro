@@ -25,7 +25,7 @@
 
 using namespace App;
 
-TelemetryController telemetryController(Board::Telemetry::USART, Board::Telemetry::TIMER);
+TelemetryController telemetryController(Board::Telemetry::USART, Board::Telemetry::TIMER, Board::Telemetry::I2C);
 DJIController djiController(Board::FC::CAN);
 FCController fcController(Board::FC::USART);
 MAVLinkComm mavLinkComm(Board::OSD::USART, MAVLINK_COMM_1);

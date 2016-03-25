@@ -14,10 +14,10 @@
 
 #include "USART.h"
 #include "Timer.h"
+#include "I2C.h"
 
 namespace App
 {
-
 
 class TelemetryController: public ConfigurationChanged
 {
@@ -27,10 +27,11 @@ private:
 
 	HAL::USART& m_usart;
 	HAL::Timer& m_timer;
+	HAL::I2C& m_i2c;
 
 public:
-	TelemetryController(HAL::USART& usart, HAL::Timer& timer) :
-			m_workspace(), m_active(NULL), m_usart(usart), m_timer(timer)
+	TelemetryController(HAL::USART& usart, HAL::Timer& timer, HAL::I2C& i2c) :
+			m_workspace(), m_active(NULL), m_usart(usart), m_timer(timer), m_i2c(i2c)
 	{
 
 	}

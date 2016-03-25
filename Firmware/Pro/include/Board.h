@@ -16,6 +16,7 @@
 #include <USART.h>
 #include <USBCDCDevice.h>
 #include <Timer.h>
+#include <I2C.h>
 
 #define FIRMWARE_VERSION		0x01000103
 #define HARDWARE_VERSION		0x01
@@ -61,6 +62,7 @@ namespace Telemetry
 {
 extern HAL::USART USART;
 extern HAL::Timer TIMER;
+extern HAL::I2C I2C;
 }
 
 namespace Sensor
