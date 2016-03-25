@@ -158,7 +158,7 @@ void System::calcConsumption()
 
 	amp_elapsed += (SensorData.GetCurrent() * 100);
 
-	uint16_t capa = SensorData.GetCapacity();
+	uint32_t capa = SensorData.GetCapacity();
 	while (amp_elapsed > amp_elapsed_limit)
 	{
 		capa++;

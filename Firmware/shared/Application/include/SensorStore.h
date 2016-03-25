@@ -89,7 +89,7 @@ private:
 	uint8_t m_CellCount = 0;
 	uint16_t m_Cells[MAXCELLS] = { 0 }; //battery voltage in mV
 	float m_Current = 0; //current consumption in 0.1 A
-	uint16_t m_Capacity = 0; // current capacity (3115mAh)
+	uint32_t m_Capacity = 0; // current capacity (3115mAh)
 
 	uint8_t m_Charge = 0; // percentage of charge (62%)
 	uint32_t m_Flightime = 0; //flightime in seconds
@@ -136,12 +136,12 @@ public:
 		m_Battery = battery;
 	}
 
-	uint16_t GetCapacity() const
+	uint32_t GetCapacity() const
 	{
 		return m_Capacity;
 	}
 
-	void SetCapacity(uint16_t capacity = 0)
+	void SetCapacity(uint32_t capacity = 0)
 	{
 		m_Capacity = capacity;
 	}
