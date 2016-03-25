@@ -750,8 +750,12 @@ namespace xeniC.AnySense.Library.Devices
 
         public void Dispose()
         {
-            if (mavlink != null)
-                mavlink.Dispose();
+            try
+            {
+                if (mavlink != null)
+                    mavlink.Dispose();
+            }
+            catch { }
         }
 
         #region Nested Types

@@ -78,8 +78,12 @@ namespace xeniC.AnySense.Library.IO
 
         public void Dispose()
         {
-            if (eventWatcher != null)
-                eventWatcher.Dispose();
+            try
+            {
+                if (eventWatcher != null)
+                    eventWatcher.Dispose();
+            }
+            catch { }
         }
 
         #region Ports

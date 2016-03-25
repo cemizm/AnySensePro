@@ -151,6 +151,14 @@ namespace xeniC.AnySense.Library.Devices
 
             mavlink.PacketReceived -= pr;
 
+            if (device == null)
+            {
+                try{
+                    mavlink.Dispose();
+                }
+                catch { }
+            }
+
             return device;
         }
 
