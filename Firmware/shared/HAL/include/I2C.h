@@ -157,6 +157,7 @@ public:
 
 	inline void SetDefaultTiming() const
 	{
+		//SetTiming(0x2000090E);
 		i2c_100khz_i2cclk8mhz(m_i2c);
 	}
 
@@ -248,6 +249,11 @@ public:
 	inline void DisableAddrMatchInterrupt() const
 	{
 		DisableInterrupt(I2C_CR1_DDRIE);
+	}
+
+	inline void EnableStopInterrupt()
+	{
+		EnableInterrupt(I2C_CR1_STOPIE);
 	}
 
 	inline uint32_t GetInterruptSource(uint32_t interrupt) const

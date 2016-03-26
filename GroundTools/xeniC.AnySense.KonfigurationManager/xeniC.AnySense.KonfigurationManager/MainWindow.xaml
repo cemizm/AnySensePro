@@ -262,18 +262,39 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Active Sensors" Style="{StaticResource Header}"/>
-                        <Label Grid.Row="1" Grid.Column="0" Content="GPS Sensor (SPMA9587)" />
-                        <Controls:ToggleSwitch Grid.Row="1" Grid.Column="1" IsChecked="{Binding SensorGPS}" />
-                        <Label Grid.Row="2" Grid.Column="0" Content="PowerBox Sensor (PBS4850)" />
-                        <Controls:ToggleSwitch Grid.Row="2" Grid.Column="1" IsChecked="{Binding SensorPowerbox}" />
-                        <Label Grid.Row="3" Grid.Column="0" Content="High Current Sensor (SPMA9590)" />
-                        <Controls:ToggleSwitch Grid.Row="3" Grid.Column="1" IsChecked="{Binding SensorCurrent}" />
+                        <Label Grid.Row="1" Grid.Column="0" Content="High Current Sensor (SPMA9590)" />
+                        <Controls:ToggleSwitch Grid.Row="1" Grid.Column="1" IsChecked="{Binding SensorCurrent}" />
+                        <Label Grid.Row="2" Grid.Column="0" Content="Speed Sensor (SPMA9574)" />
+                        <Controls:ToggleSwitch Grid.Row="2" Grid.Column="1" IsChecked="{Binding SensorSpeed}" />
+                        <Label Grid.Row="3" Grid.Column="0" Content="Altitude Sensor (SPMA9575)" />
+                        <Controls:ToggleSwitch Grid.Row="3" Grid.Column="1" IsChecked="{Binding SensorAltitude}" />
+                        <Label Grid.Row="4" Grid.Column="0" Content="GPS Sensor (SPMA9587)" />
+                        <Controls:ToggleSwitch Grid.Row="4" Grid.Column="1" IsChecked="{Binding SensorGPS}" />
+                        <Label Grid.Row="5" Grid.Column="0" Content="Dual Energy Sensor (SPMA9591)" />
+                        <Controls:ToggleSwitch Grid.Row="5" Grid.Column="1" IsChecked="{Binding SensorDualEnergy}" />
+                        <Label Grid.Row="6" Grid.Column="0" Content="Battery Gauge Sensor" />
+                        <Controls:ToggleSwitch Grid.Row="6" Grid.Column="1" IsChecked="{Binding SensorBatteryGauge}" />
+                        <Label Grid.Row="7" Grid.Column="0" Content="Lipo Sensor" />
+                        <Controls:ToggleSwitch Grid.Row="7" Grid.Column="1" IsChecked="{Binding SensorLipo}" />
+                        <Label Grid.Row="8" Grid.Column="0" Content="Vario Sensor (SPMA9589)" />
+                        <Controls:ToggleSwitch Grid.Row="8" Grid.Column="1" IsChecked="{Binding SensorVario}" />
+                        <Label Grid.Row="9" Grid.Column="0" Content="Powerbox Sensor (PBS4850)" />
+                        <Controls:ToggleSwitch Grid.Row="9" Grid.Column="1" IsChecked="{Binding SensorPowerbox}" />
+                        <Label Grid.Row="10" Grid.Column="0" Content="Voltage/Temperatur/RPM Sensor" />
+                        <Controls:ToggleSwitch Grid.Row="10" Grid.Column="1" IsChecked="{Binding SensorVoltage}" />
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm.d:AnySensePro+SettingsMultiplexModel}">

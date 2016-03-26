@@ -1605,12 +1605,62 @@ namespace xeniC.AnySense.Library.Devices
             public SettingsSpektrumModel()
             {
                 isValid = 0xCB00 + (byte)TelemetryProtocol.Spektrum;
-                SensorGPS = true;
-                SensorPowerbox = true;
+
                 SensorCurrent = true;
+                SensorSpeed = true;
+                SensorAltitude = true;
+                SensorGPS = true;
+                SensorDualEnergy = true;
+                SensorBatteryGauge = true;
+                SensorLipo = true;
+                SensorVario = true;
+                SensorPowerbox = true;
+                SensorVoltage = true;
             }
 
             #region Properties
+
+            private bool sensorCurrent;
+            public bool SensorCurrent
+            {
+                get { return sensorCurrent; }
+                set
+                {
+                    if (sensorCurrent == value)
+                        return;
+
+                    sensorCurrent = value;
+                    RaisePropertyChanged(() => SensorCurrent);
+                }
+            }
+
+            private bool sensorSpeed;
+            public bool SensorSpeed
+            {
+                get { return sensorSpeed; }
+                set
+                {
+                    if (sensorSpeed == value)
+                        return;
+
+                    sensorSpeed = value;
+                    RaisePropertyChanged(() => SensorSpeed);
+                }
+            }
+
+            private bool sensorAltitude;
+            public bool SensorAltitude
+            {
+                get { return sensorAltitude; }
+                set
+                {
+                    if (sensorAltitude == value)
+                        return;
+
+                    sensorAltitude = value;
+                    RaisePropertyChanged(() => SensorAltitude);
+                }
+            }
 
             private bool sensorGPS;
             public bool SensorGPS
@@ -1623,6 +1673,62 @@ namespace xeniC.AnySense.Library.Devices
 
                     sensorGPS = value;
                     RaisePropertyChanged(() => SensorGPS);
+                }
+            }
+
+            private bool sensorDualEnergy;
+            public bool SensorDualEnergy
+            {
+                get { return sensorDualEnergy; }
+                set
+                {
+                    if (sensorDualEnergy == value)
+                        return;
+
+                    sensorDualEnergy = value;
+                    RaisePropertyChanged(() => SensorDualEnergy);
+                }
+            }
+
+            private bool sensorBatteryGauge;
+            public bool SensorBatteryGauge
+            {
+                get { return sensorBatteryGauge; }
+                set
+                {
+                    if (sensorBatteryGauge == value)
+                        return;
+
+                    sensorBatteryGauge = value;
+                    RaisePropertyChanged(() => SensorBatteryGauge);
+                }
+            }
+
+            private bool sensorLipo;
+            public bool SensorLipo
+            {
+                get { return sensorLipo; }
+                set
+                {
+                    if (sensorLipo == value)
+                        return;
+
+                    sensorLipo = value;
+                    RaisePropertyChanged(() => SensorLipo);
+                }
+            }
+
+            private bool sensorVario;
+            public bool SensorVario
+            {
+                get { return sensorVario; }
+                set
+                {
+                    if (sensorVario == value)
+                        return;
+
+                    sensorVario = value;
+                    RaisePropertyChanged(() => SensorVario);
                 }
             }
 
@@ -1640,17 +1746,17 @@ namespace xeniC.AnySense.Library.Devices
                 }
             }
 
-            private bool sensorCurrent;
-            public bool SensorCurrent
+            private bool sensorVoltage;
+            public bool SensorVoltage
             {
-                get { return sensorCurrent; }
+                get { return sensorVoltage; }
                 set
                 {
-                    if (sensorCurrent == value)
+                    if (sensorVoltage == value)
                         return;
 
-                    sensorCurrent = value;
-                    RaisePropertyChanged(() => SensorCurrent);
+                    sensorVoltage = value;
+                    RaisePropertyChanged(() => SensorVoltage);
                 }
             }
 
@@ -1663,9 +1769,16 @@ namespace xeniC.AnySense.Library.Devices
                 isValid = Converter.ToUInt16(data, offset);
                 offset += 2;
 
-                SensorGPS = data[offset++] == 1;
-                SensorPowerbox = data[offset++] == 1;
                 SensorCurrent = data[offset++] == 1;
+                SensorSpeed = data[offset++] == 1;
+                SensorAltitude = data[offset++] == 1;
+                SensorGPS = data[offset++] == 1;
+                SensorDualEnergy = data[offset++] == 1;
+                SensorBatteryGauge = data[offset++] == 1;
+                SensorLipo = data[offset++] == 1;
+                SensorVario = data[offset++] == 1;
+                SensorPowerbox = data[offset++] == 1;
+                SensorVoltage = data[offset++] == 1;
             }
 
             public override void Serialize(byte[] data, int offset)
@@ -1673,9 +1786,16 @@ namespace xeniC.AnySense.Library.Devices
                 Converter.GetBytes(isValid, data, offset);
                 offset += 2;
 
-                data[offset++] = (byte)(SensorGPS ? 1 : 0);
-                data[offset++] = (byte)(SensorPowerbox ? 1 : 0);
                 data[offset++] = (byte)(SensorCurrent ? 1 : 0);
+                data[offset++] = (byte)(SensorSpeed ? 1 : 0);
+                data[offset++] = (byte)(SensorAltitude ? 1 : 0);
+                data[offset++] = (byte)(SensorGPS ? 1 : 0);
+                data[offset++] = (byte)(SensorDualEnergy ? 1 : 0);
+                data[offset++] = (byte)(SensorBatteryGauge ? 1 : 0);
+                data[offset++] = (byte)(SensorLipo ? 1 : 0);
+                data[offset++] = (byte)(SensorVario ? 1 : 0);
+                data[offset++] = (byte)(SensorPowerbox ? 1 : 0);
+                data[offset++] = (byte)(SensorVoltage ? 1 : 0);
             }
 
             #endregion
