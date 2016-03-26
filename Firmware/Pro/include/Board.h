@@ -18,7 +18,7 @@
 #include <Timer.h>
 #include <I2C.h>
 
-#define FIRMWARE_VERSION		0x01000103
+#define FIRMWARE_VERSION		0x02000100
 #define HARDWARE_VERSION		0x01
 
 namespace Board
