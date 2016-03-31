@@ -105,7 +105,13 @@ void TelemetryJeti::Run(void)
 			memcpy(&label->Label[label->DescriptionLength], text.Unit, label->UnitLength);
 
 			m_tx.Length += label->DescriptionLength + label->UnitLength + 2;
-			m_currentLabel = (m_currentLabel + 1) % MaxLabelCount;
+
+			m_tmpValue = m_currentLabel;
+			do
+			{
+				m_currentLabel = (m_currentLabel + 1) % MaxLabelCount;
+			} while (m_config->Mapping[m_currentLabel - 1] == TelemetryValue::None && m_tmpValue != m_currentLabel
+					&& m_currentLabel != 0);
 
 			m_nextText = m_tick + delay_sec(TextInterval);
 		}
