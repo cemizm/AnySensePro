@@ -21,6 +21,10 @@ while true; do
                 while  [[ $rc == 0 ]]; do
                     st-flash --reset read /dev/null 0x08000000 1 >&- 2>&-
                     rc=$?;
+                    if [[ $rc == 0 ]];
+                    then
+                        sleep 2
+                    fi
                 done
             else
                 echo "Error."
