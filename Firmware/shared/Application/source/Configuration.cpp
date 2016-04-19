@@ -27,7 +27,11 @@ void Configuration::Init()
 	{
 		for (uint8_t i = m_data.Version + 1; i <= ConfigurationVersion; i++)
 		{
-
+			if(i == 1) // Update to Config Version 1
+			{
+				m_data.AlarmDistance = 2000;
+				m_data.AlarmVoltage = 15;
+			}
 		}
 
 		Save();

@@ -49,6 +49,11 @@ enum Sensors
 	RPM = 10,
 };
 
+enum Alarm
+{
+	AVoltage = 0, ADistance = 1,
+};
+
 struct GPSPosition
 {
 	double Latitude;
@@ -102,6 +107,8 @@ private:
 	uint32_t m_RPM = 0;
 
 	uint32_t m_Sensors = 0;
+
+	uint32_t m_Alarms = 0;
 
 	uint8_t m_session = 1;
 
@@ -488,6 +495,22 @@ public:
 			m_Sensors |= flag;
 		else
 			m_Sensors &= ~flag;
+	}
+
+	uint8_t GetAlarmRaised(Alarm alarm)
+	{
+		uint32_t flag = (1 << ((uint8_t) alarm));
+		return (m_Alarms & flag) == flag;
+	}
+
+	void SetAlarmRaised(Alarm alarm, uint8_t raised)
+	{
+		uint32_t flag = (1 << ((uint8_t) alarm));
+
+		if (raised)
+			m_Alarms |= flag;
+		else
+			m_Alarms &= ~flag;
 	}
 
 	void SetHomeDirection(float degree)

@@ -50,6 +50,10 @@ private:
 
 	uint_fast32_t gps_nextCalc;
 
+	uint_fast32_t alarm_nextCalc;
+	uint_fast32_t alarm_voltage_triggered;
+	uint_fast32_t alarm_distance_triggered;
+
 	uint32_t lastFlightTime;
 
 	const uint8_t LevelWarning = 1;
@@ -67,12 +71,13 @@ private:
 	void calcCells();
 	void calcHome();
 	void calcGPSData();
+	void calcAlarms();
 
 public:
 	System(HAL::Pin& error, HAL::Pin& activity) :
 			ledError(error), ledActivity(activity), ft_nextCalc(0), ft_measured(0), ft_elapsed(0), amp_nextCalc(0), amp_elapsed(
 					0), cells_nextCalc(0), cells_measure_end(0), home_nextCalc(0), home_measure_end(0), home_gps_measure_end(0), gps_nextCalc(
-					0), lastFlightTime(0)
+					0), alarm_nextCalc(0), alarm_voltage_triggered(0), alarm_distance_triggered(0), lastFlightTime(0)
 	{
 	}
 

@@ -99,6 +99,7 @@ void System::Run()
 		calcCells();
 		calcHome();
 		calcGPSData();
+		calcAlarms();
 	}
 }
 
@@ -317,5 +318,39 @@ void System::calcGPSData()
 
 	gps_nextCalc = tick + delay_ms(300);
 }
+
+
+void System::calcAlarms()
+{
+	uint_fast32_t tick = OSAL::Timer::GetTime();
+	if (alarm_nextCalc > tick)
+		return;
+
+	uint8_t isVoltage = Config.GetConfiguration().AlarmVoltage > SensorData.GetCharge();
+	uint8_t isDistance = Config.GetConfiguration().AlarmDistance < SensorData.GetHomeDistance();
+
+	if(isVoltage != SensorData.GetAlarmRaised(Alarm::AVoltage))
+	{
+		if(alarm_voltage_triggered == 0)
+			alarm_voltage_triggered = tick + delay_sec(2);
+		else if(tick > alarm_voltage_triggered)
+			SensorData.SetAlarmRaised(Alarm::AVoltage, isVoltage);
+	}
+	else
+		alarm_voltage_triggered = 0;
+
+	if(isDistance != SensorData.GetAlarmRaised(Alarm::ADistance))
+	{
+		if(alarm_distance_triggered == 0)
+			alarm_distance_triggered = tick + delay_sec(2);
+		else if(tick > alarm_distance_triggered)
+			SensorData.SetAlarmRaised(Alarm::ADistance, isDistance);
+	}
+	else
+		alarm_distance_triggered = 0;
+
+	alarm_nextCalc = tick + delay_ms(500);
+}
+
 
 } /* namespace App */

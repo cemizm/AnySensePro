@@ -367,17 +367,23 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"  />
+                            <RowDefinition Height="Auto"  />
+                            <RowDefinition Height="Auto"  />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Protocol" />
-                        <ComboBox Grid.Row="0" Grid.Column="1"
+                        <Label Grid.Row="0" Grid.Column="0" Content="Alarm Charge" />
+                        <Controls:NumericUpDown Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="100" Interval="1" StringFormat="{}{0:N0} %" Value="{Binding AlarmCharge}" />
+                        <Label Grid.Row="1" Grid.Column="0" Content="Alarm Distance" />
+                        <Controls:NumericUpDown Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="10000" Interval="100" StringFormat="{}{0:N0} m" Value="{Binding AlarmDistance}" />
+                        <Label Grid.Row="2" Grid.Column="0" Content="Protocol" />
+                        <ComboBox Grid.Row="2" Grid.Column="1"
                               ItemsSource="{Binding ProtocolSource}" 
                               SelectedValue="{Binding Protocol}" SelectedValuePath="Value" />
-                        <ContentControl Grid.Row="1" Grid.ColumnSpan="2" Content="{Binding Settings}" />
+                        <ContentControl Grid.Row="3" Grid.ColumnSpan="2" Content="{Binding Settings}" />
                     </Grid>
                 </ScrollViewer>
                 <Controls:ProgressRing IsActive="{Binding IsLoading}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource IdealForegroundColorBrush}" />

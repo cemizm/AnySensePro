@@ -118,8 +118,10 @@ void TelemetryHoTT::UpdateGPS()
 	m_tx.GPS.Fix = 'x';
 	m_tx.GPS.Version = 0xCE;
 
-	if(!SensorData.IsGPSOK())
+	if (!SensorData.IsGPSOK())
 		m_tx.GPS.AlarmDisplay = AlarmDisplayMainCurr;
+
+	m_tx.AlarmTone = SensorData.GetAlarmRaised(Alarm::ADistance) ? AlarmToneType::AlarmToneUnk04 : AlarmToneType::AlarmToneNone;
 
 	SendData();
 }
@@ -152,6 +154,8 @@ void TelemetryHoTT::UpdateGAM()
 	m_tx.GAM.LowestCell = SensorData.GetCellLowest() / 20;
 
 	m_tx.GAM.Version = 0xCE;
+
+	m_tx.AlarmTone = SensorData.GetAlarmRaised(Alarm::AVoltage) ? AlarmToneType::AlarmToneVoltMin : AlarmToneType::AlarmToneNone;
 
 	SendData();
 }

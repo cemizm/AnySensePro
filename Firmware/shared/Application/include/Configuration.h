@@ -30,7 +30,9 @@ union ConfigurationData
 			{
 				uint8_t Version;
 				TelemetryProtocol Protocol;
-			};
+				uint8_t AlarmVoltage;
+				uint16_t AlarmDistance;
+			}__attribute__((packed));
 		};
 		uint8_t ProtocolSettings[128];
 	};
@@ -61,7 +63,7 @@ class Configuration
 private:
 	const char* cfgname = "system.cfg";
 	const char* intname = "intern.bin";
-	const uint8_t ConfigurationVersion = 0;
+	const uint8_t ConfigurationVersion = 1;
 	static const uint8_t MaxHandlers = 5;
 
 	ConfigurationData m_data;

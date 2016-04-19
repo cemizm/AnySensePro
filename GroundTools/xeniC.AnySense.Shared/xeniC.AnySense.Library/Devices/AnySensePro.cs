@@ -19,7 +19,7 @@ namespace xeniC.AnySense.Library.Devices
 {
     public class AnySensePro : DeviceModelBase
     {
-        private const UInt32 LatestVersion = 0x02000100;
+        private const UInt32 LatestVersion = 0x02010100;
 
         public AnySensePro(BaseMavlinkLayer mv, UInt32 version)
             : base(mv, version)
@@ -180,6 +180,7 @@ namespace xeniC.AnySense.Library.Devices
         {
             private BaseMavlinkLayer mavlink;
             private Action closeAction;
+            private MavLink.FrameworkBitConverter converter;
 
             public SettingsModel(Action closeAction, BaseMavlinkLayer mavlink)
             {
@@ -187,6 +188,9 @@ namespace xeniC.AnySense.Library.Devices
                 this.mavlink = mavlink;
 
                 Load();
+
+                converter = new MavLink.FrameworkBitConverter();
+                converter.SetDataIsLittleEndian(MavLink.MavlinkSettings.IsLittleEndian);
             }
 
             #region Loading/Saving
@@ -304,6 +308,8 @@ namespace xeniC.AnySense.Library.Devices
                 msg = new Msg_configuration_data();
                 msg.data = new byte[240];
                 msg.data[offset++] = (byte)Protocol;
+                msg.data[offset++] = AlarmCharge;
+                converter.GetBytes(alarmDistance, msg.data, offset); offset += 2;
 
                 offset = 32;
                 if (Settings != null)
@@ -315,6 +321,8 @@ namespace xeniC.AnySense.Library.Devices
                 int offset = 1;
 
                 Protocol = (TelemetryProtocol)msg.data[offset++];
+                AlarmCharge = (byte)msg.data[offset++];
+                AlarmDistance = converter.ToUInt16(msg.data, offset); offset += 2; 
                 offset = 32;
 
                 if (Settings != null)
@@ -388,6 +396,37 @@ namespace xeniC.AnySense.Library.Devices
 
                 return null;
             }
+
+            private byte alarmCharge;
+
+            public byte AlarmCharge
+            {
+                get { return alarmCharge; }
+                set
+                {
+                    if (alarmCharge == value)
+                        return;
+
+                    alarmCharge = value;
+                    RaisePropertyChanged(() => AlarmCharge);
+                }
+            }
+
+            private UInt16 alarmDistance;
+            public UInt16 AlarmDistance
+            {
+                get { return alarmDistance; }
+                set
+                {
+                    if (alarmDistance == value)
+                        return;
+
+                    alarmDistance = value;
+                    RaisePropertyChanged(() => AlarmDistance);
+                }
+            }
+
+
 
             #endregion
         }
