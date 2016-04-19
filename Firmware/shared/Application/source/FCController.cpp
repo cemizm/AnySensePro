@@ -7,12 +7,12 @@
 
 #include <FCController.h>
 #include <FCMAVLink.h>
+#include <FCTarot.h>
 
 #include <SensorStore.h>
 
 #include <string.h>
 #include <new>
-
 
 namespace App
 {
@@ -35,6 +35,9 @@ void FCController::Run()
 		case FCAdapter::Protocol::MAVLink:
 			m_active = new (m_workspace) FCMAVLink(m_usart);
 			break;
+		case FCAdapter::Protocol::Tarot:
+			m_active = new (m_workspace) FCTarot(m_usart);
+			break;
 		default:
 			m_active = new (m_workspace) FCAdapter();
 			break;
@@ -47,7 +50,7 @@ void FCController::Run()
 				|| SensorData.GetFCType() == FCType::Wookong || SensorData.GetFCType() == FCType::A2)
 			return;
 
-		m_protocol = (FCAdapter::Protocol)((m_protocol + 1) % FCAdapter::Protocol::Last);
+		m_protocol = (FCAdapter::Protocol) ((m_protocol + 1) % FCAdapter::Protocol::Last);
 	}
 }
 

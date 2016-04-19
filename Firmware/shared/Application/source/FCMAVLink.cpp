@@ -21,16 +21,15 @@ void FCMAVLink::Init()
 
 void FCMAVLink::Run()
 {
-	m_alive = OSAL::Timer::GetTime() + delay_sec(5);
 
-	while (m_alive > OSAL::Timer::GetTime())
+	while (IsAlive())
 	{
 		if (gotMsg.wait(WaitForDataTimeout))
 		{
 			switch (m_msg_in.msgid)
 			{
 			case MAVLINK_MSG_ID_HEARTBEAT:
-				m_alive = OSAL::Timer::GetTime() + delay_sec(5);
+				SetHeartbeat();
 				UpdateHeartbeat(m_msg_in);
 				break;
 			case MAVLINK_MSG_ID_SYS_STATUS:
