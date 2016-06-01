@@ -20,7 +20,7 @@ static_assert (sizeof(TelemetryJeti) <= TELEMETRY_WORKSPACE, "TelemetryJeti will
 const TelemetryJeti::LabelType TelemetryJeti::Labels[TelemetryJeti::TelemetryValues + 1] = { { "AnySense", "" }, { "Lat.", "" }, {
 		"Lon.", "" }, { "Num Sat.", "" }, { "GPS Fix", "" }, { "F. Mode", "" }, { "Speed", "kmh" }, { "Dist.", "m" }, { "Alt.",
 		"m" }, { "Climb", "m/s" }, { "Comp.", "\xB0" }, { "F. Dir", "\xB0" }, { "H. Dir", "\xB0" }, { "Bat.", "V" }, { "Curr.",
-		"A" }, { "Capa.", "Ah" }, { "Cell", "V" }, { "Temp.", "\xB0" "C" }, { "H. Lat", "" }, { "H. Long", "" } };
+		"A" }, { "Capa.", "Ah" }, { "Cell", "V" }, { "Temp.", "\xB0" "C" }, { "H. Lat", "" }, { "H. Long", "" }, {"RPM", "rpm"} };
 
 void TelemetryJeti::Init()
 {
@@ -194,6 +194,9 @@ void TelemetryJeti::Run(void)
 				case TelemetryValue::HomeLongitude: //lon
 					if (SensorData.IsPositionHomeSet())
 						packetLen = packet->UpdateGPS(SensorData.GetPositionHome().Longitude, 1);
+					break;
+				case TelemetryValue::RPM: //RPM
+					packetLen = packet->UpdateU30(0, SensorData.GetRpm());
 					break;
 				default:
 					packetLen = 0;

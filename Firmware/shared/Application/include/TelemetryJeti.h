@@ -34,7 +34,7 @@ private:
 	static const uint8_t StartByte = 0x7E;
 	static const uint8_t CRCPoly = 0x07;
 
-	static const uint8_t TelemetryValues = 19;
+	static const uint8_t TelemetryValues = 20;
 	static const uint8_t MaxTelemetryCount = 15;
 	static const uint8_t MaxLabelCount = 16;
 
@@ -81,7 +81,7 @@ private:
 		LipoTemp = 17,
 		HomeLatitude = 18,
 		HomeLongitude = 19,
-
+		RPM = 20,
 	};
 
 	struct ProtocolConfig

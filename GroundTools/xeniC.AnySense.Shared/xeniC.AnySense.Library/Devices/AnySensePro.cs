@@ -19,7 +19,7 @@ namespace xeniC.AnySense.Library.Devices
 {
     public class AnySensePro : DeviceModelBase
     {
-        private const UInt32 LatestVersion = 0x02010100;
+        private const UInt32 LatestVersion = 0x02010200;
 
         public AnySensePro(BaseMavlinkLayer mv, UInt32 version)
             : base(mv, version)
@@ -1184,6 +1184,8 @@ namespace xeniC.AnySense.Library.Devices
                 Home_Latitude = 18,
                 [Description("Home Longitude")]
                 Home_Longitude = 19,
+                [Description("RPM")]
+                RPM = 20,
 
             };
 
