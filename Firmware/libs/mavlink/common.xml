@@ -73,6 +73,9 @@
                <entry value="22" name="MAV_AUTOPILOT_TAROT_ZYX_M">
                   <description>Tarot ZYX-M</description>
                </entry>
+               <entry value="23" name="MAV_AUTOPILOT_ALIGN_APS_M">
+                 <description>Align APS-M</description>
+               </entry>
           </enum>
           <enum name="MAV_TYPE">
                <entry value="0" name="MAV_TYPE_GENERIC">

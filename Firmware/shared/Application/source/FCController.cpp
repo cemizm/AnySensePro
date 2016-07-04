@@ -8,6 +8,7 @@
 #include <FCController.h>
 #include <FCMAVLink.h>
 #include <FCTarot.h>
+#include <FCAlign.h>
 
 #include <SensorStore.h>
 
@@ -37,6 +38,9 @@ void FCController::Run()
 			break;
 		case FCAdapter::Protocol::Tarot:
 			m_active = new (m_workspace) FCTarot(m_usart);
+			break;
+		case FCAdapter::Protocol::Align:
+			m_active = new (m_workspace) FCAlign(m_usart);
 			break;
 		default:
 			m_active = new (m_workspace) FCAdapter();

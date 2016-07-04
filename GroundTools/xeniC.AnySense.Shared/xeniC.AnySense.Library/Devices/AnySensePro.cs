@@ -19,7 +19,7 @@ namespace xeniC.AnySense.Library.Devices
 {
     public class AnySensePro : DeviceModelBase
     {
-        private const UInt32 LatestVersion = 0x02010200;
+        private const UInt32 LatestVersion = 0x02020100;
 
         public AnySensePro(BaseMavlinkLayer mv, UInt32 version)
             : base(mv, version)
@@ -79,6 +79,7 @@ namespace xeniC.AnySense.Library.Devices
             IProgressController progress = await dlg.ShowProgress("Firmware Update", "Initializing Update...");
             progress.SetIndeterminate();
 
+            Thread.Sleep(5000);
 
             int state = 0;
             int timeout = 0;

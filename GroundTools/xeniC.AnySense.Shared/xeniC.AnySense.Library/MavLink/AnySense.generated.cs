@@ -235,7 +235,12 @@ namespace MavLink
 		/// Tarot ZYX-M
 		/// </summary>
 		MAV_AUTOPILOT_TAROT_ZYX_M = 22,
-		MAV_AUTOPILOT_ENUM_END = 23,
+
+		/// <summary>
+		/// Align APS-M
+		/// </summary>
+		MAV_AUTOPILOT_ALIGN_APS_M = 23,
+		MAV_AUTOPILOT_ENUM_END = 24,
 
 	}
 

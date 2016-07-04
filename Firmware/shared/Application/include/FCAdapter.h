@@ -24,7 +24,7 @@ public:
 
 	enum Protocol
 	{
-		MAVLink = 0, Tarot = 1, Last = 2,
+		MAVLink = 0, Tarot = 1, Align = 2, Last = 3,
 	};
 
 	FCAdapter() :

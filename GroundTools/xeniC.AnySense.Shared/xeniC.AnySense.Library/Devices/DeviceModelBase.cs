@@ -776,6 +776,8 @@ namespace xeniC.AnySense.Library.Devices
             Pixhawk = 12,
             [Description("Tarot ZYX-M")]
             ZYX_M = 22,
+            [Description("Align APS-M")]
+            APS_M = 23,
         }
 
         public enum FlightModeType
