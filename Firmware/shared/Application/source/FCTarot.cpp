@@ -21,7 +21,8 @@ void FCTarot::Init()
 {
 	static_assert (sizeof(FCTarot::GPSType) == FCTarot::PacketContentSize, "Tarot GPS PaketSize does not match!");
 	static_assert (sizeof(FCTarot::RCType) == FCTarot::PacketContentSize, "Tarot RC PaketSize does not match!");
-	static_assert (sizeof(FCTarot::HomeDataType) == FCTarot::PacketContentSize, "Tarot HomeData PaketSize does not match!");
+	static_assert (sizeof(FCTarot::BatteryType) == FCTarot::PacketContentSize, "Tarot Battery PaketSize does not match!");
+	static_assert (sizeof(FCTarot::TimeType) == FCTarot::PacketContentSize, "Tarot Time PaketSize does not match!");
 
 	static_assert (sizeof(FCTarot::Paket) == FCTarot::PaketSize, "Tarot PaketSize does not match!");
 
@@ -117,18 +118,20 @@ void FCTarot::Process(Paket& paket)
 	case PaketType::RC:
 		Process(paket.RC);
 		break;
-	case PaketType::HomeData:
-		Process(paket.HomeData);
+	case PaketType::Battery:
+		Process(paket.Battery);
+		break;
+	case PaketType::Time:
+		Process(paket.Time);
+		break;
 	}
 }
 
-void FCTarot::Process(GPSType& data)
+void FCTarot::Process(RCType& data)
 {
-	SensorData.SetPositionCurrent(data.Latitude / 10000000.f, data.Longitude / 10000000.f);
-	SensorData.SetAltitude(data.Altitude / 10.f);
-	SensorData.SetSpeed(data.Speed / 10.f);
-	SensorData.SetVerticalSpeed(data.Climb / 10.f);
-	SensorData.SetBattery(data.Voltage * 10);
+	SensorData.SetThrottle(data.Throttle * 10);
+
+	SensorData.SetArmed(data.Armed);
 
 	if (data.Failsafe != 0)
 		SensorData.SetFlightMode(FlightMode::Failsafe);
@@ -142,18 +145,30 @@ void FCTarot::Process(GPSType& data)
 	SensorData.SetSatellites(data.Satellites);
 	SensorData.SetFixType(data.Satellites == 0 ? GPSFixType::FixNo : data.Satellites < 4 ? GPSFixType::Fix2D : GPSFixType::Fix3D);
 
-}
-
-void FCTarot::Process(RCType& data)
-{
-	SensorData.SetArmed(data.Armed);
 	//TODO: Set RC Channels
 }
 
-void FCTarot::Process(HomeDataType& data)
+void FCTarot::Process(GPSType& data)
 {
-	SensorData.SetHomeAltitude(data.Altitude / 10.f);
-	SensorData.SetPositionHome(data.Latitude / 10000000.f, data.Longitude / 10000000.f);
+	SensorData.SetPositionHome(data.HomeLatitude / 10000000.f, data.HomeLongitude / 10000000.f);
+	SensorData.SetHomeAltitude(data.HomeAltitude / 10.f);
+
+	SensorData.SetPositionCurrent(data.Latitude / 10000000.f, data.Longitude / 10000000.f);
+	SensorData.SetAltitude(data.Altitude / 10.f);
+
+	SensorData.SetSpeed(data.Speed / 10.f);
+	SensorData.SetVerticalSpeed(data.Climb / 10.f);
+}
+
+void FCTarot::Process(BatteryType& data)
+{
+	SensorData.SetBattery(data.Voltage * 10);
+}
+
+void FCTarot::Process(TimeType& data)
+{
+	Utils::DateTime dt = Utils::DateTime(1467504000 + data.Time / 1000);
+	SensorData.SetDateTime(dt);
 }
 
 uint16_t FCTarot::calculateChecksum(const uint8_t* data, uint8_t size)
