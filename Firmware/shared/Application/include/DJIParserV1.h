@@ -94,8 +94,8 @@ private:
 		uint8_t unk4[8];
 		struct
 		{
-			double Longitude;							// home lattitude (radians)
 			double Latitude;							// home longitude (radians)
+			double Longitude;							// home lattitude (radians)
 		}__attribute__((packed)) HomePosition;
 		float HomeAltitude; 							// home altitude from barometric sensor plus 20m (meters)
 		uint16_t Sequence; 								// sequence number - increases with every message
