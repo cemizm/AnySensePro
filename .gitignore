@@ -35,6 +35,7 @@
 # Eagle files
 *.b\#*
 *.s\#*
+*eagle.epf
 
 # System files
 .DS_Store
