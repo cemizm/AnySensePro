@@ -47,3 +47,4 @@ obj/
 bin/
 *.suo
 *.csproj.user
+OldVersions
