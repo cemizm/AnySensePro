@@ -114,7 +114,7 @@ uint8_t TelemetryFrSky::UpdateAnySense()
 		break;
 	case 1:
 		m_packet.Id = SensorValue::ANY_FIX;
-		m_packet.Value = SensorData.GetFCType();
+		m_packet.Value = SensorData.GetFixType();
 		break;
 	case 2:
 		m_packet.Id = SensorValue::ANY_SATS;
