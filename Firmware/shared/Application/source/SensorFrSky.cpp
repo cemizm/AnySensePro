@@ -237,7 +237,7 @@ void SensorFrSky::UpdateData()
 		uint32_t gps_time_date = DATA_U32(m_rx.Value);
 		if (gps_time_date & 0x000000ff)
 		{
-			time.SetYear(gps_time_date >> 24);
+			time.SetYear((uint16_t)(gps_time_date >> 24));
 			time.SetMonth(gps_time_date >> 16);
 			time.SetDay(gps_time_date >> 8);
 		}

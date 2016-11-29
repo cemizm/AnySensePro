@@ -87,8 +87,18 @@ void DJIParserV2::process(DJIMessage* msg)
 
 void DJIParserV2::process(DJIMessageGPS* msg)
 {
-	SensorData.SetDateTime(msg->DateTime.getYear(), msg->DateTime.getMonth(), msg->DateTime.getDay(), msg->DateTime.getHours(),
-			msg->DateTime.getMinutes(), msg->DateTime.getSeconds());
+	uint16_t year = 0;
+	uint8_t month = 0;
+	uint8_t day = 0;
+
+	uint8_t hour = 0;
+	uint8_t min = 0;
+	uint8_t sec = 0;
+
+	msg->DateTime.getDate(year, month, day);
+	msg->DateTime.getTime(hour, min, sec);
+
+	SensorData.SetDateTime(year, month, day, hour, min, sec);
 
 	SensorData.SetFixType(msg->Satellites == 0 ? GPSFixType::FixNo : msg->Satellites < 4 ? GPSFixType::Fix2D : GPSFixType::Fix3D);
 

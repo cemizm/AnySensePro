@@ -54,32 +54,30 @@ private:
 			uint32_t Date;          						// GPS date (year * 10000 + month * 100 + day)
 			uint32_t Time;          						// GPS time (hour * 10000 + minute * 100 + second)
 
-			uint8_t getDay()
+			void getDate(uint16_t& year, uint8_t& month, uint8_t& day)
 			{
-				return Date;
+				uint32_t tmp = Date;
+
+				year = tmp / 10000;
+				tmp -= year * 10000;
+
+				month = tmp / 100;
+				tmp -= month * 100;
+
+				day = tmp;
 			}
 
-			uint8_t getMonth()
+			void getTime(uint8_t& hour, uint8_t& minute, uint8_t& seconds)
 			{
-				return Date / 100;
-			}
+				uint32_t tmp = Time;
 
-			uint16_t getYear()
-			{
-				return Date / 10000;
-			}
+				hour = tmp / 10000;
+				tmp -= hour * 10000;
 
-			uint8_t getSeconds()
-			{
-				return Time;
-			}
-			uint8_t getMinutes()
-			{
-				return Time / 100;
-			}
-			uint8_t getHours()
-			{
-				return Time / 10000;
+				minute = tmp / 100;
+				tmp -= minute * 100;
+
+				seconds = tmp;
 			}
 
 		} DateTime;

@@ -229,7 +229,7 @@ public:
 		return m_dateTime;
 	}
 
-	void SetDateTime(uint8_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
+	void SetDateTime(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 	{
 		m_dateTime.SetYear(year);
 		m_dateTime.SetMonth(month);

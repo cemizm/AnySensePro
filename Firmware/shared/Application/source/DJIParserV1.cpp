@@ -83,7 +83,7 @@ void DJIParserV1::process(DJIMessage* msg)
 
 void DJIParserV1::process(DJIMessageGPS* msg)
 {
-	SensorData.SetDateTime(msg->DateTime.Years, msg->DateTime.Months, msg->DateTime.Days, msg->DateTime.Hours,
+	SensorData.SetDateTime(msg->DateTime.Years + 2000, msg->DateTime.Months, msg->DateTime.Days, msg->DateTime.Hours,
 			msg->DateTime.Minutes, msg->DateTime.Seconds);
 
 	if ((msg->FixStatus & 0x02) && msg->FixType > 0)

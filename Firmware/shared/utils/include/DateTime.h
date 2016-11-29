@@ -42,7 +42,8 @@ public:
 	void SetHour(uint8_t hour){ m_Hour = hour; }
 	void SetDay(uint8_t day){ m_Day = day; }
 	void SetMonth(uint8_t month){ m_Month = month; }
-	void SetYear(uint8_t year){ m_Year = year; }
+	void SetYearUnix(uint8_t year){ m_Year = year; }
+	void SetYear(uint16_t year){ m_Year = (year - 1970); }
 
 	uint8_t GetSecond() const { return m_Second; }
 	uint8_t GetMinute() const { return m_Minute; }
