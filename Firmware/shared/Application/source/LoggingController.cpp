@@ -78,9 +78,15 @@ void LoggingController::Run()
 			case 6:
 				m_dataLen = m_mavlink.PackVFRHud(&m_msg);
 				break;
+			case 7:
+				m_dataLen = m_mavlink.PackGPSInt(&m_msg);
+				break;
+			case 8:
+				m_dataLen = m_mavlink.PackSystemTime(&m_msg);
+				break;
 			}
 
-			m_currentData = (m_currentData + 1) % 7;
+			m_currentData = (m_currentData + 1) % 9;
 
 			m_dataLen = m_mavlink.FillBytes(&m_msg, m_buffer);
 

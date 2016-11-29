@@ -26,10 +26,12 @@ public:
 	uint16_t PackHeartbeat(mavlink_message_t* msg);
 	uint16_t PackSystemStatus(mavlink_message_t* msg);
 	uint16_t PackGPS(mavlink_message_t* msg);
+	uint16_t PackGPSInt(mavlink_message_t* msg);
 	uint16_t PackVFRHud(mavlink_message_t* msg);
 	uint16_t PackAttitude(mavlink_message_t* msg);
 	uint16_t PackRCOut(mavlink_message_t* msg);
 	uint16_t PackBatteryPack(mavlink_message_t* msg);
+	uint16_t PackSystemTime(mavlink_message_t* msg);
 
 	uint16_t PackCommandAck(mavlink_message_t* msg, MAV_CMD_ACK ack);
 	uint16_t PackConfigurationVersion3(mavlink_message_t* msg, uint32_t firmware, uint8_t hardware);

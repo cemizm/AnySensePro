@@ -4,6 +4,7 @@
  *  Created on: 18.10.2015
  *      Author: cem
  */
+#include "OSAL.h"
 
 #include <MAVLinkLayer.h>
 #include <SensorStore.h>
@@ -50,11 +51,25 @@ uint16_t MAVLinkLayer::PackSystemStatus(mavlink_message_t* msg)
 uint16_t MAVLinkLayer::PackGPS(mavlink_message_t* msg)
 {
 	const GPSPosition& gps = SensorData.GetPositionCurrent();
+	const Utils::DateTime& dt = SensorData.GetDateTime();
 
-	return mavlink_msg_gps_raw_int_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 0, SensorData.GetFixType(),
+	uint64_t time = dt.ToUnixTimestamp() * 1000000;
+
+	return mavlink_msg_gps_raw_int_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, time, SensorData.GetFixType(),
 			gps.Latitude * 10000000, gps.Longitude * 10000000, SensorData.GetRelativeAltitude() * 1000,
 			SensorData.GetHdop() * 100, SensorData.GetVdop() * 100, SensorData.GetSpeed() * 100,
 			SensorData.GetCourseOverGround() * 100, SensorData.GetSatellites());
+}
+uint16_t MAVLinkLayer::PackGPSInt(mavlink_message_t* msg)
+{
+	const GPSPosition& gps = SensorData.GetPositionCurrent();
+	const Velocity& vel = SensorData.GetVelocity();
+	uint32_t ts = OSAL::Timer::GetBootMS();
+
+	return mavlink_msg_global_position_int_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg,
+			ts, gps.Latitude * 10000000, gps.Longitude * 10000000, SensorData.GetAltitude() * 1000, SensorData.GetRelativeAltitude() * 1000,
+			vel.North * 100, vel.East * 100, vel.Down * 100,
+			SensorData.GetHeading() * 100);
 }
 uint16_t MAVLinkLayer::PackVFRHud(mavlink_message_t* msg)
 {
@@ -63,7 +78,9 @@ uint16_t MAVLinkLayer::PackVFRHud(mavlink_message_t* msg)
 }
 uint16_t MAVLinkLayer::PackAttitude(mavlink_message_t* msg)
 {
-	return mavlink_msg_attitude_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 0, SensorData.GetRoll() * M_PI / 180,
+	uint32_t ts = OSAL::Timer::GetBootMS();
+
+	return mavlink_msg_attitude_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, ts, SensorData.GetRoll() * M_PI / 180,
 			SensorData.GetPitch() * M_PI / 180, SensorData.GetHeading() * M_PI / 180, 0, 0, 0);
 }
 uint16_t MAVLinkLayer::PackRCOut(mavlink_message_t* msg)
@@ -77,6 +94,15 @@ uint16_t MAVLinkLayer::PackBatteryPack(mavlink_message_t* msg)
 	return mavlink_msg_battery_status_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, 1, MAV_BATTERY_FUNCTION_ALL,
 			MAV_BATTERY_TYPE_LIPO, SensorData.GetTemperatur1(), SensorData.GetCells(), SensorData.GetCurrent() * 10,
 			SensorData.GetCapacity(), -1, SensorData.GetCharge());
+}
+
+uint16_t MAVLinkLayer::PackSystemTime(mavlink_message_t* msg)
+{
+	const Utils::DateTime& dt = SensorData.GetDateTime();
+	uint32_t ts = OSAL::Timer::GetBootMS();
+	uint64_t time = dt.ToUnixTimestamp() * 1000000;
+
+	return mavlink_msg_system_time_pack(MAVLINK_SYSTEM_ID, MAVLINK_COMP_ID, msg, time, ts);
 }
 
 uint16_t MAVLinkLayer::PackMAVStreams(mavlink_message_t* msg, uint8_t stream, uint8_t rate)
