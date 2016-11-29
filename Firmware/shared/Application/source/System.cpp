@@ -256,7 +256,7 @@ void System::calcHome()
 
 	if (SensorData.GetSensorPresent(Sensors::SGPS))
 	{
-		if (home_gps_measure_end == 0)
+		if (home_gps_measure_end == 0 && SensorData.GetSatellites() > 5)
 			home_gps_measure_end = tick + delay_sec(10);
 
 		if (home_gps_measure_end > tick)
