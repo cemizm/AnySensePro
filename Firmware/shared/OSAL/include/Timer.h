@@ -33,6 +33,14 @@ public:
 	{
 		return OS::get_tick_count();
 	}
+
+	static uint_fast32_t GetBootMS() {
+		return OS::get_tick_count() / delay_ms(1);
+	}
+
+	static uint_fast32_t GetBootUS() {
+		return OS::get_tick_count() / delay_us(1);
+	}
 };
 
 } /* namespace OSAL */
