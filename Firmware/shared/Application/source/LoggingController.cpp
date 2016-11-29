@@ -16,13 +16,15 @@
 
 namespace App
 {
-
+static const uint8_t delay = 10;
 static const char* label = "SD:ANYSENSEPRO";
 static const char* prefix = "SD:flight_";
 static const char* ext = ".bin";
 
 void LoggingController::Init()
 {
+	OSAL::Timer::SleepSeconds(delay);
+
 	updateFilename();
 }
 
