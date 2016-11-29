@@ -60,6 +60,12 @@ struct GPSPosition
 	double Longitude;
 };
 
+struct Velocity{
+	float North;
+	float East;
+	float Down;
+};
+
 class SensorStore
 {
 private:
@@ -72,6 +78,7 @@ private:
 	GPSPosition m_PositionHome;
 	float m_Speed = 0; //speed in m/s
 	float m_CourseOverGround = 0; //course over ground
+	Velocity m_velocity;
 
 	Utils::DateTime m_dateTime = Utils::DateTime(14, 6, 13, 18, 0, 0);
 
@@ -361,6 +368,15 @@ public:
 	uint8_t IsPositionHomeSet()
 	{
 		return m_PositionHome.Latitude != 0 && m_PositionHome.Longitude != 0;
+	}
+
+	void SetVelocity(float north, float east, float down){
+		m_velocity.North = north;
+		m_velocity.East = east;
+		m_velocity.Down = down;
+	}
+	const Velocity& GetVelocity() const {
+		return m_velocity;
 	}
 
 	void SetRCChannels(int16_t* value, uint8_t count)

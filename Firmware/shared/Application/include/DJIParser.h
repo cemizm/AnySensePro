@@ -162,6 +162,7 @@ protected:
 		SensorData.SetSpeed(msg->Velocity.getSpeed());
 		SensorData.SetVerticalSpeed(-msg->Velocity.Down);
 		SensorData.SetCourseOverGround(msg->Velocity.getCOG());
+		SensorData.SetVelocity(msg->Velocity.North, msg->Velocity.East, msg->Velocity.Down);
 		SensorData.SetSatellites(msg->Satellites);
 	}
 
